@@ -1,5 +1,5 @@
 <?php
-namespace DrdPlus\Person\Harms\Exceptions;
+namespace DrdPlus\Person\Health\Exceptions;
 
 interface Runtime extends Exception
 {

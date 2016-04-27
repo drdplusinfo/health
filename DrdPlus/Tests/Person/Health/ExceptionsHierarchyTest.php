@@ -1,5 +1,5 @@
 <?php
-namespace DrdPlus\Tests\Person\Harms;
+namespace DrdPlus\Tests\Person\Health;
 
 use Granam\Tests\Exceptions\Tools\AbstractExceptionsHierarchyTest;
 

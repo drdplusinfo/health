@@ -2,7 +2,7 @@
   "name": "drd-plus/person-harm",
   "license": "MIT",
   "type": "project",
-  "description": "Body and soul harms of a person for Drd+",
+  "description": "Body and soul harms, lesions and their treatment of a person for Drd+",
   "autoload": {
     "psr-4": {
       "DrdPlus\\": "DrdPlus/"

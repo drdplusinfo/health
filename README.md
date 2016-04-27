@@ -1,22 +1,3 @@
-### Wounds origins
-
-#### Mechanical wounds
-
- - stab
- - cut
- - crush
-
-#### Psychical wounds
-
- - Ψ [ˈpsiː]
- 
-#### Elemental wounds
- 
- - ± fire
- - ± air
- - ± water
- - ± earth
- 
 ### Wounds
  
  - aggregates every single not-yet healed wound
@@ -35,12 +16,31 @@
 
 ##### Wound
 
- - has origin
+ - has `Origin`
  - has size (expressed by number of `point of wound`)
  - has severity
     - ordinary
     - serious, which has detail about its origin, see `Wounds origin`,
     also serious wound is automatically considered as `old injury` (see `Treatment boundary`)
+    
+##### Wounds origins
+
+###### Mechanical wounds
+
+ - stab
+ - cut
+ - crush
+
+###### Psychical wounds
+
+ - Ψ [ˈpsiː]
+ 
+###### Elemental wounds
+ 
+ - ± fire
+ - ± air
+ - ± water
+ - ± earth
  
 ##### Treatment boundary
 

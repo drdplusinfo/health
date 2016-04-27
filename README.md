@@ -45,10 +45,10 @@
 ##### Treatment boundary
 
  - splits wounds in `grid of wounds` into two parts
-    - "old" injuries, which are those not healed by last treatment (native body heal per day, or by healer) and all serious injuries
+    - "old" injuries, which are those not healed by last treatment (native regeneration per day, or by a healer) and all serious injuries
     - new injuries
 
-### Lesion (handicap caused by body or soul damage)
+### Affliction (handicap caused by body or soul damage)
 
 Knows its
 
@@ -64,3 +64,16 @@ Knows its
  
 ### Healing
 
+#### Mitigation of wounds
+
+##### Treatment of ordinary wounds
+
+##### Treatment of serious wounds
+
+##### Native healing of wounds
+
+### Healing of affliction
+
+#### Treatment of affliction
+
+#### Native cure of affliction

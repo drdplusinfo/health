@@ -23,7 +23,7 @@
     - serious, which has detail about its origin, see `Wounds origin`,
     also serious wound is automatically considered as `old injury` (see `Treatment boundary`)
     
-##### Wounds origins
+##### Wounds origin
 
 ###### Mechanical wounds
 

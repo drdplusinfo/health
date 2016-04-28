@@ -11,6 +11,8 @@
   "require": {
     "php": ">=5.5.0",
     "doctrineum/integer": "dev-master",
+    "doctrineum/string": "dev-master",
+    "drd-plus/properties": "dev-master",
     "drd-plus/tables": "dev-master"
   },
   "require-dev": {

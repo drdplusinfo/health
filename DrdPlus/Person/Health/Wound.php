@@ -119,6 +119,15 @@ class Wound extends StrictObject implements Entity
      */
     public function getValue()
     {
+        // each point has value of 1, therefore count is enough
         return count($this->getPointsOfWound());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSerious()
+    {
+        return !$this->getWoundOrigin()->isOrdinaryWoundOrigin();
     }
 }

@@ -4,12 +4,12 @@
  - knows number of serious injuries (six means death)
  - knows malus caused by wounds and roll on will
  - knows if person is still alive
- - sum of wounds (its points) is kept by `Grid of wounds`
+ - note: sum of wounds (its points) is kept by `Grid of wounds`
  
 #### Grid of wounds
 
  - its three-rows size is determined by `wounds limit` (filled rows have effect on `malus`)
- - knows sum of `Wound`s
+ - knows sum of `Wound`s (their `points of wound` respectively)
  - knows remaining health
  - knows filled "rows" count (useful for `roll on will` to get `malus caused by wounds`)
  - knows `Treatment boundary`

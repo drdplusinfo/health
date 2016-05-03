@@ -1,7 +1,9 @@
 <?php
 namespace DrdPlus\Person\Health\EnumTypes;
 
+use DrdPlus\Person\Health\Affliction\ElementalPertinences\EnumTypes\ElementalPertinenceType;
 use DrdPlus\Person\Health\Affliction\EnumTypes\AfflictionDomainType;
+use DrdPlus\Person\Health\Affliction\EnumTypes\SourceEnumType;
 use DrdPlus\Person\Health\Affliction\EnumTypes\VirulenceType;
 
 class PersonHealthEnumsRegistrar
@@ -12,5 +14,7 @@ class PersonHealthEnumsRegistrar
         WoundOriginType::registerSelf();
         AfflictionDomainType::registerSelf();
         VirulenceType::registerSelf();
+        SourceEnumType::registerSelf();
+        ElementalPertinenceType::registerAllPertinence();
     }
 }

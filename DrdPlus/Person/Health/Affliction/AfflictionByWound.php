@@ -3,7 +3,9 @@ namespace DrdPlus\Person\Health\Affliction;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrineum\Entity\Entity;
-use DrdPlus\Properties\Property;
+use DrdPlus\Person\Health\Health;
+use Granam\Integer\Tools\ToInteger;
+use Granam\Scalar\Tools\ToString;
 use Granam\Strict\Object\StrictObject;
 
 class AfflictionByWound extends StrictObject implements Entity
@@ -16,6 +18,11 @@ class AfflictionByWound extends StrictObject implements Entity
      */
     private $id;
     /**
+     * @var Health
+     * @ORM\ManyToOne(targetEntity="Health", cascade={"persist"}, inversedBy="affliction")
+     */
+    private $health;
+    /**
      * @var AfflictionDomain
      * @ORM\Column(type="affliction_domain")
      */
@@ -26,13 +33,13 @@ class AfflictionByWound extends StrictObject implements Entity
      */
     private $virulence;
     /**
-     * @var
+     * @var Source
      */
     private $source;
     /**
-     * @var Property
+     * @var string
      */
-    private $property;
+    private $propertyCode;
     /**
      * @var
      */
@@ -54,11 +61,24 @@ class AfflictionByWound extends StrictObject implements Entity
      */
     private $outbreakPeriod;
 
+    /**
+     * @param Health $health
+     * @param AfflictionDomain $domain
+     * @param Virulence $virulence
+     * @param Source $source
+     * @param string $propertyCode
+     * @param int $dangerousness
+     * @param $size
+     * @param $elementalPertinence
+     * @param $effect
+     * @param $outbreakPeriod
+     */
     public function __construct(
+        Health $health,
         AfflictionDomain $domain,
         Virulence $virulence,
-        $source,
-        Property $property,
+        Source $source,
+        $propertyCode,
         $dangerousness,
         $size,
         $elementalPertinence,
@@ -66,12 +86,13 @@ class AfflictionByWound extends StrictObject implements Entity
         $outbreakPeriod
     )
     {
+        $this->health = $health;
         $this->domain = $domain;
         $this->virulence = $virulence;
         $this->source = $source;
-        $this->property = $property;
-        $this->dangerousness = $dangerousness;
-        $this->size = $size;
+        $this->propertyCode = ToString::toString($propertyCode);
+        $this->dangerousness = ToInteger::toInteger($dangerousness);
+        $this->size = $size; // TODO property type
         $this->elementalPertinence = $elementalPertinence;
         $this->effect = $effect;
         $this->outbreakPeriod = $outbreakPeriod;
@@ -86,10 +107,11 @@ class AfflictionByWound extends StrictObject implements Entity
     }
 
     /**
-     * @return Virulence
+     * @return Health
      */
-    public function getVirulence()
+    public function getHealth()
     {
-        return $this->virulence;
+        return $this->health;
     }
+
 }

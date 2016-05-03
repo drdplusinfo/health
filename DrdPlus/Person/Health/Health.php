@@ -31,6 +31,11 @@ class Health extends StrictObject implements Entity
      */
     private $gridOfWounds;
     /**
+     * @var ArrayCollection|AfflictionByWound[]
+     * @ORM\OneToMany(targetEntity="AfflictionByWound", mappedBy="health", cascade={"all"}, orphanRemoval=true)
+     */
+    private $afflictions;
+    /**
      * @var int
      * @ORM\Column(type="smallint")
      */
@@ -41,6 +46,7 @@ class Health extends StrictObject implements Entity
         $this->wounds = new ArrayCollection();
         $this->woundsLimitValue = $woundsLimit->getValue();
         $this->gridOfWounds = new GridOfWounds($this);
+        $this->afflictions = new ArrayCollection();
     }
 
     /**
@@ -69,6 +75,7 @@ class Health extends StrictObject implements Entity
         $wound = new Wound($this, $woundSize, $woundOrigin);
         $this->getWounds()->add($wound);
         $this->getGridOfWounds()->addPointsOfWound($wound->getPointsOfWound());
+        $this->getAfflictions()->add($afflictionByWound);
 
         return $wound;
     }
@@ -98,6 +105,14 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * @return ArrayCollection|AfflictionByWound[]
+     */
+    public function getAfflictions()
+    {
+        return $this->afflictions;
+    }
+
+    /**
      * @return int
      */
     public function getWoundsLimitValue()
@@ -116,9 +131,19 @@ class Health extends StrictObject implements Entity
     /**
      * @return int
      */
-    public function getNumberOfSeriousInjures()
+    public function getNumberOfSeriousInjuries()
     {
-        // TODO
+        return count($this->getSeriousWounds());
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection|Wound[]
+     */
+    public function getSeriousWounds()
+    {
+        return $this->getWounds()->filter(function (Wound $wound) {
+            return $wound->isSerious();
+        });
     }
 
     const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
@@ -130,7 +155,7 @@ class Health extends StrictObject implements Entity
     {
         return
             $this->getGridOfWounds()->getRemainingHealth() > 0
-            && $this->getNumberOfSeriousInjures() < self::DEADLY_NUMBER_OF_SERIOUS_INJURIES;
+            && $this->getNumberOfSeriousInjuries() < self::DEADLY_NUMBER_OF_SERIOUS_INJURIES;
     }
 
     /**

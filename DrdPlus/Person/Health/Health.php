@@ -3,6 +3,7 @@ namespace DrdPlus\Person\Health;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrineum\Entity\Entity;
+use DrdPlus\Person\Health\Affliction\AfflictionByWound;
 use DrdPlus\Properties\Derived\WoundsLimit;
 use Granam\Strict\Object\StrictObject;
 use Doctrine\ORM\Mapping as ORM;
@@ -44,11 +45,26 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param int $woundSize
-     * @param WoundOrigin $woundOrigin
      * @return Wound
      * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToHaveSomeValue
      */
-    public function createWound($woundSize, WoundOrigin $woundOrigin)
+    public function createOrdinaryWound($woundSize)
+    {
+        $wound = new Wound($this, $woundSize, WoundOrigin::getOrdinaryWoundOrigin());
+        $this->getWounds()->add($wound);
+        $this->getGridOfWounds()->addPointsOfWound($wound->getPointsOfWound());
+
+        return $wound;
+    }
+
+    /**
+     * @param int $woundSize
+     * @param WoundOrigin $woundOrigin
+     * @param AfflictionByWound $afflictionByWound
+     * @return Wound
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToHaveSomeValue
+     */
+    public function createSeriousWound($woundSize, WoundOrigin $woundOrigin, AfflictionByWound $afflictionByWound)
     {
         $wound = new Wound($this, $woundSize, $woundOrigin);
         $this->getWounds()->add($wound);
@@ -105,12 +121,16 @@ class Health extends StrictObject implements Entity
         // TODO
     }
 
+    const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
+
     /**
      * @return bool
      */
     public function isAlive()
     {
-        return $this->getGridOfWounds()->getRemainingHealth() > 0;
+        return
+            $this->getGridOfWounds()->getRemainingHealth() > 0
+            && $this->getNumberOfSeriousInjures() < self::DEADLY_NUMBER_OF_SERIOUS_INJURIES;
     }
 
     /**

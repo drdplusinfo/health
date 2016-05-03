@@ -46,7 +46,7 @@ class GridOfWounds extends StrictObject implements Entity
     public function __construct(Health $health)
     {
         $this->health = $health;
-        $this->treatmentBoundary = TreatmentBoundary::getIt(0);
+        $this->treatmentBoundary = TreatmentBoundary::getIt(0); // TODO move on heal or serious wound
         $this->pointsOfWounds = new ArrayCollection();
     }
 
@@ -58,6 +58,24 @@ class GridOfWounds extends StrictObject implements Entity
         $pointsOfWound->map(function (PointOfWound $newPointOfWound) {
             $this->getPointsOfWounds()->add($newPointOfWound);
         });
+    }
+
+    /**
+     * @param int $healUpTo
+     * @return int amount of healed points of wounds
+     */
+    public function healOrdinaryWoundsUpTo($healUpTo)
+    {
+        // TODO (moves treatment boundary)
+    }
+
+    /**
+     * @param int $healUpTo
+     * @return int amount of healed points of wounds
+     */
+    public function healSeriousAndOrdinaryWoundsUpTo($healUpTo)
+    {
+        // TODO (takes treatment boundary altogether)
     }
 
     /**

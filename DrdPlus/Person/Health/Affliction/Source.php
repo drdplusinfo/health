@@ -18,6 +18,14 @@ class Source extends StringEnum
         return self::getEnum(self::EXTERNAL);
     }
 
+    /**
+     * @return bool
+     */
+    public function isExternal()
+    {
+        return $this->getValue() === self::EXTERNAL;
+    }
+
     const ACTIVE = 'active';
 
     /**
@@ -26,6 +34,14 @@ class Source extends StringEnum
     public static function getActiveSource()
     {
         return self::getEnum(self::ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->getValue() === self::ACTIVE;
     }
 
     const PASSIVE = 'passive';
@@ -38,14 +54,56 @@ class Source extends StringEnum
         return self::getEnum(self::PASSIVE);
     }
 
-    const DEFORMATION = 'deformation';
+    /**
+     * @return bool
+     */
+    public function isPassive()
+    {
+        return $this->getValue() === self::PASSIVE;
+    }
+
+    const PARTIAL_DEFORMATION = 'partial_deformation';
 
     /**
      * @return Source
      */
-    public static function getDeformationSource()
+    public static function getPartialDeformationSource()
     {
-        return self::getEnum(self::DEFORMATION);
+        return self::getEnum(self::PARTIAL_DEFORMATION);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPartialDeformation()
+    {
+        return $this->getValue() === self::PARTIAL_DEFORMATION;
+    }
+
+    const FULL_DEFORMATION = 'full_deformation';
+
+    /**
+     * @return Source
+     */
+    public static function getFullDeformationSource()
+    {
+        return self::getEnum(self::FULL_DEFORMATION);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFullDeformation()
+    {
+        return $this->getValue() === self::FULL_DEFORMATION;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeformation()
+    {
+        return $this->isPartialDeformation() || $this->isFullDeformation();
     }
 
     /**
@@ -56,7 +114,7 @@ class Source extends StringEnum
     protected static function convertToEnumFinalValue($enumValue)
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
-        if (!in_array($enumFinalValue, [self::EXTERNAL, self::PASSIVE, self::ACTIVE, self::DEFORMATION], true)) {
+        if (!in_array($enumFinalValue, [self::EXTERNAL, self::PASSIVE, self::ACTIVE, self::PARTIAL_DEFORMATION], true)) {
             throw new Exceptions\UnknownAfflictionSource(
                 'Unexpected source of an affliction: ' . ValueDescriber::describe($enumValue)
             );

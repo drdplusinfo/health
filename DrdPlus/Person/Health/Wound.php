@@ -3,10 +3,9 @@ namespace DrdPlus\Person\Health;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrineum\Entity\Entity;
-use Granam\Integer\Tools\ToInteger;
+use DrdPlus\Person\Health\Afflictions\AfflictionByWound;
 use Doctrine\ORM\Mapping as ORM;
 use Granam\Strict\Object\StrictObject;
-use Granam\Tools\ValueDescriber;
 
 /**
  * @ORM\Entity
@@ -39,44 +38,36 @@ class Wound extends StrictObject implements Entity
      * @ORM\Column(type="wound_origin")
      */
     private $woundOrigin;
+    /**
+     * @var ArrayCollection|AfflictionByWound[]
+     * @ORM\OneToMany(targetEntity="\DrdPlus\Person\Health\Afflictions\AfflictionByWound", mappedBy="wound", cascade={"persist"})
+     */
+    private $afflictions;
 
     /**
      * @param Health $health
-     * @param int $woundSize
+     * @param WoundSize $woundSize (it can be also zero; usable for afflictions without a damage at all)
      * @param WoundOrigin $woundOrigin
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToHaveSomeValue
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToBeAtLeastZero
      */
-    public function __construct(Health $health, $woundSize, WoundOrigin $woundOrigin)
+    public function __construct(Health $health, WoundSize $woundSize, WoundOrigin $woundOrigin)
     {
         $this->health = $health;
         $this->pointsOfWound = new ArrayCollection($this->createPointsOfWound($woundSize));
         $this->woundOrigin = $woundOrigin;
+        $this->afflictions = new ArrayCollection();
     }
 
     /**
-     * @param int $woundValue
+     * @param WoundSize $woundSize
      * @return PointOfWound[]|array
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToHaveSomeValue
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToBeAtLeastZero
      */
-    private function createPointsOfWound($woundValue)
+    private function createPointsOfWound(WoundSize $woundSize)
     {
-        try {
-            $woundValue = ToInteger::toInteger($woundValue);
-        } catch (\Granam\Integer\Tools\Exceptions\Exception $conversionException) {
-            throw new Exceptions\WoundHasToHaveSomeValue(
-                'Expected positive integer as wound value, got ' . ValueDescriber::describe($woundValue),
-                $conversionException->getCode(),
-                $conversionException
-            );
-        }
-        if ($woundValue <= 0) {
-            throw new Exceptions\WoundHasToHaveSomeValue(
-                'Expected at least 1 as wound value, got ' . ValueDescriber::describe($woundValue)
-            );
-        }
         $pointsOfWound = [];
-        for (; $woundValue > 0; $woundValue--) {
-            $pointsOfWound[] = new PointOfWound($this);
+        for ($wounded = $woundSize->getValue(); $wounded > 0; $wounded--) {
+            $pointsOfWound[] = new PointOfWound($this); // implicit value of point of wound is 1
         }
 
         return $pointsOfWound;
@@ -99,11 +90,11 @@ class Wound extends StrictObject implements Entity
     }
 
     /**
-     * @return ArrayCollection|PointOfWound[]
+     * @return array|PointOfWound[]
      */
     public function getPointsOfWound()
     {
-        return $this->pointsOfWound;
+        return $this->pointsOfWound->toArray(); // to avoid external changes of the collection
     }
 
     /**
@@ -129,5 +120,34 @@ class Wound extends StrictObject implements Entity
     public function isSerious()
     {
         return !$this->getWoundOrigin()->isOrdinaryWoundOrigin();
+    }
+
+    /**
+     * @param int $upTo
+     * @return int amount of healed points of wound
+     */
+    public function heal($upTo)
+    {
+        // technical note: orphaned points of wound are removed automatically on persistence
+        if ($upTo >= $this->getValue()) { // there is power to heal it all
+            $this->pointsOfWound->clear(); // unbinds all the points of wound
+
+            return $upTo;
+        }
+        $healed = 0;
+        for ($healing = 1; $healing <= $upTo; $healing++) {
+            array_pop($this->pointsOfWound);
+            $healed++;
+        }
+
+        return $healed; // just a partial heal
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHealed()
+    {
+        return $this->getValue() === 0;
     }
 }

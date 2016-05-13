@@ -1,97 +1,24 @@
 <?php
 namespace DrdPlus\Person\Health;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrineum\Entity\Entity;
+use DrdPlus\Tools\Calculations\SumAndRound;
 use Granam\Strict\Object\StrictObject;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="grid_of_wounds")
- */
-class GridOfWounds extends StrictObject implements Entity
+class GridOfWounds extends StrictObject
 {
-    /**
-     * @var int
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+
+    const PAIN_NUMBER_OF_ROWS = 1;
+    const UNCONSCIOUS_NUMBER_OF_ROWS = 2;
+    const TOTAL_NUMBER_OF_ROWS = 3;
 
     /**
      * @var Health
-     * @ORM\OneToOne(cascade={"all"}, fetch="EAGER", targetEntity="Health", inversedBy="gridOfWounds")
      */
     private $health;
 
-    /**
-     * @var TreatmentBoundary
-     * @ORM\Column(type="treatment_boundary")
-     */
-    private $treatmentBoundary;
-
-    /**
-     * @var PointOfWound[]|Collection
-     * @ORM\OneToMany(targetEntity="PointOfWound", mappedBy="", cascade={strategy="persist"})
-     */
-    private $pointsOfWounds;
-
-    /**
-     * @param Health $health
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundsPerRowHasToBeGreaterThanZero
-     */
     public function __construct(Health $health)
     {
         $this->health = $health;
-        $this->treatmentBoundary = TreatmentBoundary::getIt(0); // TODO move on heal or serious wound
-        $this->pointsOfWounds = new ArrayCollection();
-    }
-
-    /**
-     * @param Collection|PointOfWound[] $pointsOfWound
-     */
-    public function addPointsOfWound(Collection $pointsOfWound)
-    {
-        $pointsOfWound->map(function (PointOfWound $newPointOfWound) {
-            $this->getPointsOfWounds()->add($newPointOfWound);
-        });
-    }
-
-    /**
-     * @param int $healUpTo
-     * @return int amount of healed points of wounds
-     */
-    public function healOrdinaryWoundsUpTo($healUpTo)
-    {
-        // TODO (moves treatment boundary)
-    }
-
-    /**
-     * @param int $healUpTo
-     * @return int amount of healed points of wounds
-     */
-    public function healSeriousAndOrdinaryWoundsUpTo($healUpTo)
-    {
-        // TODO (takes treatment boundary altogether)
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Health
-     */
-    public function getHealth()
-    {
-        return $this->health;
     }
 
     /**
@@ -110,11 +37,60 @@ class GridOfWounds extends StrictObject implements Entity
     }
 
     /**
+     * @return array|PointOfWound[]
+     */
+    private function getPointsOfWounds()
+    {
+        return array_merge(
+            array_map(
+                function (Wound $wound) {
+                    $wound->getPointsOfWound();
+                },
+                $this->health->getUnhealedWounds()
+            )
+        );
+    }
+
+    /**
      * @return int
      */
-    public function getMaximumWoundsPerRow()
+    public function getWoundsPerRowMaximum()
     {
-        return $this->getHealth()->getWoundsLimitValue();
+        return $this->health->getWoundsLimitValue();
+    }
+
+    /**
+     * @param int $woundValue
+     * @return int
+     */
+    public function calculateFilledHalfRowsFor($woundValue)
+    {
+        if ($this->getWoundsPerRowMaximum() % 2 === 0) { // odd
+            return SumAndRound::floor($woundValue / ($this->getWoundsPerRowMaximum() / 2));
+        }
+        // first half round up, second down (for example 11 = 6 + 5)
+        $halves = [SumAndRound::ceiledHalf($this->getWoundsPerRowMaximum()), SumAndRound::flooredHalf($this->getWoundsPerRowMaximum())];
+        $numberOfHalfRows = 0;
+        while ($woundValue > 0) {
+            foreach ($halves as $half) {
+                $woundValue -= $half;
+                if ($woundValue < 0) {
+                    break;
+                }
+                $numberOfHalfRows++;
+            }
+        }
+
+        return $numberOfHalfRows;
+    }
+
+    /**
+     * @param int $woundValue
+     * @return bool
+     */
+    public function isSeriousInjury($woundValue)
+    {
+        return $this->calculateFilledHalfRowsFor($woundValue) > 0;
     }
 
     /**
@@ -122,34 +98,15 @@ class GridOfWounds extends StrictObject implements Entity
      */
     public function getRemainingHealth()
     {
-        return max($this->getMaximumHealth() - $this->getSumOfWounds(), 0);
+        return max($this->getHealthMaximum() - $this->getSumOfWounds(), 0);
     }
-
-    const NUMBER_OF_ROWS = 3;
 
     /**
      * @return int
      */
-    public function getMaximumHealth()
+    public function getHealthMaximum()
     {
-        return $this->health * self::NUMBER_OF_ROWS;
-    }
-
-    /**
-     * @return Collection|PointOfWound[]
-     */
-    public function getPointsOfWounds()
-    {
-        return $this->pointsOfWounds;
-    }
-
-    /**
-     * Treatment boundary is set automatically on any heal (lowering wounds) or new serious injury
-     * @return TreatmentBoundary
-     */
-    public function getTreatmentBoundary()
-    {
-        return $this->treatmentBoundary;
+        return $this->health->getWoundsLimitValue() * self::TOTAL_NUMBER_OF_ROWS;
     }
 
     /**
@@ -157,7 +114,7 @@ class GridOfWounds extends StrictObject implements Entity
      */
     public function getNumberOfFilledRows()
     {
-        return (int)floor($this->getSumOfWounds() / $this->getMaximumWoundsPerRow());
+        return SumAndRound::floor($this->getSumOfWounds() / $this->getWoundsPerRowMaximum());
     }
 
 }

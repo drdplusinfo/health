@@ -1,13 +1,13 @@
 <?php
-namespace DrdPlus\Person\Health;
+namespace DrdPlus\Person\Health\Afflictions;
 
 use Doctrineum\Integer\IntegerEnum;
 
-class TreatmentBoundary extends IntegerEnum
+class AfflictionDangerousness extends IntegerEnum
 {
     /**
-     * @param int $value
-     * @return TreatmentBoundary
+     * @param $value
+     * @return AfflictionDangerousness
      */
     public static function getIt($value)
     {

@@ -7,8 +7,6 @@ use Granam\Tools\ValueDescriber;
 
 class WoundOrigin extends StringEnum
 {
-    const WOUND_ORIGIN = 'wound_origin';
-
     /**
      * @return WoundOrigin
      */
@@ -116,7 +114,7 @@ class WoundOrigin extends StringEnum
     }
 
     /**
-     * @param bool|float|int|object|string $enumValue
+     * @param bool|float|int|string $enumValue
      * @return string
      * @throws \DrdPlus\Person\Health\Exceptions\UnknownWoundOriginCode
      */

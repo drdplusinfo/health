@@ -62,6 +62,11 @@ Knows its
  - effect
  - outbreak period
  
+#### Affliction effect
+
+ - it just keeps the effect
+ - the Person itself is responsible to ask its Health for its AfflictionsByWounds for its AfflictionEffects and aply them on self
+ 
 ### Healing
 
 #### Mitigation of wounds

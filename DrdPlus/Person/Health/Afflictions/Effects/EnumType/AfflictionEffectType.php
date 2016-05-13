@@ -9,9 +9,9 @@ class AfflictionEffectType extends ScalarEnumType
 {
     const AFFLICTION_EFFECT = 'affliction_effect';
 
-    public static function registerAllEffects()
+    public static function registerSelf()
     {
-        self::registerSelf();
+        parent::registerSelf();
         self::registerSubTypeEnum(ColdEffect::class, '~^' . ColdEffect::COLD . '$~');
         self::registerSubTypeEnum(SeveredArmEffect::class, '~^' . SeveredArmEffect::SEVERED_ARM . '$~');
     }

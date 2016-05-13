@@ -8,24 +8,33 @@ use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionDangerousnessType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionDomainType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionNameType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionPropertyType;
-use DrdPlus\Person\Health\Afflictions\EnumTypes\SourceEnumType;
+use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionSizeType;
+use DrdPlus\Person\Health\Afflictions\EnumTypes\SourceType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\VirulenceType;
 
 class PersonHealthEnumsRegistrar
 {
     public static function registerAll()
     {
+        DateIntervalType::registerSelf();
+
+        // Health
         TreatmentBoundaryType::registerSelf();
         WoundOriginType::registerSelf();
 
-        AfflictionDomainType::registerSelf();
-        VirulenceType::registerSelf();
-        SourceEnumType::registerSelf();
-        ElementalPertinenceType::registerAllPertinence();
-        AfflictionPropertyType::registerSelf();
-        DateIntervalType::registerSelf();
+        // Health\Afflictions
         AfflictionDangerousnessType::registerSelf();
-        AfflictionEffectType::registerAllEffects();
+        AfflictionDomainType::registerSelf();
         AfflictionNameType::registerSelf();
+        AfflictionPropertyType::registerSelf();
+        AfflictionSizeType::registerSelf();
+        SourceType::registerSelf();
+        VirulenceType::registerSelf();
+
+        // Health\Afflictions\Effects
+        AfflictionEffectType::registerSelf();
+
+        // Health\Afflictions\Effects\ElementalPertinence
+        ElementalPertinenceType::registerSelf();
     }
 }

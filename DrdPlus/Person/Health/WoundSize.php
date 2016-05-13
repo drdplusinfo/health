@@ -11,7 +11,7 @@ class WoundSize extends IntegerObject
         try {
             $finalValue = parent::__construct($value);
         } catch (\Granam\Integer\Tools\Exceptions\Exception $conversionException) {
-            throw new Exceptions\WoundHasToBeAtLeastZero(
+            throw new Exceptions\WoundValueHasToBeAtLeastZero(
                 'Expected integer as a wound value, got ' . ValueDescriber::describe($value),
                 $conversionException->getCode(),
                 $conversionException
@@ -19,7 +19,7 @@ class WoundSize extends IntegerObject
         }
 
         if ($finalValue < 0) {
-            throw new Exceptions\WoundHasToBeAtLeastZero(
+            throw new Exceptions\WoundValueHasToBeAtLeastZero(
                 'Expected at least zero, got ' . ValueDescriber::describe($finalValue)
             );
         }

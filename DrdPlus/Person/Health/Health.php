@@ -65,7 +65,7 @@ class Health extends StrictObject implements Entity
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return Wound
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToBeAtLeastZero
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundValueHasToBeAtLeastZero
      */
     public function createOrdinaryWound(WoundSize $woundSize, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
@@ -92,7 +92,7 @@ class Health extends StrictObject implements Entity
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return Wound
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToBeAtLeastZero
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundValueHasToBeAtLeastZero
      */
     public function createSeriousWound(
         WoundSize $woundSize,

@@ -130,13 +130,14 @@ class Wound extends StrictObject implements Entity
     {
         // technical note: orphaned points of wound are removed automatically on persistence
         if ($upTo >= $this->getValue()) { // there is power to heal it all
+            $healed = $this->getValue();
             $this->pointsOfWound->clear(); // unbinds all the points of wound
 
-            return $upTo;
+            return $healed;
         }
         $healed = 0;
         for ($healing = 1; $healing <= $upTo; $healing++) {
-            array_pop($this->pointsOfWound);
+            $this->pointsOfWound->removeElement($this->pointsOfWound->last());
             $healed++;
         }
 

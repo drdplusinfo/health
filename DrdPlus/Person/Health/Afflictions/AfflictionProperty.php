@@ -7,6 +7,10 @@ use Granam\Tools\ValueDescriber;
 
 class AfflictionProperty extends StringEnum
 {
+    /**
+     * @param string $propertyCode
+     * @return AfflictionProperty
+     */
     public static function getIt($propertyCode)
     {
         return self::getEnum($propertyCode);
@@ -20,6 +24,8 @@ class AfflictionProperty extends StringEnum
                 'Got unknown code of property keeping affliction on short: ' . ValueDescriber::describe($enumValue)
             );
         }
+
+        return $enumFinalValue;
     }
 
     const LEVEL = 'level';

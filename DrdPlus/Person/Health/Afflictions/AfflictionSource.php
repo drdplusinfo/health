@@ -114,7 +114,7 @@ class AfflictionSource extends StringEnum
     protected static function convertToEnumFinalValue($enumValue)
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
-        if (!in_array($enumFinalValue, [self::EXTERNAL, self::PASSIVE, self::ACTIVE, self::PARTIAL_DEFORMATION], true)) {
+        if (!in_array($enumFinalValue, [self::EXTERNAL, self::PASSIVE, self::ACTIVE, self::PARTIAL_DEFORMATION, self::FULL_DEFORMATION], true)) {
             throw new Exceptions\UnknownAfflictionSource(
                 'Unexpected source of an affliction: ' . ValueDescriber::describe($enumValue)
             );

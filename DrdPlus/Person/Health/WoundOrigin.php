@@ -122,7 +122,7 @@ class WoundOrigin extends StringEnum
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
         if ($enumFinalValue !== self::ORDINARY
-            || !in_array($enumFinalValue, WoundsOriginCodes::getOriginsWithTypeCodes(), true)
+            && !in_array($enumFinalValue, WoundsOriginCodes::getOriginWithTypeCodes(), true)
         ) {
             throw new Exceptions\UnknownWoundOriginCode(
                 'Got unexpected code of wound origin ' . ValueDescriber::describe($enumValue)

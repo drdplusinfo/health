@@ -3,9 +3,8 @@ namespace DrdPlus\Tests\Person\Health;
 
 use DrdPlus\Person\Health\WoundSize;
 use Granam\Integer\IntegerInterface;
-use Granam\Tests\Tools\TestWithMockery;
 
-class WoundSizeTest extends TestWithMockery
+class WoundSizeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test

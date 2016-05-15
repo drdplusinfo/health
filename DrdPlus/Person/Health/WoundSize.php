@@ -9,7 +9,7 @@ class WoundSize extends IntegerObject
     public function __construct($value)
     {
         try {
-            $finalValue = parent::__construct($value);
+            parent::__construct($value);
         } catch (\Granam\Integer\Tools\Exceptions\Exception $conversionException) {
             throw new Exceptions\WoundValueHasToBeAtLeastZero(
                 'Expected integer as a wound value, got ' . ValueDescriber::describe($value),
@@ -18,9 +18,9 @@ class WoundSize extends IntegerObject
             );
         }
 
-        if ($finalValue < 0) {
+        if ($this->getValue() < 0) {
             throw new Exceptions\WoundValueHasToBeAtLeastZero(
-                'Expected at least zero, got ' . ValueDescriber::describe($finalValue)
+                'Expected at least zero, got ' . ValueDescriber::describe($value)
             );
         }
     }

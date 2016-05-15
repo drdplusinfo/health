@@ -6,20 +6,17 @@ use Granam\Tools\ValueDescriber;
 
 class WoundSize extends IntegerObject
 {
+    /**
+     * @param mixed $value
+     * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundSizeCanNotBeNegative
+     */
     public function __construct($value)
     {
-        try {
-            parent::__construct($value);
-        } catch (\Granam\Integer\Tools\Exceptions\Exception $conversionException) {
-            throw new Exceptions\WoundValueCanNotBeNegative(
-                'Expected integer as a wound value, got ' . ValueDescriber::describe($value),
-                $conversionException->getCode(),
-                $conversionException
-            );
-        }
+        parent::__construct($value);
 
         if ($this->getValue() < 0) {
-            throw new Exceptions\WoundValueCanNotBeNegative(
+            throw new Exceptions\WoundSizeCanNotBeNegative(
                 'Expected at least zero, got ' . ValueDescriber::describe($value)
             );
         }

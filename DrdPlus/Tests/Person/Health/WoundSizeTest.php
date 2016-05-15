@@ -18,7 +18,7 @@ class WoundSizeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \DrdPlus\Person\Health\Exceptions\WoundValueCanNotBeNegative
+     * @expectedException \Granam\Integer\Tools\Exceptions\WrongParameterType
      * @expectedExceptionMessageRegExp ~Terribly wounded by horrible pebble~
      */
     public function I_am_stopped_by_specific_exception_on_invalid_value()
@@ -28,7 +28,7 @@ class WoundSizeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \DrdPlus\Person\Health\Exceptions\WoundValueCanNotBeNegative
+     * @expectedException \DrdPlus\Person\Health\Exceptions\WoundSizeCanNotBeNegative
      * @expectedExceptionMessageRegExp ~-1~
      */
     public function I_can_not_use_negative_value()

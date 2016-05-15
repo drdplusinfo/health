@@ -65,7 +65,7 @@ class Health extends StrictObject implements Entity
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return Wound
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundValueHasToBeAtLeastZero
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundValueCanNotBeNegative
      */
     public function createOrdinaryWound(WoundSize $woundSize, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
@@ -92,7 +92,7 @@ class Health extends StrictObject implements Entity
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return Wound
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundValueHasToBeAtLeastZero
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundValueCanNotBeNegative
      */
     public function createSeriousWound(
         WoundSize $woundSize,
@@ -133,7 +133,7 @@ class Health extends StrictObject implements Entity
                 break; // we spent all the healing power
             }
         }
-        // all unhealed wounds become "old" and can be healed only by a professional or nature itself
+        // all unhealed wounds become "old" (and can be healed only by a professional or nature itself)
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getGridOfWounds()->getSumOfWounds());
 
         return $healed;

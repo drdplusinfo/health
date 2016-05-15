@@ -26,14 +26,7 @@ class GridOfWounds extends StrictObject
      */
     public function getSumOfWounds()
     {
-        return array_sum(
-            array_map(
-                function (PointOfWound $pointOfWound) {
-                    return $pointOfWound->getValue();
-                },
-                $this->getPointsOfWounds()
-            )
-        );
+        return count($this->getPointsOfWounds()); // presumes each point of value 1 and only 1
     }
 
     /**
@@ -41,14 +34,14 @@ class GridOfWounds extends StrictObject
      */
     private function getPointsOfWounds()
     {
-        return array_merge(
-            array_map(
-                function (Wound $wound) {
-                    $wound->getPointsOfWound();
-                },
-                $this->health->getUnhealedWounds()
-            )
-        );
+        $pointsOfWounds = [];
+        foreach ($this->health->getUnhealedWounds() as $unhealedWound) {
+            foreach ($unhealedWound->getPointsOfWound() as $pointOfWound) {
+                $pointsOfWounds[] = $pointOfWound;
+            }
+        }
+
+        return $pointsOfWounds;
     }
 
     /**
@@ -66,22 +59,25 @@ class GridOfWounds extends StrictObject
     public function calculateFilledHalfRowsFor($woundValue)
     {
         if ($this->getWoundsPerRowMaximum() % 2 === 0) { // odd
-            return SumAndRound::floor($woundValue / ($this->getWoundsPerRowMaximum() / 2));
-        }
-        // first half round up, second down (for example 11 = 6 + 5)
-        $halves = [SumAndRound::ceiledHalf($this->getWoundsPerRowMaximum()), SumAndRound::flooredHalf($this->getWoundsPerRowMaximum())];
-        $numberOfHalfRows = 0;
-        while ($woundValue > 0) {
-            foreach ($halves as $half) {
-                $woundValue -= $half;
-                if ($woundValue < 0) {
-                    break;
+            $filledHalfRows = SumAndRound::floor($woundValue / ($this->getWoundsPerRowMaximum() / 2));
+        } else {
+            // first half round up, second down (for example 11 = 6 + 5)
+            $halves = [SumAndRound::ceiledHalf($this->getWoundsPerRowMaximum()), SumAndRound::flooredHalf($this->getWoundsPerRowMaximum())];
+            $filledHalfRows = 0;
+            while ($woundValue > 0) {
+                foreach ($halves as $half) {
+                    $woundValue -= $half;
+                    if ($woundValue < 0) {
+                        break;
+                    }
+                    $filledHalfRows++;
                 }
-                $numberOfHalfRows++;
             }
         }
 
-        return $numberOfHalfRows;
+        return $filledHalfRows < (self::TOTAL_NUMBER_OF_ROWS * 2)
+            ? $filledHalfRows
+            : self::TOTAL_NUMBER_OF_ROWS * 2; // to prevent "more dead than death" value
     }
 
     /**
@@ -96,14 +92,6 @@ class GridOfWounds extends StrictObject
     /**
      * @return int
      */
-    public function getRemainingHealth()
-    {
-        return max($this->getHealthMaximum() - $this->getSumOfWounds(), 0);
-    }
-
-    /**
-     * @return int
-     */
     public function getHealthMaximum()
     {
         return $this->health->getWoundsLimitValue() * self::TOTAL_NUMBER_OF_ROWS;
@@ -112,9 +100,21 @@ class GridOfWounds extends StrictObject
     /**
      * @return int
      */
+    public function getRemainingHealth()
+    {
+        return max(0, $this->getHealthMaximum() - $this->getSumOfWounds());
+    }
+
+    /**
+     * @return int
+     */
     public function getNumberOfFilledRows()
     {
-        return SumAndRound::floor($this->getSumOfWounds() / $this->getWoundsPerRowMaximum());
+        $numberOfFilledRows = SumAndRound::floor($this->getSumOfWounds() / $this->getWoundsPerRowMaximum());
+
+        return $numberOfFilledRows < self::TOTAL_NUMBER_OF_ROWS
+            ? $numberOfFilledRows
+            : self::TOTAL_NUMBER_OF_ROWS;
     }
 
 }

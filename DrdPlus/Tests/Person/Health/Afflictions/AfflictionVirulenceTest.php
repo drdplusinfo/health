@@ -2,9 +2,8 @@
 namespace DrdPlus\Tests\Person\Health\Afflictions;
 
 use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
-use Granam\Tests\Tools\TestWithMockery;
 
-class AfflictionVirulenceTest extends TestWithMockery
+class AfflictionVirulenceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test

@@ -3,9 +3,8 @@ namespace DrdPlus\Tests\Person\Health\Afflictions;
 
 use DrdPlus\Person\Health\Afflictions\AfflictionSource;
 use Granam\String\StringTools;
-use Granam\Tests\Tools\TestWithMockery;
 
-class AfflictionSourceTest extends TestWithMockery
+class AfflictionSourceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
@@ -19,6 +18,7 @@ class AfflictionSourceTest extends TestWithMockery
         /** @var AfflictionSource $source */
         $source = AfflictionSource::$getSource();
         self::assertInstanceOf(AfflictionSource::class, $source);
+        self::assertSame($source, AfflictionSource::getIt($sourceCode));
         self::assertSame($sourceCode, $source->getValue());
         $isTypeSource = StringTools::assembleGetterForName($source, 'is');
         self::assertTrue($source->$isTypeSource());

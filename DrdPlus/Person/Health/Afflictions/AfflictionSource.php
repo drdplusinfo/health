@@ -8,6 +8,15 @@ class AfflictionSource extends StringEnum
 {
     const SOURCE = 'source';
 
+    /**
+     * @param string $sourceCode
+     * @return AfflictionSource
+     */
+    public static function getIt($sourceCode)
+    {
+        return static::getEnum($sourceCode);
+    }
+
     const EXTERNAL = 'external';
 
     /**

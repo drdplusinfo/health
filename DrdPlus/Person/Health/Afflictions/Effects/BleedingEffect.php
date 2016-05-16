@@ -38,7 +38,7 @@ class BleedingEffect extends AfflictionEffect
         // see PPH page 78 right column, Bleeding
         $effectSize = $bleeding->getSize()->getValue() - 6;
         $woundsFromTable = $woundsTable->toWounds(new WoundsBonus($effectSize, $woundsTable));
-        if ($woundsFromTable->getValue() < 1) {
+        if ($woundsFromTable->getValue() < 1) { // should not happen at all because affection size can not be negative and wounds can be zero on bonus -11
             return false;
         }
 

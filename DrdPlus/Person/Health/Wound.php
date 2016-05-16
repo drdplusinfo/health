@@ -3,7 +3,6 @@ namespace DrdPlus\Person\Health;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrineum\Entity\Entity;
-use DrdPlus\Person\Health\Afflictions\AfflictionByWound;
 use Doctrine\ORM\Mapping as ORM;
 use Granam\Strict\Object\StrictObject;
 
@@ -38,11 +37,6 @@ class Wound extends StrictObject implements Entity
      * @ORM\Column(type="wound_origin")
      */
     private $woundOrigin;
-    /**
-     * @var ArrayCollection|AfflictionByWound[]
-     * @ORM\OneToMany(targetEntity="\DrdPlus\Person\Health\Afflictions\AfflictionByWound", mappedBy="wound", cascade={"persist"})
-     */
-    private $afflictions;
 
     /**
      * @param Health $health
@@ -55,7 +49,6 @@ class Wound extends StrictObject implements Entity
         $this->health = $health;
         $this->pointsOfWound = new ArrayCollection($this->createPointsOfWound($woundSize));
         $this->woundOrigin = $woundOrigin;
-        $this->afflictions = new ArrayCollection();
     }
 
     /**

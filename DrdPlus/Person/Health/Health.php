@@ -225,6 +225,7 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * Looking for a setter? Sorry but affliction can be caused only by a new wound.
      * @return Collection|AfflictionByWound[]
      */
     public function getAfflictions()

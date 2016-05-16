@@ -62,10 +62,13 @@ Knows its
  - effect
  - outbreak period
  
+ Affliction knows from what wound it comes from, but wound itself does not know all the afflictions it caused - it is one-way knowledge.
+ But health knows all afflictions it is suffering now.
+ 
 #### Affliction effect
 
  - it just keeps the effect
- - the Person itself is responsible to ask its Health for its AfflictionsByWounds for its AfflictionEffects and aply them on self
+ - the Person itself is responsible to ask its Health for its AfflictionsByWounds for its AfflictionEffects and apply them on self
  
 ### Healing
 

@@ -20,9 +20,14 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     private $id;
     /**
      * @var Wound|null
-     * @ORM\ManyToOne(targetEntity="\DrdPlus\Person\Health\Wound", cascade={"persist"}, inversedBy="afflictions")
+     * @ORM\ManyToOne(targetEntity="\DrdPlus\Person\Health\Wound", cascade={"persist"})
      */
     private $wound;
+    /**
+     * @var \DrdPlus\Person\Health\Health
+     * @ORM\ManyToOne(targetEntity="\DrdPlus\Person\Health\Health", cascade={"persist"}, inversedBy="afflictions")
+     */
+    private $health;
     /**
      * @var AfflictionDomain
      * @ORM\Column(type="affliction_domain")
@@ -102,6 +107,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     )
     {
         $this->wound = $wound;
+        $this->health = $wound->getHealth();
         $this->domain = $domain;
         $this->virulence = $virulence;
         $this->source = $source;

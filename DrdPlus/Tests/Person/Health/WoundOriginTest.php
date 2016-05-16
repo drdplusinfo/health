@@ -12,14 +12,18 @@ class WoundOriginTest extends TestWithMockery
      * @test
      * @dataProvider provideOriginCode
      * @param string $originName
+     * @param bool $isOrdinary
      */
-    public function I_can_get_every_type_of_wound($originName)
+    public function I_can_get_every_type_of_wound($originName, $isOrdinary)
     {
         $getWoundOrigin = StringTools::assembleGetterForName($originName) . 'WoundOrigin';
+        /** @var WoundOrigin $woundOrigin */
         $woundOrigin = WoundOrigin::$getWoundOrigin();
 
         $isWoundOrigin = StringTools::assembleGetterForName($originName, 'is') . 'WoundOrigin';
         self::assertTrue($woundOrigin->$isWoundOrigin());
+        self::assertSame($isOrdinary, $woundOrigin->isOrdinaryWoundOrigin());
+        self::assertSame(!$isOrdinary, $woundOrigin->isExtraOrdinaryWoundOrigin());
 
         $otherOrigins = array_diff($this->getWoundOriginCodes(), [$originName]);
         foreach ($otherOrigins as $otherOrigin) {
@@ -40,7 +44,7 @@ class WoundOriginTest extends TestWithMockery
     {
         return array_map(
             function ($code) {
-                return [$code]; // just wrapping into array
+                return [$code, strpos($code, 'ordinary') !== false];
             },
             $this->getWoundOriginCodes()
         );

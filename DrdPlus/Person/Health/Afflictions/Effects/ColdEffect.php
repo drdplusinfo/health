@@ -19,7 +19,7 @@ class ColdEffect extends AfflictionEffect
     /**
      * {@inheritdoc}
      */
-    public function isEffectiveEvenOnSuccessAgainst()
+    public function isEffectiveEvenOnSuccessAgainstTrap()
     {
         return false;
     }

@@ -9,5 +9,5 @@ abstract class AfflictionEffect extends ScalarEnum
      * Even if affected person success on roll against trap, comes this effect into play.
      * @return bool
      */
-    abstract public function isEffectiveEvenOnSuccessAgainst();
+    abstract public function isEffectiveEvenOnSuccessAgainstTrap();
 }

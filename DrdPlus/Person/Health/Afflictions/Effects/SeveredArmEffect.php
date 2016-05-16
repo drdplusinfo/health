@@ -18,7 +18,7 @@ class SeveredArmEffect extends AfflictionEffect
     /**
      * {@inheritdoc}
      */
-    public function isEffectiveEvenOnSuccessAgainst()
+    public function isEffectiveEvenOnSuccessAgainstTrap()
     {
         return true;
     }

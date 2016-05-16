@@ -23,7 +23,7 @@ class BleedingEffect extends AfflictionEffect
     /**
      * {@inheritdoc}
      */
-    public function isEffectiveEvenOnSuccessAgainst()
+    public function isEffectiveEvenOnSuccessAgainstTrap()
     {
         return true;
     }

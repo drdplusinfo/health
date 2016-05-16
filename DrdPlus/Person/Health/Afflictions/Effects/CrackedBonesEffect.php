@@ -18,7 +18,7 @@ class CrackedBonesEffect extends AfflictionEffect
     /**
      * {@inheritdoc}
      */
-    public function isEffectiveEvenOnSuccessAgainst()
+    public function isEffectiveEvenOnSuccessAgainstTrap()
     {
         return true;
     }

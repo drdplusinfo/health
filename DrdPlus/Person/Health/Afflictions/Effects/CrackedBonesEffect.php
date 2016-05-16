@@ -27,7 +27,7 @@ class CrackedBonesEffect extends AfflictionEffect
      * @param CrackedBones $crackedBones
      * @return int
      */
-    public function getToHealingMalus(CrackedBones $crackedBones)
+    public function getHealingMalus(CrackedBones $crackedBones)
     {
         // note: affliction size is always at least zero
         return -$crackedBones->getSize()->getValue();

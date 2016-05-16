@@ -27,7 +27,7 @@ class PainEffect extends AfflictionEffect
      * @param Pain $pain
      * @return int
      */
-    public function getMalusSize(Pain $pain)
+    public function getMalusFromPain(Pain $pain)
     {
         return -$pain->getSize()->getValue();
     }

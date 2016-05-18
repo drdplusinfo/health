@@ -5,6 +5,7 @@ use DrdPlus\Codes\PropertyCodes;
 use DrdPlus\Person\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Person\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Person\Health\Afflictions\AfflictionDomain;
+use DrdPlus\Person\Health\Afflictions\AfflictionName;
 use DrdPlus\Person\Health\Afflictions\AfflictionProperty;
 use DrdPlus\Person\Health\Afflictions\AfflictionSize;
 use DrdPlus\Person\Health\Afflictions\AfflictionSource;
@@ -38,7 +39,7 @@ class Cold extends AfflictionByWound
             WaterPertinence::getPlus(),
             ColdEffect::getIt(),
             new \DateInterval('P1D'),
-            self::COLD // name
+            AfflictionName::getIt(self::COLD)
         );
     }
 }

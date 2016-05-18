@@ -16,6 +16,7 @@ class PointOfWoundTest extends TestWithMockery
         self::assertNull($pointOfWound->getId());
         self::assertSame(1, $pointOfWound->getValue());
         self::assertSame($wound, $pointOfWound->getWound());
+        self::assertSame('1', (string)$pointOfWound);
     }
 
     /**

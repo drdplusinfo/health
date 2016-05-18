@@ -49,4 +49,14 @@ class WoundOriginTest extends TestWithMockery
             $this->getWoundOriginCodes()
         );
     }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\Person\Health\Exceptions\UnknownWoundOriginCode
+     * @expectedExceptionMessageRegExp ~Kitchen accident~
+     */
+    public function I_can_not_create_custom_origin()
+    {
+        WoundOrigin::getEnum('Kitchen accident');
+    }
 }

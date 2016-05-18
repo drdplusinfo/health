@@ -3,7 +3,7 @@ namespace DrdPlus\Person\Health\Afflictions\EnumTypes;
 
 use Doctrineum\String\StringEnumType;
 
-class SourceType extends StringEnumType
+class AfflictionSourceType extends StringEnumType
 {
     /**
      * should has the same value as @see \DrdPlus\Person\Health\Afflictions\Source::SOURCE

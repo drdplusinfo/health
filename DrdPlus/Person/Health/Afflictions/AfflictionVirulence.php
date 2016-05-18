@@ -7,7 +7,7 @@ use Granam\Tools\ValueDescriber;
 
 class AfflictionVirulence extends StringEnum
 {
-    const VIRULENCE = 'virulence';
+    const AFFLICTION_VIRULENCE = 'affliction_virulence';
 
     const ROUND = TimeCodes::ROUND;
 

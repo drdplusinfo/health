@@ -23,13 +23,12 @@ class BleedingTest extends AfflictionByWoundTest
      */
     public function I_can_use_it()
     {
-        $wound = $this->createWound($health = $this->createHealth());
+        $wound = $this->createWound();
         $this->addSizeCalculation($wound, $filledHalfOfRows = 123);
         $bleeding = Bleeding::createIt($wound);
 
         self::assertNull($bleeding->getId());
         self::assertSame($wound, $bleeding->getWound());
-        self::assertSame($health, $bleeding->getHealth());
 
         self::assertInstanceOf(AfflictionDomain::class, $bleeding->getDomain());
         self::assertSame('physical', $bleeding->getDomain()->getValue());
@@ -55,7 +54,7 @@ class BleedingTest extends AfflictionByWoundTest
         self::assertInstanceOf(BleedingEffect::class, $bleeding->getEffect());
 
         self::assertInstanceOf(\DateInterval::class, $bleeding->getOutbreakPeriod());
-        self::assertSame(0, (int)$bleeding->getOutbreakPeriod()->format('%y%m%d%h%i%s'));
+        self::assertSame('0', $bleeding->getOutbreakPeriod()->format('%y%m%d%h%i%s'));
 
         self::assertInstanceOf(AfflictionName::class, $bleeding->getName());
         self::assertSame('bleeding', $bleeding->getName()->getValue());
@@ -86,7 +85,7 @@ class BleedingTest extends AfflictionByWoundTest
      */
     public function I_can_not_create_it_from_too_low_wound()
     {
-        $wound = $this->createWound($this->createHealth());
+        $wound = $this->createWound();
         $this->addSizeCalculation($wound, 0);
         Bleeding::createIt($wound);
     }

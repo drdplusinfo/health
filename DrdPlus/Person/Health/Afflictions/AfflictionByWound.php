@@ -136,14 +136,6 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     }
 
     /**
-     * @return \DrdPlus\Person\Health\Health
-     */
-    public function getHealth()
-    {
-        return $this->health;
-    }
-
-    /**
      * @return AfflictionDomain
      */
     public function getDomain()

@@ -53,24 +53,15 @@ abstract class AfflictionByWoundTest extends TestWithMockery
 */
 
     /**
-     * @param Health $health
      * @return \Mockery\MockInterface|Wound
      */
-    protected function createWound(Health $health)
+    protected function createWound()
     {
         $wound = $this->mockery(Wound::class);
         $wound->shouldReceive('getHealth')
-            ->andReturn($health);
+            ->andReturn($this->mockery(Health::class));
 
         return $wound;
-    }
-
-    /**
-     * @return \Mockery\MockInterface|Health
-     */
-    protected function createHealth()
-    {
-        return $this->mockery(Health::class);
     }
 
     /**

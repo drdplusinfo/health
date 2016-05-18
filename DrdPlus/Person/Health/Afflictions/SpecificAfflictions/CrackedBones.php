@@ -27,6 +27,7 @@ class CrackedBones extends AfflictionByWound
         // see PPH page 78 right column, Cracked bones
         $sizeValue = $wound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($wound->getValue()) * 2;
 
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $wound,
             AfflictionDomain::getPhysicalAffliction(),

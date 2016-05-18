@@ -27,6 +27,7 @@ class SeveredArm extends AfflictionByWound
      * @return Cold
      * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative
      * @throws \DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Exceptions\SeveredArmAfflictionSizeExceeded
+     * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
     public static function createIt(Wound $wound, $afflictionSizeValue = self::COMPLETELY_SEVERED_ARM_SIZE_VALUE)
     {

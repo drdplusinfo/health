@@ -26,6 +26,7 @@ class Cold extends AfflictionByWound
      */
     public static function createIt(Wound $wound)
     {
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $wound,
             AfflictionDomain::getPhysicalAffliction(),

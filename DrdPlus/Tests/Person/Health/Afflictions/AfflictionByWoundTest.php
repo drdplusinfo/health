@@ -20,37 +20,6 @@ abstract class AfflictionByWoundTest extends TestWithMockery
      * @test
      */
     abstract public function I_can_use_it();
-        /* $affliction = $this->createAffliction(
-            $wound = $this->createWound($health = $this->createHealth())
-        );
-            $domain = $this->createAfflictionDomain(),
-            $virulence = $this->createAfflictionVirulence(),
-            $source = $this->createAfflictionSource(),
-            $property = $this->createAfflictionProperty(),
-            $dangerousness = $this->createAfflictionDangerousness(),
-            $size = $this->createAfflictionSize(),
-            $elementalPertinence = $this->createElementalPertinence(),
-            $effect = $this->createAfflictionEffect(),
-            $outbreakPeriod = $this->createOutbreakPeriod(),
-            $afflictionName = $this->createAfflictionName()
-        self::assertNull($affliction->getId());
-        self::assertSame($wound, $affliction->getWound());
-        self::assertSame($health, $affliction->getHealth());
-
-        return $affliction;
-
-        self::assertSame($domain, $affliction->getDomain());
-        self::assertSame($virulence, $affliction->getVirulence());
-        self::assertSame($source, $affliction->getSource());
-        self::assertSame($property, $affliction->getProperty());
-        self::assertSame($dangerousness, $affliction->getDangerousness());
-        self::assertSame($size, $affliction->getSize());
-        self::assertSame($elementalPertinence, $affliction->getElementalPertinence());
-        self::assertSame($effect, $affliction->getEffect());
-        self::assertSame($outbreakPeriod, $affliction->getOutbreakPeriod());
-        self::assertSame($afflictionName, $affliction->getAfflictionName());
-    }
-*/
 
     /**
      * @return \Mockery\MockInterface|Wound
@@ -67,7 +36,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|AfflictionDomain
      */
-    private function createAfflictionDomain()
+    protected function createAfflictionDomain()
     {
         return $this->mockery(AfflictionDomain::class);
     }
@@ -75,7 +44,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|AfflictionVirulence
      */
-    private function createAfflictionVirulence()
+    protected function createAfflictionVirulence()
     {
         return $this->mockery(AfflictionVirulence::class);
     }
@@ -83,7 +52,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|AfflictionSource
      */
-    private function createAfflictionSource()
+    protected function createAfflictionSource()
     {
         return $this->mockery(AfflictionSource::class);
     }
@@ -91,7 +60,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|AfflictionProperty
      */
-    private function createAfflictionProperty()
+    protected function createAfflictionProperty()
     {
         return $this->mockery(AfflictionProperty::class);
     }
@@ -99,23 +68,30 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|AfflictionDangerousness
      */
-    private function createAfflictionDangerousness()
+    protected function createAfflictionDangerousness()
     {
         return $this->mockery(AfflictionDangerousness::class);
     }
 
     /**
+     * @param $value
      * @return \Mockery\MockInterface|AfflictionSize
      */
-    private function createAfflictionSize()
+    protected function createAfflictionSize($value = null)
     {
-        return $this->mockery(AfflictionSize::class);
+        $afflictionSize = $this->mockery(AfflictionSize::class);
+        if ($value !== null) {
+            $afflictionSize->shouldReceive('getValue')
+                ->andReturn($value);
+        }
+
+        return $afflictionSize;
     }
 
     /**
      * @return \Mockery\MockInterface|ElementalPertinence
      */
-    private function createElementalPertinence()
+    protected function createElementalPertinence()
     {
         return $this->mockery(ElementalPertinence::class);
     }
@@ -123,7 +99,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|AfflictionEffect
      */
-    private function createAfflictionEffect()
+    protected function createAfflictionEffect()
     {
         return $this->mockery(AfflictionEffect::class);
     }
@@ -131,7 +107,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|\DateInterval
      */
-    private function createOutbreakPeriod()
+    protected function createOutbreakPeriod()
     {
         return $this->mockery(\DateInterval::class);
     }
@@ -139,7 +115,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|AfflictionName
      */
-    private function createAfflictionName()
+    protected function createAfflictionName()
     {
         return $this->mockery(AfflictionName::class);
     }

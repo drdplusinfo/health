@@ -9,7 +9,7 @@ use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionDomainType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionNameType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionPropertyType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionSizeType;
-use DrdPlus\Person\Health\Afflictions\EnumTypes\SourceType;
+use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionSourceType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\VirulenceType;
 
 class PersonHealthEnumsRegistrar
@@ -28,7 +28,7 @@ class PersonHealthEnumsRegistrar
         AfflictionNameType::registerSelf();
         AfflictionPropertyType::registerSelf();
         AfflictionSizeType::registerSelf();
-        SourceType::registerSelf();
+        AfflictionSourceType::registerSelf();
         VirulenceType::registerSelf();
 
         // Health\Afflictions\Effects

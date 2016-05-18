@@ -20,7 +20,7 @@ class CrackedBones extends AfflictionByWound
 
     /**
      * @param Wound $wound
-     * @return Cold
+     * @return CrackedBones
      */
     public static function createIt(Wound $wound)
     {

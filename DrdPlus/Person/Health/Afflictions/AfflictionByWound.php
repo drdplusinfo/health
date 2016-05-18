@@ -3,7 +3,6 @@ namespace DrdPlus\Person\Health\Afflictions;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrineum\Entity\Entity;
-use Doctrineum\Integer\IntegerEnum;
 use DrdPlus\Person\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Person\Health\Wound;
@@ -19,7 +18,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
      */
     private $id;
     /**
-     * @var Wound|null
+     * @var Wound
      * @ORM\ManyToOne(targetEntity="\DrdPlus\Person\Health\Wound", cascade={"persist"})
      */
     private $wound;
@@ -90,7 +89,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
      * @param ElementalPertinence $elementalPertinence
      * @param AfflictionEffect $effect
      * @param \DateInterval $outbreakPeriod
-     * @param $afflictionName
+     * @param AfflictionName $afflictionName
      */
     protected function __construct(
         Wound $wound, // wound can be healed, but never disappears - just stays healed
@@ -129,11 +128,19 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     }
 
     /**
-     * @return Wound|null
+     * @return Wound
      */
     public function getWound()
     {
         return $this->wound;
+    }
+
+    /**
+     * @return \DrdPlus\Person\Health\Health
+     */
+    public function getHealth()
+    {
+        return $this->health;
     }
 
     /**
@@ -169,7 +176,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     }
 
     /**
-     * @return IntegerEnum
+     * @return AfflictionDangerousness
      */
     public function getDangerousness()
     {
@@ -209,9 +216,9 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     }
 
     /**
-     * @return string
+     * @return AfflictionName
      */
-    public function getAfflictionName()
+    public function getName()
     {
         return $this->afflictionName;
     }

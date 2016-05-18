@@ -21,7 +21,7 @@ class PersonHealthEnumsRegistrarTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($this->getLocalEnumTypeClasses(__DIR__ . '/../../../../Person') as $enumTypeClass) {
-            $expectedEnumTypeName = preg_replace('~_type$~', '', StringTools::camelToSnakeCaseBasename($enumTypeClass));
+            $expectedEnumTypeName = preg_replace('~_type$~', '', StringTools::camelCaseToSnakeCasedBasename($enumTypeClass));
             self::assertTrue(
                 Type::hasType($expectedEnumTypeName),
                 "Type {$expectedEnumTypeName} not registered by class {$enumTypeClass}"

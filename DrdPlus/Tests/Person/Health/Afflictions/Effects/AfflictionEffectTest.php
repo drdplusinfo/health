@@ -28,7 +28,7 @@ abstract class AfflictionEffectTest extends TestWithMockery
 
     protected function getEffectCode()
     {
-        return preg_replace('~_effect$~', '', StringTools::camelToSnakeCaseBasename($this->getSutClass()));
+        return preg_replace('~_effect$~', '', StringTools::camelCaseToSnakeCasedBasename($this->getSutClass()));
     }
 
     /**

@@ -21,7 +21,7 @@ abstract class ElementalPertinence extends StringEnum
      */
     public static function getPertinenceCode()
     {
-        return preg_replace('~_pertinence$~', '', StringTools::camelToSnakeCaseBasename(static::class));
+        return preg_replace('~_pertinence$~', '', StringTools::camelCaseToSnakeCasedBasename(static::class));
     }
 
     /**

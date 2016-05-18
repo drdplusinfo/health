@@ -79,4 +79,15 @@ class BleedingTest extends AfflictionByWoundTest
             ->with($woundValue)
             ->andReturn($filledHalfOfRows);
     }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Exceptions\BleedingCanNotExistsDueToTooLowWound
+     */
+    public function I_can_not_create_it_from_too_low_wound()
+    {
+        $wound = $this->createWound($this->createHealth());
+        $this->addSizeCalculation($wound, 0);
+        Bleeding::createIt($wound);
+    }
 }

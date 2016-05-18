@@ -12,6 +12,7 @@ use DrdPlus\Person\Health\Afflictions\AfflictionSource;
 use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\WaterPertinence;
+use DrdPlus\Person\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative;
 use DrdPlus\Person\Health\Wound;
 
 /**
@@ -24,11 +25,20 @@ class Bleeding extends AfflictionByWound
     /**
      * @param Wound $wound
      * @return Cold
+     * @throws \DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Exceptions\BleedingCanNotExistsDueToTooLowWound
      */
     public static function createIt(Wound $wound)
     {
         // see PPH page 78 right column, Bleeding
         $sizeValue = $wound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($wound->getValue()) - 1;
+        try {
+            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+            $size = AfflictionSize::getIt($sizeValue);
+        } catch (AfflictionSizeCanNotBeNegative $afflictionSizeCanNotBeNegative) {
+            throw new Exceptions\BleedingCanNotExistsDueToTooLowWound(
+                "Size of bleeding resulted into {$sizeValue}"
+            );
+        }
 
         return new static(
             $wound,
@@ -37,7 +47,7 @@ class Bleeding extends AfflictionByWound
             AfflictionSource::getActiveSource(),
             AfflictionProperty::getIt(PropertyCodes::TOUGHNESS),
             AfflictionDangerousness::getIt(15),
-            AfflictionSize::getIt($sizeValue),
+            $size,
             WaterPertinence::getMinus(),
             BleedingEffect::getIt(),
             new \DateInterval('PT0S'), // immediately

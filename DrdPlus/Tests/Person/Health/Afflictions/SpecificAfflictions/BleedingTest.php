@@ -54,7 +54,7 @@ class BleedingTest extends AfflictionByWoundTest
         self::assertInstanceOf(BleedingEffect::class, $bleeding->getEffect());
 
         self::assertInstanceOf(\DateInterval::class, $bleeding->getOutbreakPeriod());
-        self::assertSame('0', $bleeding->getOutbreakPeriod()->format('%y%m%d%h%i%s'));
+        self::assertSame('0y0m0d0h0i0s', $bleeding->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));
 
         self::assertInstanceOf(AfflictionName::class, $bleeding->getName());
         self::assertSame('bleeding', $bleeding->getName()->getValue());

@@ -25,7 +25,7 @@ class AfflictionSourceTest extends \PHPUnit_Framework_TestCase
         if ($isSomeDeformation) {
             self::assertTrue($source->isDeformation());
         } else {
-            self::assertFalse($source->isDeformation());
+            self::assertFalse($source->isDeformation(), "Expected source {$source} to be a deformation");
         }
 
         foreach (array_diff($this->getSourceCodes(), [$sourceCode]) as $otherSourceCode) {

@@ -6,7 +6,7 @@ use Granam\Tools\ValueDescriber;
 
 class AfflictionSource extends StringEnum
 {
-    const SOURCE = 'source';
+    const AFFLICTION_SOURCE = 'affliction_source';
 
     /**
      * @param string $sourceCode

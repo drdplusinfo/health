@@ -15,20 +15,25 @@ class AfflictionDomain extends StringEnum
     {
         return static::getEnum($domainCode);
     }
+
+    const PHYSICAL = AfflictionByWoundDomainCodes::PHYSICAL;
+
     /**
      * @return AfflictionDomain
      */
     public static function getPhysicalAffliction()
     {
-        return static::getEnum(AfflictionByWoundDomainCodes::PHYSICAL);
+        return static::getEnum(self::PHYSICAL);
     }
+
+    const PSYCHICAL = AfflictionByWoundDomainCodes::PSYCHICAL;
 
     /**
      * @return AfflictionDomain
      */
     public static function getPsychicalAffliction()
     {
-        return static::getEnum(AfflictionByWoundDomainCodes::PSYCHICAL);
+        return static::getEnum(self::PSYCHICAL);
     }
 
     protected static function convertToEnumFinalValue($enumValue)

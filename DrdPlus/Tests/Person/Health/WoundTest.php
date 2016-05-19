@@ -65,4 +65,18 @@ class WoundTest extends TestWithMockery
         self::assertEmpty($wound->getPointsOfWound());
         self::assertTrue($wound->isHealed());
     }
+
+    /**
+     * @test
+     */
+    public function I_can_create_wound_with_zero_value()
+    {
+        $wound = new Wound(
+            $this->createHealth(),
+            new WoundSize(0),
+            WoundOrigin::getMechanicalCrushWoundOrigin()
+        );
+        self::assertSame(0, $wound->getValue());
+        self::assertTrue($wound->isHealed());
+    }
 }

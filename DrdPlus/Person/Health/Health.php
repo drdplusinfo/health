@@ -48,7 +48,7 @@ class Health extends StrictObject implements Entity
      */
     private $treatmentBoundary;
     /**
-     * @var GridOfWounds is just a helper, does not need to be persisted
+     * @var GridOfWounds|null is just a helper, does not need to be persisted
      */
     private $gridOfWounds;
 
@@ -82,7 +82,7 @@ class Health extends StrictObject implements Entity
     {
         return
             $this->getGridOfWounds()->getNumberOfFilledRows() >= GridOfWounds::PAIN_NUMBER_OF_ROWS
-            && $this->isConscious();
+            && $this->isConscious(); // if person became unconscious than the roll against pain malus is not re-rolled
     }
 
     /**
@@ -155,16 +155,67 @@ class Health extends StrictObject implements Entity
      * Usable for info about amount of wounds which can be healed by basic healing
      * @return int
      */
-    public function getUnhealedOrdinaryWoundsValue()
+    public function getUnhealedOrdinaryWoundsSum()
     {
         return array_sum(
             array_map(
                 function (Wound $wound) {
                     return $wound->getValue();
                 },
-                $this->getUnhealedOrdinaryWounds()
+                $this->getUnhealedOrdinaryWounds()->toArray()
             )
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnhealedSeriousWoundsSum()
+    {
+        return array_sum(
+            array_map(
+                function (Wound $wound) {
+                    return $wound->getValue();
+                },
+                $this->getUnhealedSeriousWounds()->toArray()
+            )
+        );
+    }
+
+    /**
+     * @return Wound[]|Collection
+     */
+    private function getUnhealedSeriousWounds()
+    {
+        return $this->getUnhealedWounds()->filter(
+            function (Wound $wound) {
+                return $wound->isSerious();
+            }
+        );
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnhealedWoundsSum()
+    {
+        return $this->getGridOfWounds()->getSumOfWounds();
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealthMaximum()
+    {
+        return $this->getGridOfWounds()->getHealthMaximum();
+    }
+
+    /**
+     * @return int
+     */
+    public function getRemainingHealth()
+    {
+        return $this->getGridOfWounds()->getRemainingHealth();
     }
 
     /**
@@ -205,7 +256,8 @@ class Health extends StrictObject implements Entity
      */
     public function getUnhealedWounds()
     {
-        return $this->wounds->filter( // results into different instance which avoids external change of the original
+        // results into different instance of Collection which avoids external change of the original
+        return $this->wounds->filter(
             function (Wound $wound) {
                 return !$wound->isHealed();
             }
@@ -353,7 +405,7 @@ class Health extends StrictObject implements Entity
      */
     public function getMalusCausedByWounds(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
-        if ($this->getGridOfWounds()->getNumberOfFilledRows() === 0) {
+        if ($this->getGridOfWounds()->getNumberOfFilledRows() === 0) { // else even unconscious can has a malus (but would be wrong if applied) 
             return 0;
         }
 

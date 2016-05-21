@@ -4,6 +4,9 @@ namespace DrdPlus\Tests\Person\Health\EnumTypes;
 use Doctrine\DBAL\Types\Type;
 use Doctrineum\DateInterval\DBAL\Types\DateIntervalType;
 use DrdPlus\Person\Health\EnumTypes\PersonHealthEnumsRegistrar;
+use DrdPlus\Person\Health\EnumTypes\WoundOriginType;
+use DrdPlus\Person\Health\OrdinaryWoundOrigin;
+use DrdPlus\Person\Health\SpecificWoundOrigin;
 use Granam\String\StringTools;
 
 class PersonHealthEnumsRegistrarTest extends \PHPUnit_Framework_TestCase
@@ -27,6 +30,8 @@ class PersonHealthEnumsRegistrarTest extends \PHPUnit_Framework_TestCase
                 "Type {$expectedEnumTypeName} not registered by class {$enumTypeClass}"
             );
         }
+        self::assertTrue(WoundOriginType::hasSubTypeEnum(OrdinaryWoundOrigin::class));
+        self::assertTrue(WoundOriginType::hasSubTypeEnum(SpecificWoundOrigin::class));
     }
 
     /**

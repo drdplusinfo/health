@@ -14,6 +14,9 @@ class WoundSizeTest extends \PHPUnit_Framework_TestCase
         $woundSize = new WoundSize(123);
         self::assertInstanceOf(IntegerInterface::class, $woundSize);
         self::assertSame(123, $woundSize->getValue());
+        $woundSizeByFactory = WoundSize::createIt(123);
+        self::assertEquals($woundSize, $woundSizeByFactory);
+        self::assertNotSame($woundSize, $woundSizeByFactory);
     }
 
     /**

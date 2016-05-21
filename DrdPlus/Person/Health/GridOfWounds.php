@@ -81,31 +81,6 @@ class GridOfWounds extends StrictObject
     }
 
     /**
-     * @param int $woundValue
-     * @return bool
-     */
-    public function isSeriousInjury($woundValue)
-    {
-        return $this->calculateFilledHalfRowsFor($woundValue) > 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getHealthMaximum()
-    {
-        return $this->health->getWoundsLimitValue() * self::TOTAL_NUMBER_OF_ROWS;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRemainingHealth()
-    {
-        return max(0, $this->getHealthMaximum() - $this->getSumOfWounds());
-    }
-
-    /**
      * @return int
      */
     public function getNumberOfFilledRows()

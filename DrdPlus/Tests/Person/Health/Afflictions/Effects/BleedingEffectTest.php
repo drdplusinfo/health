@@ -1,15 +1,15 @@
 <?php
 namespace DrdPlus\Tests\Person\Health\Afflictions\Effects;
 
-use DrdPlus\Person\Health\Afflictions\AfflictionSize;
+use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Person\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Bleeding;
-use DrdPlus\Person\Health\GridOfWounds;
 use DrdPlus\Person\Health\Health;
+use DrdPlus\Person\Health\SpecificWoundOrigin;
 use DrdPlus\Person\Health\Wound;
-use DrdPlus\Person\Health\WoundOrigin;
-use DrdPlus\Tables\Measurements\Wounds\Wounds as TableWounds;
-use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
+use DrdPlus\Person\Health\WoundSize;
+use DrdPlus\Properties\Base\Will;
+use DrdPlus\Properties\Derived\WoundsLimit;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 
 class BleedingEffectTest extends AfflictionEffectTest
@@ -29,74 +29,57 @@ class BleedingEffectTest extends AfflictionEffectTest
     public function I_can_get_wound_caused_by_bleeding()
     {
         $bleedingEffect = BleedingEffect::getIt();
-        $wound = $bleedingEffect->getWound($this->createBleeding(999 /* useless in this test */), $this->createWoundsTable(0 /* resulting wounds value */));
-        self::assertFalse($wound, 'Expected no wound at all on zero wound value');
-
-        $wound = $bleedingEffect->getWound(
-            $this->createBleeding(
-                0 /* bleeding size */,
-                false /* not a serious injury */
-            ),
-            new WoundsTable()
+        $woundCausedBleeding = new Wound(
+            new Health($this->createWoundsLimit(10)),
+            new WoundSize(25),
+            $specificWoundOrigin = $this->createSpecificWoundOrigin()
+        );
+        $wound = $bleedingEffect->bleed(
+            Bleeding::createIt($woundCausedBleeding),
+            new WoundsTable(),
+            $this->createWill(),
+            $this->createRoller2d6DrdPlus()
         );
         self::assertInstanceOf(Wound::class, $wound);
-        self::assertSame(2, $wound->getValue()); // 0 bleeding size ... some calculation ... see wounds table for details
+        self::assertSame(3, $wound->getValue()); // 4 bleeding size ... some calculation ... see wounds table for details
         self::assertTrue($wound->getWoundOrigin()->isOrdinaryWoundOrigin()); // because not a serious injury
-
-        $wound = $bleedingEffect->getWound(
-            $this->createBleeding(
-                20 /* bleeding size */,
-                true /* serious injury */,
-                $woundOrigin = WoundOrigin::getMechanicalCutWoundOrigin()
-            ),
-            new WoundsTable()
-        );
-        self::assertInstanceOf(Wound::class, $wound);
-        self::assertSame(16, $wound->getValue()); // 20 bleeding size ... some calculation ... see wounds table for details
-        self::assertSame($woundOrigin, $wound->getWoundOrigin());
+        self::assertNotEquals($specificWoundOrigin, $wound->getWoundOrigin());
     }
 
     /**
-     * @param $size
-     * @param bool $isSeriousInjury
-     * @param WoundOrigin|null $bleedingWoundOrigin
-     * @return \Mockery\MockInterface|Bleeding
+     * @param $value
+     * @return \Mockery\MockInterface|WoundsLimit
      */
-    private function createBleeding($size, $isSeriousInjury = false, WoundOrigin $bleedingWoundOrigin = null)
+    private function createWoundsLimit($value)
     {
-        $bleeding = $this->mockery(Bleeding::class);
-        $bleeding->shouldReceive('getSize')
-            ->andReturn(AfflictionSize::getIt($size));
-        $bleeding->shouldReceive('getWound')
-            ->andReturn($woundCausedBleeding = $this->mockery(Wound::class));
-        $woundCausedBleeding->shouldReceive('getHealth')
-            ->andReturn($health = $this->mockery(Health::class));
-        $health->shouldReceive('getGridOfWounds')
-            ->andReturn($gridOfWounds = $this->mockery(GridOfWounds::class));
-        $gridOfWounds->shouldReceive('isSeriousInjury')
-            ->with(\Mockery::type('int'))
-            ->andReturn($isSeriousInjury);
-        if ($bleedingWoundOrigin !== null) {
-            $woundCausedBleeding->shouldReceive('getWoundOrigin')
-                ->andReturn($bleedingWoundOrigin);
-        }
+        $woundsLimit = $this->mockery(WoundsLimit::class);
+        $woundsLimit->shouldReceive('getValue')
+            ->andReturn($value);
 
-        return $bleeding;
+        return $woundsLimit;
     }
 
     /**
-     * @param $woundsValue
-     * @return \Mockery\MockInterface|WoundsTable
+     * @return \Mockery\MockInterface|SpecificWoundOrigin
      */
-    private function createWoundsTable($woundsValue)
+    private function createSpecificWoundOrigin()
     {
-        $woundsTable = $this->mockery(WoundsTable::class);
-        $woundsTable->shouldReceive('toWounds')
-            ->with(\Mockery::type(WoundsBonus::class))
-            ->andReturn($wounds = $this->mockery(TableWounds::class));
-        $wounds->shouldReceive('getValue')
-            ->andReturn($woundsValue);
+        return $this->mockery(SpecificWoundOrigin::class);
+    }
 
-        return $woundsTable;
+    /**
+     * @return \Mockery\MockInterface|Will
+     */
+    private function createWill()
+    {
+        return $this->mockery(Will::class);
+    }
+
+    /**
+     * @return \Mockery\MockInterface|Roller2d6DrdPlus
+     */
+    private function createRoller2d6DrdPlus()
+    {
+        return $this->mockery(Roller2d6DrdPlus::class);
     }
 }

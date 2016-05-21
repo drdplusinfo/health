@@ -1,23 +1,24 @@
 <?php
 namespace DrdPlus\Person\Health\Afflictions\Effects;
 
+use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Bleeding;
 use DrdPlus\Person\Health\Wound;
-use DrdPlus\Person\Health\WoundOrigin;
 use DrdPlus\Person\Health\WoundSize;
+use DrdPlus\Properties\Base\Will;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 
 class BleedingEffect extends AfflictionEffect
 {
-    const BLEEDING = 'bleeding';
+    const BLEEDING_EFFECT = 'bleeding_effect';
 
     /**
      * @return BleedingEffect
      */
     public static function getIt()
     {
-        return static::getEnum(self::BLEEDING);
+        return static::getEnum(self::BLEEDING_EFFECT);
     }
 
     /**
@@ -29,26 +30,32 @@ class BleedingEffect extends AfflictionEffect
     }
 
     /**
+     * Creates new wound right in the health of origin wound
      * @param Bleeding $bleeding
      * @param WoundsTable $woundsTable
+     * @param Will $will
+     * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return Wound|false
      */
-    public function getWound(Bleeding $bleeding, WoundsTable $woundsTable)
+    public function bleed(
+        Bleeding $bleeding,
+        WoundsTable $woundsTable,
+        Will $will,
+        Roller2d6DrdPlus $roller2d6DrdPlus
+    )
     {
         // see PPH page 78 right column, Bleeding
         $effectSize = $bleeding->getSize()->getValue() - 6;
         $woundsFromTable = $woundsTable->toWounds(new WoundsBonus($effectSize, $woundsTable));
-        if ($woundsFromTable->getValue() < 1) { // should not happen at all because affection size can not be negative and wounds can be zero on bonus -11
-            return false;
-        }
-
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        return new Wound(
-            $bleeding->getWound()->getHealth(),
-            new WoundSize($woundsFromTable->getValue()),
-            $bleeding->getWound()->getHealth()->getGridOfWounds()->isSeriousInjury($woundsFromTable->getValue())
-                ? $bleeding->getWound()->getWoundOrigin()
-                : WoundOrigin::getOrdinaryWoundOrigin()
+        $woundSize = new WoundSize($woundsFromTable->getValue());
+        $woundCausedBleeding = $bleeding->getWound();
+
+        return $woundCausedBleeding->getHealth()->createWound(
+            $woundSize,
+            $woundCausedBleeding->getWoundOrigin(),
+            $will,
+            $roller2d6DrdPlus
         );
     }
 

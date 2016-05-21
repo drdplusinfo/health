@@ -6,14 +6,14 @@ use DrdPlus\Tools\Calculations\SumAndRound;
 
 class ColdEffect extends AfflictionEffect
 {
-    const COLD = 'cold';
+    const COLD_EFFECT = 'cold_effect';
 
     /**
      * @return ColdEffect
      */
     public static function getIt()
     {
-        return static::getEnum(self::COLD);
+        return static::getEnum(self::COLD_EFFECT);
     }
 
     /**

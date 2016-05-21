@@ -62,57 +62,91 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param WoundSize $woundSize
+     * @param SpecificWoundOrigin $seriousWoundOrigin Beware, if the wound size is considered as serious, OrdinaryWoundOrigin will be used instead
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return Wound
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundSizeCanNotBeNegative
      */
-    public function createOrdinaryWound(WoundSize $woundSize, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function createWound(WoundSize $woundSize, SpecificWoundOrigin $seriousWoundOrigin, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
-        $wound = new Wound($this, $woundSize, WoundOrigin::getOrdinaryWoundOrigin());
+        $wound = new Wound($this, $woundSize, $this->isSeriousInjury($woundSize) ? $seriousWoundOrigin : OrdinaryWoundOrigin::getIt());
         $this->wounds->add($wound);
         if ($this->maySufferFromPain()) {
-            $this->reRollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
+            $this->rollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
+        }
+        if ($wound->isSerious()) {
+            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+            $this->treatmentBoundary = TreatmentBoundary::getIt($this->getTreatmentBoundary()->getValue() + $wound->getValue());
         }
 
         return $wound;
+    }
+
+    private function rollAgainstMalusFromWoundsOnWound(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    {
+        $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
+        // greater (or same of course) malus remains; can not be lowered on new wounds
+        if ($this->rollAgainstMalusFromWounds === null
+            || $this->rollAgainstMalusFromWounds->getMalusValue() >= $newRoll->getMalusValue()
+        ) {
+            return;
+        }
+        $this->rollAgainstMalusFromWounds = $newRoll;
+    }
+
+    private function isSeriousInjury(WoundSize $woundSize)
+    {
+        return $this->getGridOfWounds()->calculateFilledHalfRowsFor($woundSize->getValue()) > 0;
     }
 
     private function maySufferFromPain()
     {
-        return
-            $this->getGridOfWounds()->getNumberOfFilledRows() >= GridOfWounds::PAIN_NUMBER_OF_ROWS
-            && $this->isConscious(); // if person became unconscious than the roll against pain malus is not re-rolled
+        // if person became unconscious than the roll against pain malus is not re-rolled
+        return $this->getGridOfWounds()->getNumberOfFilledRows() >= GridOfWounds::PAIN_NUMBER_OF_ROWS && $this->isConscious();
     }
 
     /**
-     * @param WoundSize $woundSize
-     * @param WoundOrigin $woundOrigin
+     * Serious wound MAY be of lower value than half of wound row (but ordinary wound HAS TO be lower than half of row).
+     * Wound origin MUST NOT be ordinary wound origin.
      * @param AfflictionByWound $afflictionByWound
-     * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
-     * @return Wound
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundSizeCanNotBeNegative
+     * @throws \DrdPlus\Person\Health\Exceptions\UnknownAfflictionOriginatingWound
+     * @throws \DrdPlus\Person\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
-    public function createSeriousWound(
-        WoundSize $woundSize,
-        WoundOrigin $woundOrigin,
-        AfflictionByWound $afflictionByWound,
-        Will $will,
-        Roller2d6DrdPlus $roller2d6DrdPlus
-    )
+    public function addAffliction(AfflictionByWound $afflictionByWound)
     {
-        $wound = new Wound($this, $woundSize, $woundOrigin);
-        $this->wounds->add($wound);
-        $this->getAfflictions()->add($afflictionByWound);
-        if ($this->maySufferFromPain()) {
-            $this->reRollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
+        if (!$this->doesHaveThatWound($afflictionByWound->getWound())) {
+            throw new Exceptions\UnknownAfflictionOriginatingWound(
+                "Given affliction to add {$afflictionByWound->getName()} comes from not yet registered wound of value {$afflictionByWound->getWound()}"
+            );
         }
-        $this->treatmentBoundary = TreatmentBoundary::getIt(
-            $this->getTreatmentBoundary()->getValue() + $wound->getValue()
-        );
+        if ($this->doesHaveThatAffliction($afflictionByWound)) {
+            throw new Exceptions\AfflictionIsAlreadyRegistered(
+                "Given instance of affliction with name {$afflictionByWound->getName()} is already added"
+            );
+        }
+        $this->afflictions->add($afflictionByWound);
+    }
 
-        return $wound;
+    private function doesHaveThatWound(Wound $givenWound)
+    {
+        foreach ($this->wounds as $registeredWound) {
+            if ($givenWound === $registeredWound) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function doesHaveThatAffliction(AfflictionByWound $givenAffliction)
+    {
+        foreach ($this->afflictions as $registeredAffliction) {
+            if ($givenAffliction === $registeredAffliction) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -134,7 +168,8 @@ class Health extends StrictObject implements Entity
             }
         }
         // all unhealed wounds become "old" (and can be healed only by a professional or nature itself)
-        $this->treatmentBoundary = TreatmentBoundary::getIt($this->getGridOfWounds()->getSumOfWounds());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
 
         return $healed;
     }
@@ -207,15 +242,15 @@ class Health extends StrictObject implements Entity
      */
     public function getHealthMaximum()
     {
-        return $this->getGridOfWounds()->getHealthMaximum();
+        return $this->getWoundsLimitValue() * GridOfWounds::TOTAL_NUMBER_OF_ROWS;
     }
 
     /**
      * @return int
      */
-    public function getRemainingHealth()
+    public function getRemainingHealthAmount()
     {
-        return $this->getGridOfWounds()->getRemainingHealth();
+        return max(0, $this->getHealthMaximum() - $this->getUnhealedWoundsSum());
     }
 
     /**
@@ -236,6 +271,7 @@ class Health extends StrictObject implements Entity
             }
         }
         // treatment boundary is taken with wounds down together
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt(
             $this->treatmentBoundary->getValue() - $healed
         );
@@ -303,14 +339,13 @@ class Health extends StrictObject implements Entity
         if ($this->getWoundsLimitValue() === $woundsLimit->getValue()) {
             return;
         }
-        $previousHealthMaximum = $this->getGridOfWounds()->getHealthMaximum();
+        $previousHealthMaximum = $this->getHealthMaximum();
         $this->woundsLimitValue = $woundsLimit->getValue();
-        if ($previousHealthMaximum > $this->gridOfWounds->getHealthMaximum()) { // current wounds relatively increases
+        if ($previousHealthMaximum > $this->getHealthMaximum()) { // current wounds relatively increases
             $this->reRollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
-        } elseif ($previousHealthMaximum < $this->gridOfWounds->getHealthMaximum()) { // current wounds relatively decreases
+        } elseif ($previousHealthMaximum < $this->getHealthMaximum()) { // current wounds relatively decreases
             $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
         }
-        $this->rollAgainstMalusFromWounds = null; // health changed, new conditions and therefore new roll on malus
     }
 
     private function reRollAgainstMalusFromWoundsOnHeal(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
@@ -331,12 +366,7 @@ class Health extends StrictObject implements Entity
         if ($this->rollAgainstMalusFromWounds === null) {
             return;
         }
-        $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
-        // greater (or same of course) malus remains; can not be decreased on new wounds
-        if ($this->rollAgainstMalusFromWounds->getMalusValue() >= $newRoll->getMalusValue()) {
-            return;
-        }
-        $this->rollAgainstMalusFromWounds = $newRoll;
+        $this->rollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
     }
 
     /**
@@ -369,7 +399,7 @@ class Health extends StrictObject implements Entity
     public function isAlive()
     {
         return
-            $this->getGridOfWounds()->getRemainingHealth() > 0
+            $this->getRemainingHealthAmount() > 0
             && $this->getNumberOfSeriousInjuries() < self::DEADLY_NUMBER_OF_SERIOUS_INJURIES;
     }
 

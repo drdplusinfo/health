@@ -41,8 +41,7 @@ class Wound extends StrictObject implements Entity
     /**
      * @param Health $health
      * @param WoundSize $woundSize (it can be also zero; usable for afflictions without a damage at all)
-     * @param WoundOrigin $woundOrigin
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundSizeCanNotBeNegative
+     * @param WoundOrigin $woundOrigin Ordinary origin is for lesser wound, others for serious wound
      */
     public function __construct(Health $health, WoundSize $woundSize, WoundOrigin $woundOrigin)
     {
@@ -54,7 +53,6 @@ class Wound extends StrictObject implements Entity
     /**
      * @param WoundSize $woundSize
      * @return PointOfWound[]|array
-     * @throws \DrdPlus\Person\Health\Exceptions\WoundSizeCanNotBeNegative
      */
     private function createPointsOfWound(WoundSize $woundSize)
     {
@@ -91,7 +89,7 @@ class Wound extends StrictObject implements Entity
     }
 
     /**
-     * @return WoundOrigin
+     * @return SpecificWoundOrigin|OrdinaryWoundOrigin
      */
     public function getWoundOrigin()
     {
@@ -143,5 +141,13 @@ class Wound extends StrictObject implements Entity
     public function isHealed()
     {
         return $this->getValue() === 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->getValue();
     }
 }

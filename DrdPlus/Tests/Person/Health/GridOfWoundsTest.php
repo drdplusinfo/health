@@ -141,38 +141,6 @@ class GridOfWoundsTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_find_out_if_wound_is_serious_by_its_value()
-    {
-        $gridOfWounds = new GridOfWounds($this->createHealth([] /* no wounds*/, 123));
-        self::assertFalse($gridOfWounds->isSeriousInjury(61), 'Wound lesser than half of row should not be serious');
-        self::assertTrue($gridOfWounds->isSeriousInjury(62), 'Wound same as half of row should be serious');
-        self::assertTrue($gridOfWounds->isSeriousInjury(9999), 'Such big wound should be seriously serious');
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_get_maximum_of_health()
-    {
-        $gridOfWounds = new GridOfWounds($this->createHealth([] /* no wounds*/, 123));
-        self::assertSame(369 /* 3 x 123 */, $gridOfWounds->getHealthMaximum());
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_get_remaining_health()
-    {
-        $gridOfWoundsWithoutWounds = new GridOfWounds($this->createHealth([] /* no wounds*/, $woundsLimit = 123));
-        self::assertSame($woundsLimit * 3, $gridOfWoundsWithoutWounds->getRemainingHealth());
-
-        $gridOfWoundsWithWounds = new GridOfWounds($this->createHealth($this->createWounds($wounds = [11, 65, 42]), $woundsLimit = 456));
-        self::assertSame($woundsLimit * 3 - array_sum($wounds), $gridOfWoundsWithWounds->getRemainingHealth());
-    }
-
-    /**
-     * @test
-     */
     public function I_can_get_number_of_filled_rows()
     {
         $gridOfWounds = new GridOfWounds($this->createHealth($this->createWounds([1, 21, 5, 14]), 23));

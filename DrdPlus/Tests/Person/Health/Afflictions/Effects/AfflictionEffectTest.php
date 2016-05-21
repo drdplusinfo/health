@@ -16,19 +16,23 @@ abstract class AfflictionEffectTest extends TestWithMockery
         /** @var AfflictionEffect $effect */
         $effect = $sutClass::getIt();
         self::assertInstanceOf($sutClass, $effect);
-        self::assertSame($effect, $sutClass::getEnum($this->getEffectCode()));
+        self::assertSame(
+            $effect,
+            $sameEffect = $sutClass::getEnum($this->getEffectCode()),
+            "Expected {$effect} to be the very same instance as {$sameEffect}"
+        );
         self::assertInstanceOf($sutClass, $effect);
         self::assertSame($this->getEffectCode(), $effect->getValue());
     }
 
-    protected function getSutClass()
+    private function getSutClass()
     {
         return preg_replace('~[\\\]Tests([\\\].+)Test$~', '$1', static::class);
     }
 
-    protected function getEffectCode()
+    private function getEffectCode()
     {
-        return preg_replace('~_effect$~', '', StringTools::camelCaseToSnakeCasedBasename($this->getSutClass()));
+        return StringTools::camelCaseToSnakeCasedBasename($this->getSutClass());
     }
 
     /**

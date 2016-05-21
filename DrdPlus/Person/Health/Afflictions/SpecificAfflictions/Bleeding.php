@@ -24,19 +24,19 @@ class Bleeding extends AfflictionByWound
 
     /**
      * @param Wound $wound
-     * @return Cold
+     * @return Bleeding
      * @throws \DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Exceptions\BleedingCanNotExistsDueToTooLowWound
      */
     public static function createIt(Wound $wound)
     {
         // see PPH page 78 right column, Bleeding
-        $sizeValue = $wound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($wound->getValue()) - 1;
+        $bleedingSizeValue= $wound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($wound->getValue()) - 1;
         try {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-            $size = AfflictionSize::getIt($sizeValue);
+            $size = AfflictionSize::getIt($bleedingSizeValue);
         } catch (AfflictionSizeCanNotBeNegative $afflictionSizeCanNotBeNegative) {
             throw new Exceptions\BleedingCanNotExistsDueToTooLowWound(
-                "Size of bleeding resulted into {$sizeValue}"
+                "Size of bleeding resulted into {$bleedingSizeValue}"
             );
         }
 

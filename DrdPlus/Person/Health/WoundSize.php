@@ -7,6 +7,17 @@ use Granam\Tools\ValueDescriber;
 class WoundSize extends IntegerObject
 {
     /**
+     * @param $value
+     * @return WoundSize
+     * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundSizeCanNotBeNegative
+     */
+    public static function createIt($value)
+    {
+        return new static($value);
+    }
+
+    /**
      * @param mixed $value
      * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
      * @throws \DrdPlus\Person\Health\Exceptions\WoundSizeCanNotBeNegative

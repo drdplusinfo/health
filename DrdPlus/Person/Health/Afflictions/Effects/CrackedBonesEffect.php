@@ -5,14 +5,14 @@ use DrdPlus\Person\Health\Afflictions\SpecificAfflictions\CrackedBones;
 
 class CrackedBonesEffect extends AfflictionEffect
 {
-    const CRACKED_BONES = 'cracked_bones';
+    const CRACKED_BONES_EFFECT = 'cracked_bones_effect';
 
     /**
      * @return CrackedBonesEffect
      */
     public static function getIt()
     {
-        return static::getEnum(self::CRACKED_BONES);
+        return static::getEnum(self::CRACKED_BONES_EFFECT);
     }
 
     /**

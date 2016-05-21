@@ -3,16 +3,15 @@ namespace DrdPlus\Person\Health;
 
 use Doctrineum\String\StringEnum;
 use DrdPlus\Codes\WoundsOriginCodes;
-use Granam\Tools\ValueDescriber;
 
-class WoundOrigin extends StringEnum
+abstract class WoundOrigin extends StringEnum
 {
     /**
-     * @return WoundOrigin
+     * @return bool
      */
-    public static function getMechanicalStabWoundOrigin()
+    public function isMechanical()
     {
-        return static::getEnum(WoundsOriginCodes::MECHANICAL_STAB);
+        return in_array($this->getValue(), WoundsOriginCodes::getTypeOfMechanicalWoundsCodes(), true);
     }
 
     /**
@@ -20,15 +19,7 @@ class WoundOrigin extends StringEnum
      */
     public function isMechanicalStabWoundOrigin()
     {
-        return $this->is(self::getMechanicalStabWoundOrigin());
-    }
-
-    /**
-     * @return WoundOrigin
-     */
-    public static function getMechanicalCutWoundOrigin()
-    {
-        return static::getEnum(WoundsOriginCodes::MECHANICAL_CUT);
+        return $this->getValue() === WoundsOriginCodes::MECHANICAL_STAB;
     }
 
     /**
@@ -36,15 +27,7 @@ class WoundOrigin extends StringEnum
      */
     public function isMechanicalCutWoundOrigin()
     {
-        return $this->is(self::getMechanicalCutWoundOrigin());
-    }
-
-    /**
-     * @return WoundOrigin
-     */
-    public static function getMechanicalCrushWoundOrigin()
-    {
-        return static::getEnum(WoundsOriginCodes::MECHANICAL_CRUSH);
+        return $this->getValue() === WoundsOriginCodes::MECHANICAL_CUT;
     }
 
     /**
@@ -52,15 +35,7 @@ class WoundOrigin extends StringEnum
      */
     public function isMechanicalCrushWoundOrigin()
     {
-        return $this->is(self::getMechanicalCrushWoundOrigin());
-    }
-
-    /**
-     * @return WoundOrigin
-     */
-    public static function getElementalWoundOrigin()
-    {
-        return static::getEnum(WoundsOriginCodes::ELEMENTAL);
+        return $this->getValue() === WoundsOriginCodes::MECHANICAL_CRUSH;
     }
 
     /**
@@ -68,15 +43,7 @@ class WoundOrigin extends StringEnum
      */
     public function isElementalWoundOrigin()
     {
-        return $this->is(self::getElementalWoundOrigin());
-    }
-
-    /**
-     * @return WoundOrigin
-     */
-    public static function getPsychicalWoundOrigin()
-    {
-        return static::getEnum(WoundsOriginCodes::PSYCHICAL);
+        return $this->getValue() === WoundsOriginCodes::ELEMENTAL;
     }
 
     /**
@@ -84,25 +51,15 @@ class WoundOrigin extends StringEnum
      */
     public function isPsychicalWoundOrigin()
     {
-        return $this->is(self::getPsychicalWoundOrigin());
+        return $this->getValue() === WoundsOriginCodes::PSYCHICAL;
     }
 
     /**
      * @return bool
      */
-    public function isExtraOrdinaryWoundOrigin()
+    public function isSeriousWoundOrigin()
     {
-        return !$this->isOrdinaryWoundOrigin();
-    }
-
-    const ORDINARY = 'ordinary';
-
-    /**
-     * @return WoundOrigin
-     */
-    public static function getOrdinaryWoundOrigin()
-    {
-        return static::getEnum(self::ORDINARY);
+        return in_array($this->getValue(), WoundsOriginCodes::getOriginWithTypeCodes(), true);
     }
 
     /**
@@ -110,26 +67,7 @@ class WoundOrigin extends StringEnum
      */
     public function isOrdinaryWoundOrigin()
     {
-        return $this->is(self::getOrdinaryWoundOrigin());
-    }
-
-    /**
-     * @param bool|float|int|string $enumValue
-     * @return string
-     * @throws \DrdPlus\Person\Health\Exceptions\UnknownWoundOriginCode
-     */
-    protected static function convertToEnumFinalValue($enumValue)
-    {
-        $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
-        if ($enumFinalValue !== self::ORDINARY
-            && !in_array($enumFinalValue, WoundsOriginCodes::getOriginWithTypeCodes(), true)
-        ) {
-            throw new Exceptions\UnknownWoundOriginCode(
-                'Got unexpected code of wound origin ' . ValueDescriber::describe($enumValue)
-            );
-        }
-
-        return $enumFinalValue;
+        return !$this->isSeriousWoundOrigin();
     }
 
 }

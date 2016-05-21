@@ -5,14 +5,14 @@ use DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Pain;
 
 class PainEffect extends AfflictionEffect
 {
-    const PAIN = 'pain';
+    const PAIN_EFFECT = 'pain_effect';
 
     /**
      * @return PainEffect
      */
     public static function getIt()
     {
-        return static::getEnum(self::PAIN);
+        return static::getEnum(self::PAIN_EFFECT);
     }
 
     /**

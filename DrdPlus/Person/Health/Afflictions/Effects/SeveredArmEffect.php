@@ -5,14 +5,14 @@ use DrdPlus\Person\Health\Afflictions\SpecificAfflictions\SeveredArm;
 
 class SeveredArmEffect extends AfflictionEffect
 {
-    const SEVERED_ARM = 'severed_arm';
+    const SEVERED_ARM_EFFECT = 'severed_arm_effect';
 
     /**
      * @return SeveredArmEffect
      */
     public static function getIt()
     {
-        return static::getEnum(self::SEVERED_ARM);
+        return static::getEnum(self::SEVERED_ARM_EFFECT);
     }
 
     /**

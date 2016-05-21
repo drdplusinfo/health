@@ -105,7 +105,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
         AfflictionName $afflictionName
     )
     {
-        $this->wound = $wound;
+        $this->wound = $wound; // TODO has to be serious?
         $this->health = $wound->getHealth();
         $this->domain = $domain;
         $this->virulence = $virulence;

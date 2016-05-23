@@ -7,7 +7,7 @@ use Granam\Tools\ValueDescriber;
 class SpecificWoundOrigin extends WoundOrigin
 {
     /**
-     * @return WoundOrigin
+     * @return SpecificWoundOrigin
      */
     public static function getMechanicalStabWoundOrigin()
     {
@@ -15,7 +15,7 @@ class SpecificWoundOrigin extends WoundOrigin
     }
 
     /**
-     * @return WoundOrigin
+     * @return SpecificWoundOrigin
      */
     public static function getMechanicalCutWoundOrigin()
     {
@@ -23,7 +23,7 @@ class SpecificWoundOrigin extends WoundOrigin
     }
 
     /**
-     * @return WoundOrigin
+     * @return SpecificWoundOrigin
      */
     public static function getMechanicalCrushWoundOrigin()
     {
@@ -31,7 +31,7 @@ class SpecificWoundOrigin extends WoundOrigin
     }
 
     /**
-     * @return WoundOrigin
+     * @return SpecificWoundOrigin
      */
     public static function getElementalWoundOrigin()
     {
@@ -39,7 +39,7 @@ class SpecificWoundOrigin extends WoundOrigin
     }
 
     /**
-     * @return WoundOrigin
+     * @return SpecificWoundOrigin
      */
     public static function getPsychicalWoundOrigin()
     {

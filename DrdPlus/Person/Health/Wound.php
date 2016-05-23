@@ -39,6 +39,12 @@ class Wound extends StrictObject implements Entity
     private $woundOrigin;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    private $old;
+
+    /**
      * @param Health $health
      * @param WoundSize $woundSize (it can be also zero; usable for afflictions without a damage at all)
      * @param WoundOrigin $woundOrigin Ordinary origin is for lesser wound, others for serious wound
@@ -48,6 +54,7 @@ class Wound extends StrictObject implements Entity
         $this->health = $health;
         $this->pointsOfWound = new ArrayCollection($this->createPointsOfWound($woundSize));
         $this->woundOrigin = $woundOrigin;
+        $this->old = false;
     }
 
     /**
@@ -119,6 +126,7 @@ class Wound extends StrictObject implements Entity
      */
     public function heal($upTo)
     {
+        $this->setOld(); // any wound is "old", treated and can be healed by regeneration or professional only
         // technical note: orphaned points of wound are removed automatically on persistence
         if ($upTo >= $this->getValue()) { // there is power to heal it all
             $healed = $this->getValue();
@@ -141,6 +149,19 @@ class Wound extends StrictObject implements Entity
     public function isHealed()
     {
         return $this->getValue() === 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOld()
+    {
+        return $this->old;
+    }
+
+    public function setOld()
+    {
+        $this->old = true;
     }
 
     /**

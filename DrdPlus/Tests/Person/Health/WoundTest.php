@@ -33,6 +33,9 @@ class WoundTest extends TestWithMockery
         foreach ($pointsOfWound as $pointOfWound) {
             self::assertInstanceOf(PointOfWound::class, $pointOfWound);
         }
+        self::assertFalse($wound->isOld());
+        $wound->setOld();
+        self::assertTrue($wound->isOld());
         self::assertSame('3', (string)$wound);
     }
 
@@ -59,15 +62,18 @@ class WoundTest extends TestWithMockery
         self::assertCount(3, $wound->getPointsOfWound());
         self::assertFalse($wound->isHealed());
         self::assertTrue($wound->isSerious(), "Wound of {$elementalWoundOrigin} origin should be serious");
+        self::assertFalse($wound->isOld());
 
         self::assertSame(1, $wound->heal(1), 'Expected reported healed value to be 1');
         self::assertSame(2, $wound->getValue(), 'Expected one point of wound to be already healed');
         self::assertCount(2, $wound->getPointsOfWound());
         self::assertFalse($wound->isHealed());
+        self::assertTrue($wound->isOld(), 'Wound should become "old" after any heal attempt');
 
         self::assertSame(2, $wound->heal(999), 'Expected reported healed value to be the remaining value, 2');
         self::assertEmpty($wound->getPointsOfWound());
         self::assertTrue($wound->isHealed());
+        self::assertTrue($wound->isOld(), 'Wound should become "old" after any heal attempt');
     }
 
     /**
@@ -83,6 +89,7 @@ class WoundTest extends TestWithMockery
         );
         self::assertSame(0, $ordinaryWound->getValue());
         self::assertTrue($ordinaryWound->isHealed());
+        self::assertFalse($ordinaryWound->isOld());
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWound = new Wound(
@@ -92,5 +99,6 @@ class WoundTest extends TestWithMockery
         );
         self::assertSame(0, $seriousWound->getValue());
         self::assertTrue($seriousWound->isHealed());
+        self::assertFalse($seriousWound->isOld());
     }
 }

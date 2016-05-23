@@ -162,18 +162,18 @@ class Health extends StrictObject implements Entity
     {
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
         $healed = 0;
-        // can heal only ordinary wounds and also only new ones (delimited by treatment boundary)
-        $healUpTo = min($healingPower->getValue(), $this->getNewOrdinaryWoundsSum() - $this->treatmentBoundary->getValue());
         foreach ($this->getNewOrdinaryWounds() as $newOrdinaryWound) {
-            if ($healUpTo < $healed) { // we do not spent all the healing power
-                $healed += $newOrdinaryWound->heal($healUpTo - $healed);
+            if ($healingPower->getHealUpTo() > 0) { // we do not spent all the healing power
+                $currentlyHealed = $newOrdinaryWound->heal($healingPower);
+                $healingPower = $healingPower->decreaseByHealedAmount($currentlyHealed); // new instance
+                $healed += $currentlyHealed;
             }
-            $newOrdinaryWound->setOld(); // every ordinary wound become "old"
+            // all new ordinary wounds become "old", healed or not (and those unhealed can be healed only by a professional or nature itself)
+            $newOrdinaryWound->setOld();
         }
-        // all unhealed wounds become "old" (and can be healed only by a professional or nature itself)
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        if ($healed > 0) { // otherwise wounds remain the same, pain remains the same
+        if ($healed > 0) { // otherwise both wounds remain the same and pain remains the same
             if ($this->maySufferFromPain()) {
                 $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
             } else if ($this->isConscious()) {
@@ -189,9 +189,9 @@ class Health extends StrictObject implements Entity
      */
     private function getNewOrdinaryWounds()
     {
-        return $this->getUnhealedWounds()->filter(
+        return $this->wounds->filter(
             function (Wound $wound) {
-                return !$wound->isSerious() && !$wound->isOld();
+                return !$wound->isHealed() && !$wound->isSerious() && !$wound->isOld();
             }
         );
     }
@@ -214,7 +214,7 @@ class Health extends StrictObject implements Entity
         if ($seriousWound->isOld()) {
             throw new \LogicException;
         }
-        $healed = $seriousWound->heal($healingPower->getValue());
+        $healed = $seriousWound->heal($healingPower);
         $seriousWound->setOld();
         // treatment boundary is taken with wounds down together
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -230,25 +230,27 @@ class Health extends StrictObject implements Entity
 
     /**
      * Regenerate any wound, both ordinary and serious, both new and old, by natural or unnatural way.
-     * @param int $regenerateUpTo
+     * @param HealingPower $healingPower
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int actually regenerated amount
      */
-    public function regenerate($regenerateUpTo, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function regenerate(HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         // every wound becomes old after this
         $regenerated = 0;
         foreach ($this->getUnhealedWounds() as $unhealedWound) {
-            if ($regenerateUpTo < $regenerated) { // we do not spent all the healing power
-                $regenerated += $unhealedWound->heal($regenerateUpTo - $regenerated);
+            if ($healingPower->getHealUpTo() > 0) { // we do not spent all the healing power yet
+                $currentlyRegenerated = $unhealedWound->heal($healingPower);
+                $healingPower = $healingPower->decreaseByHealedAmount($currentlyRegenerated); // new instance
+                $regenerated += $currentlyRegenerated;
             }
-            $unhealedWound->setOld(); // every wound become "old"
+            // all unhealed wounds become "old", healed or not (and can be healed only by this regeneration)
+            $unhealedWound->setOld();
         }
-        // all unhealed wounds become "old" (and can be healed only by a professional or nature itself)
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        if ($regenerated > 0) { // otherwise wounds remain the same, pain remains the same
+        if ($regenerated > 0) { // otherwise both wounds remain the same and pain remains the same
             if ($this->maySufferFromPain()) {
                 $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
             } else if ($this->isConscious()) {
@@ -335,6 +337,7 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * Gives both new and old wounds
      * @return Collection|Wound[]
      */
     public function getUnhealedWounds()

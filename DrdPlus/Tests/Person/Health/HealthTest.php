@@ -5,6 +5,7 @@ use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
 use Drd\DiceRoll\Templates\Rollers\SpecificRolls\Roll2d6DrdPlus;
 use DrdPlus\Person\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Person\Health\GridOfWounds;
+use DrdPlus\Person\Health\HealingPower;
 use DrdPlus\Person\Health\Health;
 use DrdPlus\Person\Health\OrdinaryWoundOrigin;
 use DrdPlus\Person\Health\SpecificWoundOrigin;
@@ -65,6 +66,19 @@ class HealthTest extends TestWithMockery
             ->andReturn($value);
 
         return $wounds;
+    }
+
+    /**
+     * @param $healUpTo
+     * @return \Mockery\MockInterface|HealingPower
+     */
+    private function createHealingPower($healUpTo)
+    {
+        $healingPower = $this->mockery(HealingPower::class);
+        $healingPower->shouldReceive('getHealUpTo')
+            ->andReturn($healUpTo);
+
+        return $healingPower;
     }
 
     /**
@@ -195,7 +209,7 @@ class HealthTest extends TestWithMockery
         self::assertTrue($health->isAlive());
         self::assertTrue($health->isConscious());
 
-        self::assertSame(1, $health->healNewOrdinaryWoundsUpTo(1, $this->createWill(), $this->createRoller2d6Plus()));
+        self::assertSame(1, $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1), $this->createWill(), $this->createRoller2d6Plus()));
         self::assertSame(11, $health->getRemainingHealthAmount());
         self::assertSame(4, $health->getNewOrdinaryWoundsSum());
         self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
@@ -207,7 +221,7 @@ class HealthTest extends TestWithMockery
 
         self::assertSame(
             0,
-            $health->healNewOrdinaryWoundsUpTo(1, $this->createWill(), $this->createRoller2d6Plus()),
+            $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1), $this->createWill(), $this->createRoller2d6Plus()),
             'Nothing should be healed because of treatment boundary'
         );
         self::assertSame(11, $health->getRemainingHealthAmount());
@@ -216,16 +230,6 @@ class HealthTest extends TestWithMockery
         self::assertSame(0, $health->getNumberOfSeriousInjuries());
         self::assertSame(0, $health->getMalusCausedByWounds());
         self::assertSame(4, $health->getTreatmentBoundary()->getValue());
-        self::assertTrue($health->isAlive());
-        self::assertTrue($health->isConscious());
-
-        self::assertSame(4, $health->healSeriousWound(999, $this->createWill(), $this->createRoller2d6Plus()));
-        self::assertSame(15, $health->getRemainingHealthAmount());
-        self::assertCount(0, $health->getUnhealedWounds());
-        self::assertSame(0, $health->getNewOrdinaryWoundsSum());
-        self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
-        self::assertSame(0, $health->getNumberOfSeriousInjuries());
-        self::assertSame(0, $health->getMalusCausedByWounds());
         self::assertTrue($health->isAlive());
         self::assertTrue($health->isConscious());
     }

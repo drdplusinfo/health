@@ -121,21 +121,21 @@ class Wound extends StrictObject implements Entity
     }
 
     /**
-     * @param int $upTo
+     * @param HealingPower $healingPower
      * @return int amount of healed points of wound
      */
-    public function heal($upTo)
+    public function heal(HealingPower $healingPower)
     {
         $this->setOld(); // any wound is "old", treated and can be healed by regeneration or professional only
         // technical note: orphaned points of wound are removed automatically on persistence
-        if ($upTo >= $this->getValue()) { // there is power to heal it all
+        if ($healingPower->getHealUpTo() >= $this->getValue()) { // there is power to heal it all
             $healed = $this->getValue();
             $this->pointsOfWound->clear(); // unbinds all the points of wound
 
             return $healed;
         }
         $healed = 0;
-        for ($healing = 1; $healing <= $upTo; $healing++) {
+        for ($healing = 1; $healing <= $healingPower->getHealUpTo(); $healing++) {
             $this->pointsOfWound->removeElement($this->pointsOfWound->last());
             $healed++;
         }

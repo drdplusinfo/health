@@ -153,17 +153,17 @@ class Health extends StrictObject implements Entity
 
     /**
      * Also sets treatment boundary to unhealed wounds after. Even if the heal itself heals nothing!
-     * @param int $healUpTo
+     * @param HealingPower $healingPower
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int amount of actually healed points of wounds
      */
-    public function healNewOrdinaryWoundsUpTo($healUpTo, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function healNewOrdinaryWoundsUpTo(HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
         $healed = 0;
         // can heal only ordinary wounds and also only new ones (delimited by treatment boundary)
-        $healUpTo = min($healUpTo, $this->getNewOrdinaryWoundsSum() - $this->treatmentBoundary->getValue());
+        $healUpTo = min($healingPower->getValue(), $this->getNewOrdinaryWoundsSum() - $this->treatmentBoundary->getValue());
         foreach ($this->getNewOrdinaryWounds() as $newOrdinaryWound) {
             if ($healUpTo < $healed) { // we do not spent all the healing power
                 $healed += $newOrdinaryWound->heal($healUpTo - $healed);
@@ -198,12 +198,12 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param Wound $seriousWound
-     * @param int $healUpTo
+     * @param HealingPower $healingPower
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int amount of healed points of wounds
      */
-    public function healSeriousWound(Wound $seriousWound, $healUpTo, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function healSeriousWound(Wound $seriousWound, HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         if (!$this->doesHaveThatWound($seriousWound)) {
             throw new \LogicException;
@@ -214,7 +214,7 @@ class Health extends StrictObject implements Entity
         if ($seriousWound->isOld()) {
             throw new \LogicException;
         }
-        $healed = $seriousWound->heal($healUpTo);
+        $healed = $seriousWound->heal($healingPower->getValue());
         $seriousWound->setOld();
         // treatment boundary is taken with wounds down together
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */

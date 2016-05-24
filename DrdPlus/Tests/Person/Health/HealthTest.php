@@ -70,13 +70,19 @@ class HealthTest extends TestWithMockery
 
     /**
      * @param $healUpTo
+     * @param $expectedHealedAmount
      * @return \Mockery\MockInterface|HealingPower
      */
-    private function createHealingPower($healUpTo)
+    private function createHealingPower($healUpTo, $expectedHealedAmount)
     {
         $healingPower = $this->mockery(HealingPower::class);
         $healingPower->shouldReceive('getHealUpTo')
             ->andReturn($healUpTo);
+        $healingPower->shouldReceive('decreaseByHealedAmount')
+            ->with($expectedHealedAmount)
+            ->andReturn($decreasedHealingPower = $this->mockery(HealingPower::class));
+        $decreasedHealingPower->shouldReceive('getHealUpTo')
+            ->andReturn(0);
 
         return $healingPower;
     }
@@ -140,7 +146,11 @@ class HealthTest extends TestWithMockery
         );
         self::assertInstanceOf(Wound::class, $wound);
         self::assertSame(1, $wound->getValue());
-        self::assertNotEquals($woundOrigin, $wound->getWoundOrigin(), 'The specific wound origin should be replaced by generic on such small wound');
+        self::assertNotEquals(
+            $woundOrigin,
+            $wound->getWoundOrigin(),
+            'The specific wound origin should be replaced by generic on such small wound'
+        );
         self::assertSame(OrdinaryWoundOrigin::getIt(), $wound->getWoundOrigin());
         self::assertCount(1, $health->getUnhealedWounds());
         self::assertSame($wound, $health->getUnhealedWounds()->current());
@@ -159,7 +169,11 @@ class HealthTest extends TestWithMockery
         );
         self::assertInstanceOf(Wound::class, $wound);
         self::assertSame(2, $wound->getValue());
-        self::assertNotEquals($woundOrigin, $wound->getWoundOrigin(), 'The specific wound origin should be replaced by generic on such small wound');
+        self::assertNotEquals(
+            $woundOrigin,
+            $wound->getWoundOrigin(),
+            'The specific wound origin should be replaced by generic on such small wound'
+        );
         self::assertSame(OrdinaryWoundOrigin::getIt(), $wound->getWoundOrigin());
         self::assertCount(2, $health->getUnhealedWounds());
         $woundSum = 0;
@@ -195,7 +209,11 @@ class HealthTest extends TestWithMockery
             self::assertLessThanOrEqual(2, $unhealedWound->getValue());
             $woundSum += $unhealedWound->getValue();
             $collectedWounds[] = $unhealedWound;
-            self::assertNotEquals($woundOrigin, $unhealedWound->getWoundOrigin(), 'The specific wound origin should be replaced by generic on such small wound');
+            self::assertNotEquals(
+                $woundOrigin,
+                $unhealedWound->getWoundOrigin(),
+                'The specific wound origin should be replaced by generic on such small wound'
+            );
             self::assertSame(OrdinaryWoundOrigin::getIt(), $unhealedWound->getWoundOrigin());
         }
         $collectedWounds = $this->sortWoundsByValue($collectedWounds);
@@ -209,9 +227,10 @@ class HealthTest extends TestWithMockery
         self::assertTrue($health->isAlive());
         self::assertTrue($health->isConscious());
 
-        self::assertSame(1, $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1), $this->createWill(), $this->createRoller2d6Plus()));
+        self::assertSame(1, $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1, 1), $this->createWill(), $this->createRoller2d6Plus()));
         self::assertSame(11, $health->getRemainingHealthAmount());
-        self::assertSame(4, $health->getNewOrdinaryWoundsSum());
+        self::assertSame(4, $health->getUnhealedWoundsSum());
+        self::assertSame(0, $health->getNewOrdinaryWoundsSum(), 'All ordinary wounds should become "old" after heal');
         self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(0, $health->getNumberOfSeriousInjuries());
         self::assertSame(0, $health->getMalusCausedByWounds());
@@ -221,11 +240,12 @@ class HealthTest extends TestWithMockery
 
         self::assertSame(
             0,
-            $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1), $this->createWill(), $this->createRoller2d6Plus()),
+            $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1, 0), $this->createWill(), $this->createRoller2d6Plus()),
             'Nothing should be healed because of treatment boundary'
         );
         self::assertSame(11, $health->getRemainingHealthAmount());
-        self::assertSame(4, $health->getNewOrdinaryWoundsSum());
+        self::assertSame(4, $health->getUnhealedWoundsSum());
+        self::assertSame(0, $health->getNewOrdinaryWoundsSum());
         self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(0, $health->getNumberOfSeriousInjuries());
         self::assertSame(0, $health->getMalusCausedByWounds());
@@ -245,17 +265,17 @@ class HealthTest extends TestWithMockery
         self::assertTrue($health->isAlive());
         self::assertTrue($health->isConscious());
 
-        $wound = $health->createWound(
+        $seriousWoundByStab = $health->createWound(
             $this->createWoundSize(3),
             $specificWoundOrigin = SpecificWoundOrigin::getMechanicalStabWoundOrigin(),
             $this->createWill(),
             $this->createRoller2d6Plus()
         );
-        self::assertInstanceOf(Wound::class, $wound);
-        self::assertSame(3, $wound->getValue());
-        self::assertSame($specificWoundOrigin, $wound->getWoundOrigin());
+        self::assertInstanceOf(Wound::class, $seriousWoundByStab);
+        self::assertSame(3, $seriousWoundByStab->getValue());
+        self::assertSame($specificWoundOrigin, $seriousWoundByStab->getWoundOrigin());
         self::assertCount(1, $health->getUnhealedWounds());
-        self::assertSame($wound, $health->getUnhealedWounds()->current());
+        self::assertSame($seriousWoundByStab, $health->getUnhealedWounds()->current());
         self::assertSame(15, $health->getRemainingHealthAmount());
         self::assertSame(0, $health->getNewOrdinaryWoundsSum());
         self::assertSame(3, $health->getUnhealedSeriousWoundsSum());
@@ -264,18 +284,21 @@ class HealthTest extends TestWithMockery
         self::assertTrue($health->isAlive());
         self::assertTrue($health->isConscious());
 
-        $health->addAffliction($affliction = $this->createAffliction($wound));
+        $health->addAffliction($affliction = $this->createAffliction($seriousWoundByStab));
         self::assertCount(1, $health->getAfflictions());
         self::assertSame($affliction, $health->getAfflictions()->current());
+        unset($seriousWoundByStab);
 
-        $wound = $health->createWound(
+        $seriousWoundByPsyche = $health->createWound(
             $this->createWoundSize(5),
             $specificWoundOrigin = SpecificWoundOrigin::getPsychicalWoundOrigin(),
             $this->createWill(-10),
             $this->createRoller2d6Plus(2)
         );
-        self::assertInstanceOf(Wound::class, $wound);
-        self::assertSame(5, $wound->getValue());
+        self::assertInstanceOf(Wound::class, $seriousWoundByPsyche);
+        self::assertSame(5, $seriousWoundByPsyche->getValue());
+        self::assertTrue($seriousWoundByPsyche->isSerious());
+        self::assertSame($specificWoundOrigin, $seriousWoundByPsyche->getWoundOrigin());
         self::assertCount(2, $health->getUnhealedWounds());
         $woundSum = 0;
         $collectedWounds = [];
@@ -299,15 +322,25 @@ class HealthTest extends TestWithMockery
         self::assertTrue($health->isAlive());
         self::assertTrue($health->isConscious());
 
-        self::assertSame(0, $health->healNewOrdinaryWoundsUpTo(1, $this->createWill(), $this->createRoller2d6Plus()));
+        self::assertSame(0, $health->healNewOrdinaryWoundsUpTo(
+            $this->createHealingPower(1, 0),
+            $this->createWill(),
+            $this->createRoller2d6Plus())
+        );
         self::assertSame(8, $health->getUnhealedWoundsSum());
         self::assertCount(2, $health->getUnhealedWounds());
         self::assertSame(8, $health->getTreatmentBoundary()->getValue());
         self::assertSame(10, $health->getRemainingHealthAmount());
 
-        self::assertSame(3, $health->healSeriousWound(3, $this->createWill(), $this->createRoller2d6Plus()));
+        self::assertSame(3, $health->healSeriousWound(
+            $seriousWoundByPsyche,
+            $this->createHealingPower(3, 3),
+            $this->createWill(),
+            $this->createRoller2d6Plus())
+        );
         self::assertSame(13, $health->getRemainingHealthAmount());
         self::assertCount(2, $health->getUnhealedWounds());
+        self::assertSame(5, $health->getUnhealedWoundsSum());
         self::assertSame(0, $health->getNewOrdinaryWoundsSum());
         self::assertSame(5, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(2, $health->getNumberOfSeriousInjuries());
@@ -316,24 +349,15 @@ class HealthTest extends TestWithMockery
         self::assertTrue($health->isAlive());
         self::assertTrue($health->isConscious());
 
-        $health->createWound(
+        $smallScratch = $health->createWound(
             $this->createWoundSize(1), // just a small scratch to test immovable treatment boundary for ordinary wounds
             $specificWoundOrigin = SpecificWoundOrigin::getPsychicalWoundOrigin(),
-            $this->createWill(),
-            $this->createRoller2d6Plus()
+            $this->createWill(-10),
+            $this->createRoller2d6Plus(2)
         );
+        self::assertFalse($smallScratch->isSerious());
         self::assertSame(5, $health->getTreatmentBoundary()->getValue());
-
-        self::assertSame(3, $health->healSeriousWound(999, $this->createWill(), $this->createRoller2d6Plus()));
-        self::assertSame(18, $health->getRemainingHealthAmount());
-        self::assertCount(0, $health->getUnhealedWounds());
-        self::assertSame(0, $health->getNewOrdinaryWoundsSum());
-        self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
-        self::assertSame(0, $health->getNumberOfSeriousInjuries());
-        self::assertSame(0, $health->getMalusCausedByWounds(), 'Malus should be gone because of low damage after heal');
-        self::assertSame(0, $health->getTreatmentBoundary()->getValue());
-        self::assertTrue($health->isAlive());
-        self::assertTrue($health->isConscious());
+        self::assertSame(-3, $health->getMalusCausedByWounds(), 'Even such scratch should cause malus because of filled row of wounds and low roll against');
     }
 
     /**

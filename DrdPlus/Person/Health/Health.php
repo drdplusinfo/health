@@ -106,8 +106,7 @@ class Health extends StrictObject implements Entity
     }
 
     /**
-     * Serious wound MAY be of lower value than half of wound row (but ordinary wound HAS TO be lower than half of row).
-     * Wound origin MUST NOT be ordinary wound origin.
+     * Every serious injury SHOULD has at least one accompanying affliction (but it is PJ privilege to say it has not).
      * @param AfflictionByWound $afflictionByWound
      * @throws \DrdPlus\Person\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Person\Health\Exceptions\AfflictionIsAlreadyRegistered
@@ -202,17 +201,26 @@ class Health extends StrictObject implements Entity
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int amount of healed points of wounds
+     * @throws \DrdPlus\Person\Health\Exceptions\UnknownSeriousWoundToHeal
+     * @throws \DrdPlus\Person\Health\Exceptions\ExpectedSeriousWound
+     * @throws \DrdPlus\Person\Health\Exceptions\ExpectedFreshWoundToHeal
      */
     public function healSeriousWound(Wound $seriousWound, HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         if (!$this->doesHaveThatWound($seriousWound)) {
-            throw new \LogicException;
+            throw new Exceptions\UnknownSeriousWoundToHeal(
+                "Given serious wound of value {$seriousWound->getValue()} and origin {$seriousWound->getWoundOrigin()} to heal does not belongs to this health"
+            );
         }
         if (!$seriousWound->isSerious()) {
-            throw new \LogicException;
+            throw new Exceptions\ExpectedSeriousWound(
+                "Given wound of value {$seriousWound->getValue()} should be serious (heal it as ordinary otherwise)"
+            );
         }
         if ($seriousWound->isOld()) {
-            throw new \LogicException;
+            throw new Exceptions\ExpectedFreshWoundToHeal(
+                "Given serious wound of value {$seriousWound->getValue()} and origin {$seriousWound->getWoundOrigin()} should not be old to be healed."
+            );
         }
         $healed = $seriousWound->heal($healingPower);
         $seriousWound->setOld();

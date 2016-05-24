@@ -401,4 +401,29 @@ class HealthTest extends TestWithMockery
 
         return $affliction;
     }
+
+    /**
+     * @test
+     */
+    public function I_can_not_lower_malus_on_new_wound_by_better_roll()
+    {
+        $health = new Health($this->createWoundsLimit(5));
+        self::assertSame(0, $health->getMalusCausedByWounds());
+
+        $health->createWound(
+            $this->createWoundSize(5),
+            SpecificWoundOrigin::getElementalWoundOrigin(),
+            $this->createWill(5),
+            $this->createRoller2d6Plus(5)
+        );
+        self::assertSame(-1, $health->getMalusCausedByWounds());
+
+        $health->createWound(
+            $this->createWoundSize(1),
+            SpecificWoundOrigin::getElementalWoundOrigin(),
+            $this->createWill(5),
+            $this->createRoller2d6Plus(40)
+        );
+        self::assertSame(-1, $health->getMalusCausedByWounds());
+    }
 }

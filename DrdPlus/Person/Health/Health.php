@@ -85,9 +85,9 @@ class Health extends StrictObject implements Entity
     private function rollAgainstMalusFromWoundsOnWound(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
-        // greater (or same of course) malus remains; can not be lowered on new wounds
+        // lower (or same of course) malus remains; can not be decreased on new wounds
         if ($this->rollAgainstMalusFromWounds !== null
-            && $this->rollAgainstMalusFromWounds->getMalusValue() >= $newRoll->getMalusValue()
+            && $this->rollAgainstMalusFromWounds->getMalusValue() <= $newRoll->getMalusValue()
         ) {
             return;
         }

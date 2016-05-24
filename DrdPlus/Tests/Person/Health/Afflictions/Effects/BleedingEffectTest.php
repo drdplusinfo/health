@@ -64,7 +64,11 @@ class BleedingEffectTest extends AfflictionEffectTest
      */
     private function createSpecificWoundOrigin()
     {
-        return $this->mockery(SpecificWoundOrigin::class);
+        $specificWoundOrigin = $this->mockery(SpecificWoundOrigin::class);
+        $specificWoundOrigin->shouldReceive('isOrdinaryWoundOrigin')
+            ->andReturn(false);
+
+        return $specificWoundOrigin;
     }
 
     /**

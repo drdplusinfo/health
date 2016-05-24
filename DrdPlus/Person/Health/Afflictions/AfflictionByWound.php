@@ -90,6 +90,8 @@ abstract class AfflictionByWound extends StrictObject implements Entity
      * @param AfflictionEffect $effect
      * @param \DateInterval $outbreakPeriod
      * @param AfflictionName $afflictionName
+     * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeSeriousForAffliction
+     * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
     protected function __construct(
         Wound $wound, // wound can be healed, but never disappears - just stays healed
@@ -105,7 +107,17 @@ abstract class AfflictionByWound extends StrictObject implements Entity
         AfflictionName $afflictionName
     )
     {
-        $this->wound = $wound; // TODO has to be serious?
+        if (!$wound->isSerious()) {
+            throw new Exceptions\WoundHasToBeSeriousForAffliction(
+                "Given wound of value {$wound->getValue()} should be serious to create an affliction."
+            );
+        }
+        if ($wound->isOld()) {
+            throw new Exceptions\WoundHasToBeFreshForAffliction(
+                "Given wound of value {$wound->getValue()} and origin '{$wound->getWoundOrigin()}' should be untreated to create an affliction."
+            );
+        }
+        $this->wound = $wound;
         $this->health = $wound->getHealth();
         $this->domain = $domain;
         $this->virulence = $virulence;

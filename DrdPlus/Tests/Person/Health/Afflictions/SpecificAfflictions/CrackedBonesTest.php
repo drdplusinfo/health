@@ -66,16 +66,13 @@ class CrackedBonesTest extends AfflictionByWoundTest
      */
     private function addSizeCalculation(Wound $wound, $filledHalfOfRows)
     {
-        /** @var \Mockery\MockInterface $wound */
-        $wound->shouldReceive('getValue')
-            ->andReturn($woundValue = 456);
         /** @var Wound $wound */
         $health = $wound->getHealth();
         /** @var \Mockery\MockInterface $health */
         $health->shouldReceive('getGridOfWounds')
             ->andReturn($gridOfWounds = $this->mockery(GridOfWounds::class));
         $gridOfWounds->shouldReceive('calculateFilledHalfRowsFor')
-            ->with($woundValue)
+            ->with($wound->getValue())
             ->andReturn($filledHalfOfRows);
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Person\Health\Afflictions;
 
+use DrdPlus\Person\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Person\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Person\Health\Afflictions\AfflictionDomain;
 use DrdPlus\Person\Health\Afflictions\AfflictionName;
@@ -11,24 +12,102 @@ use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Person\Health\Health;
+use DrdPlus\Person\Health\SpecificWoundOrigin;
 use DrdPlus\Person\Health\Wound;
+use DrdPlus\Person\Health\WoundOrigin;
 use Granam\Tests\Tools\TestWithMockery;
 
 abstract class AfflictionByWoundTest extends TestWithMockery
 {
     /**
      * @test
+     * @expectedException \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeSeriousForAffliction
+     */
+    public function I_can_not_create_it_with_non_serious_wound()
+    {
+        $reflection = new \ReflectionClass($this->getSutClass());
+        $constructor = $reflection->getConstructor();
+        $constructor->setAccessible(true);
+
+        $instance = $reflection->newInstanceWithoutConstructor();
+        $constructor->invoke(
+            $instance,
+            $this->createWound(false /* not serious */),
+            $this->mockery(AfflictionDomain::class),
+            $this->mockery(AfflictionVirulence::class),
+            $this->mockery(AfflictionSource::class),
+            $this->mockery(AfflictionProperty::class),
+            $this->mockery(AfflictionDangerousness::class),
+            $this->mockery(AfflictionSize::class),
+            $this->mockery(ElementalPertinence::class),
+            $this->mockery(AfflictionEffect::class),
+            $this->mockery(\DateInterval::class),
+            $this->mockery(AfflictionName::class)
+        );
+    }
+
+    /**
+     * @return string|AfflictionByWound
+     */
+    private function getSutClass()
+    {
+        return preg_replace('~[\\\]Tests([\\\].+)Test$~', '$1', static::class);
+    }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
+     */
+    public function I_can_not_create_it_with_old_wound()
+    {
+        $reflection = new \ReflectionClass($this->getSutClass());
+        $constructor = $reflection->getConstructor();
+        $constructor->setAccessible(true);
+
+        $instance = $reflection->newInstanceWithoutConstructor();
+        $constructor->invoke(
+            $instance,
+            $this->createWound(true /* serious */, true /* old */),
+            $this->mockery(AfflictionDomain::class),
+            $this->mockery(AfflictionVirulence::class),
+            $this->mockery(AfflictionSource::class),
+            $this->mockery(AfflictionProperty::class),
+            $this->mockery(AfflictionDangerousness::class),
+            $this->mockery(AfflictionSize::class),
+            $this->mockery(ElementalPertinence::class),
+            $this->mockery(AfflictionEffect::class),
+            $this->mockery(\DateInterval::class),
+            $this->mockery(AfflictionName::class)
+        );
+    }
+
+    /**
+     * @test
      */
     abstract public function I_can_use_it();
 
     /**
+     * @param bool $isSerious
+     * @param bool $isOld
+     * @param $value
+     * @param WoundOrigin $woundOrigin
      * @return \Mockery\MockInterface|Wound
      */
-    protected function createWound()
+    protected function createWound($isSerious = true, $isOld = false, $value = 0, WoundOrigin $woundOrigin = null)
     {
         $wound = $this->mockery(Wound::class);
         $wound->shouldReceive('getHealth')
             ->andReturn($this->mockery(Health::class));
+        $wound->shouldReceive('isSerious')
+            ->andReturn($isSerious);
+        $wound->shouldReceive('isOld')
+            ->andReturn($isOld);
+        $wound->shouldReceive('getValue')
+            ->andReturn($value);
+        $wound->shouldReceive('__toString')
+            ->andReturn((string)$value);
+        $wound->shouldReceive('getWoundOrigin')
+            ->andReturn($woundOrigin ?: SpecificWoundOrigin::getElementalWoundOrigin());
 
         return $wound;
     }

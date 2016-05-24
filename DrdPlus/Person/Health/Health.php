@@ -85,9 +85,9 @@ class Health extends StrictObject implements Entity
     private function rollAgainstMalusFromWoundsOnWound(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
-        // lower (or same of course) malus remains; can not be decreased on new wounds
+        // bigger (or same of course) malus remains; can not be decreased on new wounds
         if ($this->rollAgainstMalusFromWounds !== null
-            && $this->rollAgainstMalusFromWounds->getMalusValue() <= $newRoll->getMalusValue()
+            && $this->rollAgainstMalusFromWounds->getMalusValue() <= $newRoll->getMalusValue() // lesser in mathematical meaning (malus is negative)
         ) {
             return;
         }
@@ -115,14 +115,14 @@ class Health extends StrictObject implements Entity
     {
         if (!$this->doesHaveThatWound($afflictionByWound->getWound())) {
             throw new Exceptions\UnknownAfflictionOriginatingWound(
-                "Given affliction to add {$afflictionByWound->getName()} comes from unknown wound"
-                . " of value {$afflictionByWound->getWound()} and origin {$afflictionByWound->getWound()->getWoundOrigin()}"
-                . 'Have you created that wound by current health?'
+                "Given affliction '{$afflictionByWound->getName()}' to add comes from unknown wound"
+                . " of value {$afflictionByWound->getWound()} and origin '{$afflictionByWound->getWound()->getWoundOrigin()}'."
+                . ' Have you created that wound by current health?'
             );
         }
         if ($this->doesHaveThatAffliction($afflictionByWound)) {
             throw new Exceptions\AfflictionIsAlreadyRegistered(
-                "Given instance of affliction with name {$afflictionByWound->getName()} is already added"
+                "Given instance of affliction '{$afflictionByWound->getName()}' is already added."
             );
         }
         $this->afflictions->add($afflictionByWound);
@@ -130,13 +130,16 @@ class Health extends StrictObject implements Entity
 
     private function doesHaveThatWound(Wound $givenWound)
     {
+        if ($givenWound->getHealth() !== $this) {
+            return false; // easiest test - the wound belongs to different health
+        }
         foreach ($this->wounds as $registeredWound) {
             if ($givenWound === $registeredWound) {
-                return true;
+                return true; // this health recognizes that wound
             }
         }
 
-        return false;
+        return false; // the wound know this health, but this health does not know that wound
     }
 
     private function doesHaveThatAffliction(AfflictionByWound $givenAffliction)
@@ -420,8 +423,8 @@ class Health extends StrictObject implements Entity
             return;
         }
         $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
-        // lower (or same of course) malus remains; can not be increased on healing
-        if ($this->rollAgainstMalusFromWounds->getMalusValue() <= $newRoll->getMalusValue()) {
+        // lesser (or same of course) malus remains; can not be increased on healing
+        if ($this->rollAgainstMalusFromWounds->getMalusValue() >= $newRoll->getMalusValue()) { // greater in mathematical meaning (malus is negative)
             return;
         }
         $this->rollAgainstMalusFromWounds = $newRoll;

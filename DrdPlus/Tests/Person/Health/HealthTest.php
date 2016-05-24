@@ -11,6 +11,7 @@ use DrdPlus\Person\Health\OrdinaryWoundOrigin;
 use DrdPlus\Person\Health\SpecificWoundOrigin;
 use DrdPlus\Person\Health\TreatmentBoundary;
 use DrdPlus\Person\Health\Wound;
+use DrdPlus\Person\Health\WoundOrigin;
 use DrdPlus\Person\Health\WoundSize;
 use DrdPlus\Properties\Base\Will;
 use DrdPlus\Properties\Derived\WoundsLimit;
@@ -398,6 +399,8 @@ class HealthTest extends TestWithMockery
         $affliction = $this->mockery(AfflictionByWound::class);
         $affliction->shouldReceive('getWound')
             ->andReturn($wound);
+        $affliction->shouldReceive('getName')
+            ->andReturn('some terrible affliction');
 
         return $affliction;
     }
@@ -425,5 +428,105 @@ class HealthTest extends TestWithMockery
             $this->createRoller2d6Plus(40)
         );
         self::assertSame(-1, $health->getMalusCausedByWounds());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_not_increase_malus_on_new_wound_by_worse_roll()
+    {
+        $health = new Health($this->createWoundsLimit(5));
+        self::assertSame(0, $health->getMalusCausedByWounds());
+
+        // 3 ordinary wounds
+        $health->createWound(
+            $this->createWoundSize(2),
+            SpecificWoundOrigin::getElementalWoundOrigin(),
+            $this->createWill(5),
+            $this->createRoller2d6Plus(5)
+        );
+        $health->createWound(
+            $this->createWoundSize(2),
+            SpecificWoundOrigin::getElementalWoundOrigin(),
+            $this->createWill(5),
+            $this->createRoller2d6Plus(5)
+        );
+        $health->createWound(
+            $this->createWoundSize(2),
+            SpecificWoundOrigin::getElementalWoundOrigin(),
+            $this->createWill(5),
+            $this->createRoller2d6Plus(5)
+        );
+        self::assertSame(-1, $health->getMalusCausedByWounds());
+
+        self::assertSame(
+            1,
+            $health->healNewOrdinaryWoundsUpTo(
+                $this->createHealingPower(1, 1),
+                $this->createWill(5),
+                $this->createRoller2d6Plus(-5)
+            )
+        );
+        self::assertSame(-1, $health->getMalusCausedByWounds(), 'Malus should not be increased');
+    }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\Person\Health\Exceptions\UnknownAfflictionOriginatingWound
+     */
+    public function I_can_not_add_affliction_of_unknown_wound()
+    {
+        $health = new Health($this->createWoundsLimit(5));
+        $affliction = $this->createAffliction($this->createWound());
+        $health->addAffliction($affliction);
+    }
+
+    /**
+     * @return \Mockery\MockInterface|Wound
+     */
+    private function createWound()
+    {
+        $wound = $this->mockery(Wound::class);
+        $wound->shouldReceive('getHealth')
+            ->andReturn($this->mockery(Health::class));
+        $wound->shouldReceive('getWoundOrigin')
+            ->andReturn(SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $wound->shouldReceive('__toString')
+            ->andReturn('123');
+
+        return $wound;
+    }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\Person\Health\Exceptions\AfflictionIsAlreadyRegistered
+     */
+    public function I_can_not_add_same_affliction_twice()
+    {
+        $health = new Health($this->createWoundsLimit(5));
+        $wound = $health->createWound(
+            $this->createWoundSize(6),
+            SpecificWoundOrigin::getElementalWoundOrigin(),
+            $this->createWill(1),
+            $this->createRoller2d6Plus(2)
+        );
+        $affliction = $this->createAffliction($wound);
+        try {
+            $health->addAffliction($affliction);
+        } catch (\Exception $exception) {
+            self::fail('No exception should happened so far: ' . $exception->getTraceAsString());
+        }
+        $health->addAffliction($affliction);
+    }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\Person\Health\Exceptions\UnknownAfflictionOriginatingWound
+     */
+    public function I_can_not_add_affliction_with_to_health_unknown_wound()
+    {
+        $health = new Health($this->createWoundsLimit(5));
+        $wound = new Wound($health, $this->createWoundSize(6), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->addAffliction($this->createAffliction($wound));
     }
 }

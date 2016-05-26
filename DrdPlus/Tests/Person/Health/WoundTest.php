@@ -13,25 +13,30 @@ use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use Granam\Tests\Tools\TestWithMockery;
 
-class WoundTest extends TestWithMockery
+abstract class WoundTest extends TestWithMockery
 {
     /**
      * @test
+     * @return Wound
      */
     public function I_can_use_it()
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $wound = new Wound(
+        $wound = $this->createWound(
             $health = $this->createHealth(),
             new WoundSize($woundSizeValue = 3),
-            $ordinaryWoundOrigin = OrdinaryWoundOrigin::getIt()
+            $woundOrigin = SpecificWoundOrigin::getMechanicalCutWoundOrigin()
         );
         self::assertNull($wound->getId());
         self::assertSame($health, $wound->getHealth());
         self::assertSame($woundSizeValue, $wound->getValue());
-        self::assertFalse($wound->isSerious(), "Wound with {$ordinaryWoundOrigin} origin is not serious");
-        self::assertSame($ordinaryWoundOrigin, $wound->getWoundOrigin());
-        self::assertFalse($wound->isHealed(), "Wound with {$woundSizeValue} is not healed");
+        $this->assertIsSeriousAsExpected($wound);
+        if ($wound->isSerious()) {
+            self::assertSame($woundOrigin, $wound->getWoundOrigin());
+        } else {
+            self::assertSame(OrdinaryWoundOrigin::getIt(), $wound->getWoundOrigin());
+        }
+        self::assertFalse($wound->isHealed(), "Wound with {$woundSizeValue} should not be identified as healed");
         $pointsOfWound = $wound->getPointsOfWound();
         self::assertCount($woundSizeValue, $pointsOfWound);
         foreach ($pointsOfWound as $pointOfWound) {
@@ -41,7 +46,17 @@ class WoundTest extends TestWithMockery
         $wound->setOld();
         self::assertTrue($wound->isOld());
         self::assertSame('3', (string)$wound);
+
+        return $wound;
     }
+
+    /**
+     * @param Health $health
+     * @param WoundSize $woundSize
+     * @param SpecificWoundOrigin $specificWoundOrigin
+     * @return Wound
+     */
+    abstract protected function createWound(Health $health, WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin);
 
     /**
      * @return \Mockery\MockInterface|Health
@@ -52,20 +67,25 @@ class WoundTest extends TestWithMockery
     }
 
     /**
+     * @param Wound $wound
+     */
+    abstract protected function assertIsSeriousAsExpected(Wound $wound);
+
+    /**
      * @test
      */
     public function I_can_heal_it_both_partially_and_fully()
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $wound = new Wound(
+        $wound = $this->createWound(
             $health = $this->createHealth(),
             new WoundSize($woundSizeValue = 3),
             $elementalWoundOrigin = SpecificWoundOrigin::getElementalWoundOrigin()
         );
-        self::assertSame(3, $wound->getValue(), 'Expected same value as created with');
-        self::assertCount(3, $wound->getPointsOfWound());
+        self::assertSame($woundSizeValue, $wound->getValue(), 'Expected same value as created with');
+        self::assertCount($woundSizeValue, $wound->getPointsOfWound());
         self::assertFalse($wound->isHealed());
-        self::assertTrue($wound->isSerious(), "Wound of {$elementalWoundOrigin} origin should be serious");
+        $this->assertIsSeriousAsExpected($wound);
         self::assertFalse($wound->isOld());
 
         self::assertSame(1, $wound->heal(new HealingPower(123, $this->createWoundsTable(1, 123))), 'Expected reported healed value to be 1');
@@ -104,26 +124,16 @@ class WoundTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_create_both_light_and_serious_wound_with_zero_value()
+    public function I_can_create_wound_with_zero_value()
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $ordinaryWound = new Wound(
+        $wound = $this->createWound(
             $this->createHealth(),
             new WoundSize(0),
             SpecificWoundOrigin::getMechanicalCrushWoundOrigin()
         );
-        self::assertSame(0, $ordinaryWound->getValue());
-        self::assertTrue($ordinaryWound->isHealed());
-        self::assertFalse($ordinaryWound->isOld());
-
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $seriousWound = new Wound(
-            $this->createHealth(),
-            new WoundSize(0),
-            OrdinaryWoundOrigin::getIt()
-        );
-        self::assertSame(0, $seriousWound->getValue());
-        self::assertTrue($seriousWound->isHealed());
-        self::assertFalse($seriousWound->isOld());
+        self::assertSame(0, $wound->getValue());
+        self::assertTrue($wound->isHealed());
+        self::assertFalse($wound->isOld());
     }
 }

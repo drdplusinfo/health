@@ -62,15 +62,18 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param WoundSize $woundSize
-     * @param SpecificWoundOrigin $seriousWoundOrigin Beware, if the wound size is considered as serious, OrdinaryWoundOrigin will be used instead
+     * @param SpecificWoundOrigin $specificWoundOrigin Beware, if the wound size is considered as serious, OrdinaryWoundOrigin will be used instead
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
-     * @return Wound
+     * @return OrdinaryWound|SeriousWound
      */
-    public function createWound(WoundSize $woundSize, SpecificWoundOrigin $seriousWoundOrigin, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function createWound(WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
-        $wound = new Wound($this, $woundSize, $this->isSeriousInjury($woundSize) ? $seriousWoundOrigin : OrdinaryWoundOrigin::getIt());
+        $wound = $this->isSeriousInjury($woundSize)
+            ? new SeriousWound($this, $woundSize, $specificWoundOrigin)
+            : new OrdinaryWound($this, $woundSize);
         $this->wounds->add($wound);
+        // TODO solve malus in separate public method AFTER wound (and prohibit new wound or heal before solving malus)
         if ($this->maySufferFromPain()) {
             $this->rollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
         }
@@ -94,11 +97,18 @@ class Health extends StrictObject implements Entity
         $this->rollAgainstMalusFromWounds = $newRoll;
     }
 
+    /**
+     * @param WoundSize $woundSize
+     * @return bool
+     */
     private function isSeriousInjury(WoundSize $woundSize)
     {
         return $this->getGridOfWounds()->calculateFilledHalfRowsFor($woundSize->getValue()) > 0;
     }
 
+    /**
+     * @return bool
+     */
     private function maySufferFromPain()
     {
         // if person became unconscious than the roll against pain malus is not re-rolled
@@ -199,25 +209,19 @@ class Health extends StrictObject implements Entity
     }
 
     /**
-     * @param Wound $seriousWound
+     * @param SeriousWound $seriousWound
      * @param HealingPower $healingPower
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int amount of healed points of wounds
      * @throws \DrdPlus\Person\Health\Exceptions\UnknownSeriousWoundToHeal
-     * @throws \DrdPlus\Person\Health\Exceptions\ExpectedSeriousWound
      * @throws \DrdPlus\Person\Health\Exceptions\ExpectedFreshWoundToHeal
      */
-    public function healSeriousWound(Wound $seriousWound, HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function healSeriousWound(SeriousWound $seriousWound, HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         if (!$this->doesHaveThatWound($seriousWound)) {
             throw new Exceptions\UnknownSeriousWoundToHeal(
                 "Given serious wound of value {$seriousWound->getValue()} and origin {$seriousWound->getWoundOrigin()} to heal does not belongs to this health"
-            );
-        }
-        if (!$seriousWound->isSerious()) {
-            throw new Exceptions\ExpectedSeriousWound(
-                "Given wound of value {$seriousWound->getValue()} should be serious (heal it as ordinary otherwise)"
             );
         }
         if ($seriousWound->isOld()) {

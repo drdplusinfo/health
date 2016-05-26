@@ -7,10 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Granam\Strict\Object\StrictObject;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="wound")
+ * @ORM\MappedSuperclass()
  */
-class Wound extends StrictObject implements Entity
+abstract class Wound extends StrictObject implements Entity
 {
     /**
      * @var int
@@ -49,7 +48,7 @@ class Wound extends StrictObject implements Entity
      * @param WoundSize $woundSize (it can be also zero; usable for afflictions without a damage at all)
      * @param WoundOrigin $woundOrigin Ordinary origin is for lesser wound, others for serious wound
      */
-    public function __construct(Health $health, WoundSize $woundSize, WoundOrigin $woundOrigin)
+    protected function __construct(Health $health, WoundSize $woundSize, WoundOrigin $woundOrigin)
     {
         $this->health = $health;
         $this->pointsOfWound = new ArrayCollection($this->createPointsOfWound($woundSize));
@@ -115,10 +114,7 @@ class Wound extends StrictObject implements Entity
     /**
      * @return bool
      */
-    public function isSerious()
-    {
-        return !$this->getWoundOrigin()->isOrdinaryWoundOrigin();
-    }
+    abstract public function isSerious();
 
     /**
      * @param HealingPower $healingPower

@@ -5,6 +5,7 @@ use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Person\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Bleeding;
 use DrdPlus\Person\Health\Health;
+use DrdPlus\Person\Health\SeriousWound;
 use DrdPlus\Person\Health\SpecificWoundOrigin;
 use DrdPlus\Person\Health\Wound;
 use DrdPlus\Person\Health\WoundSize;
@@ -12,6 +13,7 @@ use DrdPlus\Properties\Base\Will;
 use DrdPlus\Properties\Derived\WoundsLimit;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 
+/** @noinspection LongInheritanceChainInspection */
 class BleedingEffectTest extends AfflictionEffectTest
 {
     /**
@@ -29,11 +31,13 @@ class BleedingEffectTest extends AfflictionEffectTest
     public function I_can_get_wound_caused_by_bleeding()
     {
         $bleedingEffect = BleedingEffect::getIt();
-        $woundCausedBleeding = new Wound(
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $woundCausedBleeding = new SeriousWound(
             new Health($this->createWoundsLimit(10)),
             new WoundSize(25),
             $specificWoundOrigin = $this->createSpecificWoundOrigin()
         );
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $bleedingEffect->bleed(
             Bleeding::createIt($woundCausedBleeding),
             new WoundsTable(),

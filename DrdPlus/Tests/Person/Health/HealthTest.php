@@ -447,8 +447,33 @@ class HealthTest extends TestWithMockery
 
     /**
      * @test
+     * @expectedException \DrdPlus\Person\Health\Exceptions\ExpectedFreshWoundToHeal
      */
-    public function I_can_not_lower_malus_on_new_wound_by_better_roll()
+    public function I_can_not_heal_old_serious_wound()
+    {
+        $health = new Health($this->createWoundsLimit(5));
+        $seriousWound = $health->createWound(
+            $this->createWoundSize(5),
+            SpecificWoundOrigin::getMechanicalCutWoundOrigin(),
+            $this->createWill(1),
+            $this->createRoller2d6Plus(4)
+        );
+        self::assertTrue($seriousWound->isSerious());
+        $seriousWound->setOld();
+        self::assertTrue($seriousWound->isOld());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $health->healSeriousWound(
+            $seriousWound,
+            $this->createHealingPower(),
+            $this->createWill(),
+            $this->createRoller2d6Plus()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function Malus_is_not_lowered_on_new_wound_by_better_roll()
     {
         $health = new Health($this->createWoundsLimit(5));
         self::assertSame(0, $health->getMalusCausedByWounds());
@@ -473,7 +498,7 @@ class HealthTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_not_increase_malus_on_new_wound_by_worse_roll()
+    public function Malus_is_not_increased_on_new_heal_by_worse_roll()
     {
         $health = new Health($this->createWoundsLimit(5));
         self::assertSame(0, $health->getMalusCausedByWounds());

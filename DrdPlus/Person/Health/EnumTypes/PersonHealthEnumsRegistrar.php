@@ -2,7 +2,7 @@
 namespace DrdPlus\Person\Health\EnumTypes;
 
 use Doctrineum\DateInterval\DBAL\Types\DateIntervalType;
-use DrdPlus\Person\Health\Afflictions\Effects\EnumType\AfflictionEffectType;
+use DrdPlus\Person\Health\Afflictions\Effects\EnumTypes\AfflictionEffectType;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\EnumTypes\ElementalPertinenceType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionDangerousnessType;
 use DrdPlus\Person\Health\Afflictions\EnumTypes\AfflictionDomainType;
@@ -21,6 +21,7 @@ class PersonHealthEnumsRegistrar
         // Health
         TreatmentBoundaryType::registerSelf();
         WoundOriginType::registerSelf();
+        MalusFromWoundsType::registerSelf();
 
         // Health\Afflictions
         AfflictionDangerousnessType::registerSelf();

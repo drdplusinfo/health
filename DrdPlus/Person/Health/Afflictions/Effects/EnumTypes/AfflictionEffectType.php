@@ -1,5 +1,5 @@
 <?php
-namespace DrdPlus\Person\Health\Afflictions\Effects\EnumType;
+namespace DrdPlus\Person\Health\Afflictions\Effects\EnumTypes;
 
 use Doctrineum\Scalar\ScalarEnumType;
 use DrdPlus\Person\Health\Afflictions\Effects\ColdEffect;

@@ -6,6 +6,12 @@ use Granam\Tools\ValueDescriber;
 
 class SpecificWoundOrigin extends WoundOrigin
 {
+    const MECHANICAL_STAB = WoundsOriginCodes::MECHANICAL_STAB;
+    const MECHANICAL_CUT = WoundsOriginCodes::MECHANICAL_CUT;
+    const MECHANICAL_CRUSH = WoundsOriginCodes::MECHANICAL_CRUSH;
+    const ELEMENTAL = WoundsOriginCodes::ELEMENTAL;
+    const PSYCHICAL = WoundsOriginCodes::PSYCHICAL;
+
     /**
      * @return SpecificWoundOrigin
      */

@@ -48,6 +48,11 @@ class Health extends StrictObject implements Entity
      */
     private $treatmentBoundary;
     /**
+     * @var MalusFromWounds|null
+     * @ORM\Column(type="malus_from_wounds", nullable=true)
+     */
+    private $malusFromWounds;
+    /**
      * @var GridOfWounds|null is just a helper, does not need to be persisted
      */
     private $gridOfWounds;
@@ -89,12 +94,12 @@ class Health extends StrictObject implements Entity
     {
         $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
         // bigger (or same of course) malus remains; can not be decreased on new wounds
-        if ($this->rollAgainstMalusFromWounds !== null
-            && $this->rollAgainstMalusFromWounds->getMalusValue() <= $newRoll->getMalusValue() // lesser in mathematical meaning (malus is negative)
+        if ($this->malusFromWounds !== null
+            && $this->malusFromWounds->getValue() <= $newRoll->getMalusValue() // lesser in mathematical meaning (malus is negative)
         ) {
             return;
         }
-        $this->rollAgainstMalusFromWounds = $newRoll;
+        $this->malusFromWounds = MalusFromWounds::getIt($newRoll->getMalusValue());
     }
 
     /**
@@ -189,7 +194,7 @@ class Health extends StrictObject implements Entity
             if ($this->maySufferFromPain()) {
                 $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
             } else if ($this->isConscious()) {
-                $this->rollAgainstMalusFromWounds = null; // pain is gone and person feel it - lets remove the roll and malus
+                $this->malusFromWounds = null; // pain is gone and person feel it - lets remove the malus
             }
         }
 
@@ -237,7 +242,7 @@ class Health extends StrictObject implements Entity
         if ($this->maySufferFromPain()) {
             $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
         } else if ($this->isConscious()) {
-            $this->rollAgainstMalusFromWounds = null; // pain is gone and person feel it - lets remove the roll and malus
+            $this->malusFromWounds = null; // pain is gone and person feel it - lets remove the malus
         }
 
         return $healed;
@@ -269,7 +274,7 @@ class Health extends StrictObject implements Entity
             if ($this->maySufferFromPain()) {
                 $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
             } else if ($this->isConscious()) {
-                $this->rollAgainstMalusFromWounds = null; // pain is gone and person feel it - lets remove the roll and malus
+                $this->malusFromWounds = null; // pain is gone and person feel it - lets remove the malus
             }
         }
 
@@ -415,7 +420,7 @@ class Health extends StrictObject implements Entity
 
     private function reRollAgainstMalusFromWoundsOnWound(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
-        if ($this->rollAgainstMalusFromWounds === null) {
+        if ($this->malusFromWounds === null) {
             return;
         }
         $this->rollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
@@ -423,15 +428,15 @@ class Health extends StrictObject implements Entity
 
     private function reRollAgainstMalusFromWoundsOnHeal(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
-        if ($this->rollAgainstMalusFromWounds === null) {
+        if ($this->malusFromWounds === null) {
             return;
         }
         $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
         // lesser (or same of course) malus remains; can not be increased on healing
-        if ($this->rollAgainstMalusFromWounds->getMalusValue() >= $newRoll->getMalusValue()) { // greater in mathematical meaning (malus is negative)
+        if ($this->malusFromWounds->getValue() >= $newRoll->getMalusValue()) { // greater in mathematical meaning (malus is negative)
             return;
         }
-        $this->rollAgainstMalusFromWounds = $newRoll;
+        $this->malusFromWounds = MalusFromWounds::getIt($newRoll->getMalusValue());
     }
 
     /**
@@ -491,12 +496,10 @@ class Health extends StrictObject implements Entity
      */
     public function getMalusCausedByWounds()
     {
-        if ($this->getGridOfWounds()->getNumberOfFilledRows() === 0) { // else even unconscious can has a malus (but would be wrong if applied)
+        if ($this->getGridOfWounds()->getNumberOfFilledRows() === 0 // else even unconscious can has a malus (but would be wrong if applied)
+            || $this->malusFromWounds === null // no roll against malus happened so far, therefore no malus at all
+        ) {
             return 0;
-        }
-
-        if ($this->rollAgainstMalusFromWounds === null) {
-            return 0; // no roll against malus happened so far, therefore no malus at all
         }
 
         /**
@@ -505,13 +508,8 @@ class Health extends StrictObject implements Entity
          * Is removed when first row of grid of wounds is not filled.
          * See PPH page 75 right column
          */
-        return $this->rollAgainstMalusFromWounds->getMalusValue();
+        return $this->malusFromWounds->getValue();
     }
-
-    /**
-     * @var RollOnWillAgainstMalus|null
-     */
-    private $rollAgainstMalusFromWounds;
 
     /**
      * @param Will $will

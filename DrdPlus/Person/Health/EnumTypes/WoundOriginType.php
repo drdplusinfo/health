@@ -15,7 +15,7 @@ class WoundOriginType extends StringEnumType
         self::registerSubTypeEnum(OrdinaryWoundOrigin::class, '~^' . OrdinaryWoundOrigin::ORDINARY . '$~');
         self::registerSubTypeEnum(
             SpecificWoundOrigin::class,
-            '~^(?:(?!' . OrdinaryWoundOrigin::ORDINARY . ').)+$~' // just the not "ordinary" string
+            '~^(?:(?!' . OrdinaryWoundOrigin::ORDINARY . ').)+$~' // just not the "ordinary" string
         );
     }
 

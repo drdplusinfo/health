@@ -28,7 +28,7 @@ class BleedingTest extends AfflictionByWoundTest
         $bleeding = Bleeding::createIt($wound);
 
         self::assertNull($bleeding->getId());
-        self::assertSame($wound, $bleeding->getWound());
+        self::assertSame($wound, $bleeding->getSeriousWound());
 
         self::assertInstanceOf(AfflictionDomain::class, $bleeding->getDomain());
         self::assertSame('physical', $bleeding->getDomain()->getValue());

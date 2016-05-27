@@ -12,7 +12,7 @@ use DrdPlus\Person\Health\Afflictions\AfflictionSource;
 use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\ColdEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\WaterPertinence;
-use DrdPlus\Person\Health\Wound;
+use DrdPlus\Person\Health\SeriousWound;
 
 /**
  * See PPH page 78, left column
@@ -22,14 +22,15 @@ class Cold extends AfflictionByWound
     const COLD = 'cold';
 
     /**
-     * @param Wound $wound
+     * @param SeriousWound $seriousWound
      * @return Cold
+     * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
-    public static function createIt(Wound $wound)
+    public static function createIt(SeriousWound $seriousWound)
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
-            $wound,
+            $seriousWound,
             AfflictionDomain::getPhysicalAffliction(),
             AfflictionVirulence::getDayVirulence(),
             AfflictionSource::getActiveSource(),

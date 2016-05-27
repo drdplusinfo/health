@@ -3,7 +3,8 @@ namespace DrdPlus\Person\Health\Afflictions\Effects;
 
 use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Bleeding;
-use DrdPlus\Person\Health\Wound;
+use DrdPlus\Person\Health\OrdinaryWound;
+use DrdPlus\Person\Health\SeriousWound;
 use DrdPlus\Person\Health\WoundSize;
 use DrdPlus\Properties\Base\Will;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
@@ -35,7 +36,7 @@ class BleedingEffect extends AfflictionEffect
      * @param WoundsTable $woundsTable
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
-     * @return Wound|false
+     * @return SeriousWound|OrdinaryWound|false
      */
     public function bleed(
         Bleeding $bleeding,
@@ -49,7 +50,7 @@ class BleedingEffect extends AfflictionEffect
         $woundsFromTable = $woundsTable->toWounds(new WoundsBonus($effectSize, $woundsTable));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $woundSize = new WoundSize($woundsFromTable->getValue());
-        $woundCausedBleeding = $bleeding->getWound();
+        $woundCausedBleeding = $bleeding->getSeriousWound();
 
         return $woundCausedBleeding->getHealth()->createWound(
             $woundSize,

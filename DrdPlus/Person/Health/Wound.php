@@ -7,7 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Granam\Strict\Object\StrictObject;
 
 /**
- * @ORM\MappedSuperclass()
+ * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="severity", type="string")
+ * @ORM\DiscriminatorMap({"ordinary" = "OrdinaryWound", "serious" = "SeriousWound"})
  */
 abstract class Wound extends StrictObject implements Entity
 {

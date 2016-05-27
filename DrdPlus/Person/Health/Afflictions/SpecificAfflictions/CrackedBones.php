@@ -12,24 +12,25 @@ use DrdPlus\Person\Health\Afflictions\AfflictionSource;
 use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\CrackedBonesEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\EarthPertinence;
-use DrdPlus\Person\Health\Wound;
+use DrdPlus\Person\Health\SeriousWound;
 
 class CrackedBones extends AfflictionByWound
 {
     const CRACKED_BONES = 'cracked_bones';
 
     /**
-     * @param Wound $wound
+     * @param SeriousWound $seriousWound
      * @return CrackedBones
+     * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
-    public static function createIt(Wound $wound)
+    public static function createIt(SeriousWound $seriousWound)
     {
         // see PPH page 78 right column, Cracked bones
-        $sizeValue = $wound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($wound->getValue()) * 2;
+        $sizeValue = $seriousWound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($seriousWound->getValue()) * 2;
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
-            $wound,
+            $seriousWound,
             AfflictionDomain::getPhysicalAffliction(),
             AfflictionVirulence::getDayVirulence(),
             AfflictionSource::getPassiveSource(),

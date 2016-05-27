@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrineum\Entity\Entity;
 use DrdPlus\Person\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\ElementalPertinence;
-use DrdPlus\Person\Health\Wound;
+use DrdPlus\Person\Health\SeriousWound;
 use Granam\Strict\Object\StrictObject;
 
 abstract class AfflictionByWound extends StrictObject implements Entity
@@ -18,10 +18,10 @@ abstract class AfflictionByWound extends StrictObject implements Entity
      */
     private $id;
     /**
-     * @var Wound
-     * @ORM\ManyToOne(targetEntity="\DrdPlus\Person\Health\Wound", cascade={"persist"})
+     * @var SeriousWound
+     * @ORM\ManyToOne(targetEntity="\DrdPlus\Person\Health\SeriousWound", cascade={"persist"})
      */
-    private $wound;
+    private $seriousWound;
     /**
      * @var \DrdPlus\Person\Health\Health
      * @ORM\ManyToOne(targetEntity="\DrdPlus\Person\Health\Health", cascade={"persist"}, inversedBy="afflictions")
@@ -79,7 +79,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     private $afflictionName;
 
     /**
-     * @param Wound $wound
+     * @param SeriousWound $seriousWound
      * @param AfflictionDomain $domain
      * @param AfflictionVirulence $virulence
      * @param AfflictionSource $source
@@ -90,11 +90,10 @@ abstract class AfflictionByWound extends StrictObject implements Entity
      * @param AfflictionEffect $effect
      * @param \DateInterval $outbreakPeriod
      * @param AfflictionName $afflictionName
-     * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeSeriousForAffliction
      * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
     protected function __construct(
-        Wound $wound, // wound can be healed, but never disappears - just stays healed
+        SeriousWound $seriousWound, // wound can be healed, but never disappears - just stays healed
         AfflictionDomain $domain,
         AfflictionVirulence $virulence,
         AfflictionSource $source,
@@ -107,18 +106,13 @@ abstract class AfflictionByWound extends StrictObject implements Entity
         AfflictionName $afflictionName
     )
     {
-        if (!$wound->isSerious()) {
-            throw new Exceptions\WoundHasToBeSeriousForAffliction(
-                "Given wound of value {$wound->getValue()} should be serious to create an affliction."
-            );
-        }
-        if ($wound->isOld()) {
+        if ($seriousWound->isOld()) {
             throw new Exceptions\WoundHasToBeFreshForAffliction(
-                "Given wound of value {$wound->getValue()} and origin '{$wound->getWoundOrigin()}' should be untreated to create an affliction."
+                "Given wound of value {$seriousWound->getValue()} and origin '{$seriousWound->getWoundOrigin()}' should be untreated to create an affliction."
             );
         }
-        $this->wound = $wound;
-        $this->health = $wound->getHealth();
+        $this->seriousWound = $seriousWound;
+        $this->health = $seriousWound->getHealth();
         $this->domain = $domain;
         $this->virulence = $virulence;
         $this->source = $source;
@@ -140,11 +134,11 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     }
 
     /**
-     * @return Wound
+     * @return SeriousWound
      */
-    public function getWound()
+    public function getSeriousWound()
     {
-        return $this->wound;
+        return $this->seriousWound;
     }
 
     /**

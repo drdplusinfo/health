@@ -13,7 +13,7 @@ use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Person\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative;
-use DrdPlus\Person\Health\Wound;
+use DrdPlus\Person\Health\SeriousWound;
 
 /**
  * See PPH page 78, right column
@@ -23,14 +23,15 @@ class Bleeding extends AfflictionByWound
     const BLEEDING = 'bleeding';
 
     /**
-     * @param Wound $wound
+     * @param SeriousWound $seriousWound
      * @return Bleeding
      * @throws \DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Exceptions\BleedingCanNotExistsDueToTooLowWound
+     * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
-    public static function createIt(Wound $wound)
+    public static function createIt(SeriousWound $seriousWound)
     {
         // see PPH page 78 right column, Bleeding
-        $bleedingSizeValue= $wound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($wound->getValue()) - 1;
+        $bleedingSizeValue= $seriousWound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($seriousWound->getValue()) - 1;
         try {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $size = AfflictionSize::getIt($bleedingSizeValue);
@@ -41,7 +42,7 @@ class Bleeding extends AfflictionByWound
         }
 
         return new static(
-            $wound,
+            $seriousWound,
             AfflictionDomain::getPhysicalAffliction(),
             AfflictionVirulence::getRoundVirulence(),
             AfflictionSource::getActiveSource(),

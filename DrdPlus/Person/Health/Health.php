@@ -123,10 +123,10 @@ class Health extends StrictObject implements Entity
      */
     public function addAffliction(AfflictionByWound $afflictionByWound)
     {
-        if (!$this->doesHaveThatWound($afflictionByWound->getWound())) {
+        if (!$this->doesHaveThatWound($afflictionByWound->getSeriousWound())) {
             throw new Exceptions\UnknownAfflictionOriginatingWound(
                 "Given affliction '{$afflictionByWound->getName()}' to add comes from unknown wound"
-                . " of value {$afflictionByWound->getWound()} and origin '{$afflictionByWound->getWound()->getWoundOrigin()}'."
+                . " of value {$afflictionByWound->getSeriousWound()} and origin '{$afflictionByWound->getSeriousWound()->getWoundOrigin()}'."
                 . ' Have you created that wound by current health?'
             );
         }
@@ -174,7 +174,7 @@ class Health extends StrictObject implements Entity
     {
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
         $healed = 0;
-        foreach ($this->getNewOrdinaryWounds() as $newOrdinaryWound) {
+        foreach ($this->getUntreatedOrdinaryWounds() as $newOrdinaryWound) {
             if ($healingPower->getHealUpTo() > 0) { // we do not spent all the healing power
                 $currentlyHealed = $newOrdinaryWound->heal($healingPower);
                 $healingPower = $healingPower->decreaseByHealedAmount($currentlyHealed); // new instance
@@ -197,9 +197,9 @@ class Health extends StrictObject implements Entity
     }
 
     /**
-     * @return Wound[]|Collection
+     * @return OrdinaryWound[]|Collection
      */
-    private function getNewOrdinaryWounds()
+    private function getUntreatedOrdinaryWounds()
     {
         return $this->wounds->filter(
             function (Wound $wound) {
@@ -284,10 +284,10 @@ class Health extends StrictObject implements Entity
     {
         return array_sum(
             array_map(
-                function (Wound $wound) {
-                    return $wound->getValue();
+                function (OrdinaryWound $ordinaryWound) {
+                    return $ordinaryWound->getValue();
                 },
-                $this->getNewOrdinaryWounds()->toArray()
+                $this->getUntreatedOrdinaryWounds()->toArray()
             )
         );
     }
@@ -299,8 +299,8 @@ class Health extends StrictObject implements Entity
     {
         return array_sum(
             array_map(
-                function (Wound $wound) {
-                    return $wound->getValue();
+                function (SeriousWound $seriousWound) {
+                    return $seriousWound->getValue();
                 },
                 $this->getUnhealedSeriousWounds()->toArray()
             )
@@ -308,11 +308,11 @@ class Health extends StrictObject implements Entity
     }
 
     /**
-     * @return Wound[]|Collection
+     * @return SeriousWound[]|Collection
      */
     private function getUnhealedSeriousWounds()
     {
-        return $this->getUnhealedWounds()->filter(
+        return $this->getUnhealedWounds()->filter( // creates new Collection instance
             function (Wound $wound) {
                 return $wound->isSerious();
             }
@@ -448,12 +448,7 @@ class Health extends StrictObject implements Entity
      */
     public function getNumberOfSeriousInjuries()
     {
-        return $this->getUnhealedWounds()
-            ->filter(
-                function (Wound $wound) {
-                    return $wound->isSerious();
-                }
-            )->count();
+        return $this->getUnhealedSeriousWounds()->count();
     }
 
     const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;

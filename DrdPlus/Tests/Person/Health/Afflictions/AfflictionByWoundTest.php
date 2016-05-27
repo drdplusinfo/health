@@ -12,39 +12,14 @@ use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Person\Health\Health;
+use DrdPlus\Person\Health\OrdinaryWound;
+use DrdPlus\Person\Health\SeriousWound;
 use DrdPlus\Person\Health\SpecificWoundOrigin;
-use DrdPlus\Person\Health\Wound;
 use DrdPlus\Person\Health\WoundOrigin;
 use Granam\Tests\Tools\TestWithMockery;
 
 abstract class AfflictionByWoundTest extends TestWithMockery
 {
-    /**
-     * @test
-     * @expectedException \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeSeriousForAffliction
-     */
-    public function I_can_not_create_it_with_non_serious_wound()
-    {
-        $reflection = new \ReflectionClass($this->getSutClass());
-        $constructor = $reflection->getConstructor();
-        $constructor->setAccessible(true);
-
-        $instance = $reflection->newInstanceWithoutConstructor();
-        $constructor->invoke(
-            $instance,
-            $this->createWound(false /* not serious */),
-            $this->mockery(AfflictionDomain::class),
-            $this->mockery(AfflictionVirulence::class),
-            $this->mockery(AfflictionSource::class),
-            $this->mockery(AfflictionProperty::class),
-            $this->mockery(AfflictionDangerousness::class),
-            $this->mockery(AfflictionSize::class),
-            $this->mockery(ElementalPertinence::class),
-            $this->mockery(AfflictionEffect::class),
-            $this->mockery(\DateInterval::class),
-            $this->mockery(AfflictionName::class)
-        );
-    }
 
     /**
      * @return string|AfflictionByWound
@@ -91,11 +66,11 @@ abstract class AfflictionByWoundTest extends TestWithMockery
      * @param bool $isOld
      * @param $value
      * @param WoundOrigin $woundOrigin
-     * @return \Mockery\MockInterface|Wound
+     * @return \Mockery\MockInterface|SeriousWound|OrdinaryWound
      */
     protected function createWound($isSerious = true, $isOld = false, $value = 0, WoundOrigin $woundOrigin = null)
     {
-        $wound = $this->mockery(Wound::class);
+        $wound = $this->mockery($isSerious ? SeriousWound::class : OrdinaryWound::class);
         $wound->shouldReceive('getHealth')
             ->andReturn($this->mockery(Health::class));
         $wound->shouldReceive('isSerious')

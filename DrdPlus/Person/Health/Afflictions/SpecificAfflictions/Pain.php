@@ -12,7 +12,7 @@ use DrdPlus\Person\Health\Afflictions\AfflictionSource;
 use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\PainEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\ElementalPertinence;
-use DrdPlus\Person\Health\Wound;
+use DrdPlus\Person\Health\SeriousWound;
 
 /**
  * see PPH page 79 left column
@@ -23,21 +23,22 @@ class Pain extends AfflictionByWound
     const PAIN = 'pain';
 
     /**
-     * @param Wound $wound
+     * @param SeriousWound $seriousWound
      * @param AfflictionVirulence $virulence
      * @param AfflictionSize $painSize
      * @param ElementalPertinence $elementalPertinence
      * @return Cold
+     * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
     public static function createIt(
-        Wound $wound,
+        SeriousWound $seriousWound,
         AfflictionVirulence $virulence,
         AfflictionSize $painSize,
         ElementalPertinence $elementalPertinence
     )
     {
         return new static(
-            $wound,
+            $seriousWound,
             AfflictionDomain::getPhysicalAffliction(),
             $virulence,
             AfflictionSource::getExternalSource(),

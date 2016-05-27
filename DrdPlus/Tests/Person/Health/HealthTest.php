@@ -404,7 +404,7 @@ class HealthTest extends TestWithMockery
     private function createAffliction(Wound $wound)
     {
         $affliction = $this->mockery(AfflictionByWound::class);
-        $affliction->shouldReceive('getWound')
+        $affliction->shouldReceive('getSeriousWound')
             ->andReturn($wound);
         $affliction->shouldReceive('getName')
             ->andReturn('some terrible affliction');

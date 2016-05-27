@@ -28,7 +28,7 @@ class CrackedBonesTest extends AfflictionByWoundTest
         $crackedBones = CrackedBones::createIt($wound);
 
         self::assertNull($crackedBones->getId());
-        self::assertSame($wound, $crackedBones->getWound());
+        self::assertSame($wound, $crackedBones->getSeriousWound());
 
         self::assertInstanceOf(AfflictionDomain::class, $crackedBones->getDomain());
         self::assertSame(AfflictionDomain::PHYSICAL, $crackedBones->getDomain()->getValue());

@@ -29,7 +29,9 @@ class MalusFromWounds extends IntegerEnum
     protected static function convertToEnumFinalValue($enumValue)
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
-        if ($finalValue > self::LEAST || $finalValue < self::MOST) { // note: comparing negative numbers
+        if ($finalValue > self::LEAST // note: comparing negative numbers
+            || $finalValue < self::MOST
+        ) {
             throw new Exceptions\UnexpectedMalusValue(
                 'Malus can be between ' . self::LEAST . ' and ' . self::MOST . ', got ' . ValueDescriber::describe($enumValue)
             );

@@ -22,6 +22,7 @@ class PersonHealthEnumsRegistrar
         TreatmentBoundaryType::registerSelf();
         WoundOriginType::registerSelf();
         MalusFromWoundsType::registerSelf();
+        ReasonToRollAgainstMalusType::registerSelf();
 
         // Health\Afflictions
         AfflictionDangerousnessType::registerSelf();

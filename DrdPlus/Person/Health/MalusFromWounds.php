@@ -17,7 +17,6 @@ class MalusFromWounds extends IntegerEnum
         return static::getEnum($malusValue);
     }
 
-    const LEAST = 0;
     const MOST = -3;
 
     /**
@@ -29,11 +28,11 @@ class MalusFromWounds extends IntegerEnum
     protected static function convertToEnumFinalValue($enumValue)
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
-        if ($finalValue > self::LEAST // note: comparing negative numbers
+        if ($finalValue > 0 // note: comparing negative numbers
             || $finalValue < self::MOST
         ) {
             throw new Exceptions\UnexpectedMalusValue(
-                'Malus can be between ' . self::LEAST . ' and ' . self::MOST . ', got ' . ValueDescriber::describe($enumValue)
+                'Malus can be between 0 and ' . self::MOST . ', got ' . ValueDescriber::describe($enumValue)
             );
         }
 

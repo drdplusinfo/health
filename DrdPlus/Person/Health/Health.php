@@ -48,10 +48,15 @@ class Health extends StrictObject implements Entity
      */
     private $treatmentBoundary;
     /**
-     * @var MalusFromWounds|null
-     * @ORM\Column(type="malus_from_wounds", nullable=true)
+     * @var MalusFromWounds
+     * @ORM\Column(type="malus_from_wounds")
      */
     private $malusFromWounds;
+    /**
+     * @var ReasonToRollAgainstMalus|null
+     * @ORM\Column(type="reason_to_roll_against_malus", nullable=true)
+     */
+    private $reasonToRollAgainstMalus;
     /**
      * @var GridOfWounds|null is just a helper, does not need to be persisted
      */
@@ -63,43 +68,27 @@ class Health extends StrictObject implements Entity
         $this->woundsLimitValue = $woundsLimit->getValue();
         $this->afflictions = new ArrayCollection();
         $this->treatmentBoundary = TreatmentBoundary::getIt(0);
+        $this->malusFromWounds = MalusFromWounds::getIt(0);
     }
 
     /**
      * @param WoundSize $woundSize
-     * @param SpecificWoundOrigin $specificWoundOrigin Beware, if the wound size is considered as serious, OrdinaryWoundOrigin will be used instead
-     * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param SpecificWoundOrigin $specificWoundOrigin Beware if the wound size is considered as serious than OrdinaryWoundOrigin will be used instead
      * @return OrdinaryWound|SeriousWound
      */
-    public function createWound(WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function createWound(WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin)
     {
         $wound = $this->isSeriousInjury($woundSize)
             ? new SeriousWound($this, $woundSize, $specificWoundOrigin)
             : new OrdinaryWound($this, $woundSize);
         $this->wounds->add($wound);
-        // TODO solve malus in separate public method AFTER wound (and prohibit new wound or heal before solving malus)
-        if ($this->maySufferFromPain()) {
-            $this->rollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
-        }
         if ($wound->isSerious()) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->treatmentBoundary = TreatmentBoundary::getIt($this->getTreatmentBoundary()->getValue() + $wound->getValue());
         }
+        $this->resolveMalusAfterWound($wound);
 
         return $wound;
-    }
-
-    private function rollAgainstMalusFromWoundsOnWound(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
-    {
-        $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
-        // bigger (or same of course) malus remains; can not be decreased on new wounds
-        if ($this->malusFromWounds !== null
-            && $this->malusFromWounds->getValue() <= $newRoll->getMalusValue() // lesser in mathematical meaning (malus is negative)
-        ) {
-            return;
-        }
-        $this->malusFromWounds = MalusFromWounds::getIt($newRoll->getMalusValue());
     }
 
     /**
@@ -118,6 +107,26 @@ class Health extends StrictObject implements Entity
     {
         // if person became unconscious than the roll against pain malus is not re-rolled
         return $this->getGridOfWounds()->getNumberOfFilledRows() >= GridOfWounds::PAIN_NUMBER_OF_ROWS && $this->isConscious();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConscious()
+    {
+        return $this->getGridOfWounds()->getNumberOfFilledRows() < GridOfWounds::UNCONSCIOUS_NUMBER_OF_ROWS;
+    }
+
+    private function resolveMalusAfterWound(Wound $wound)
+    {
+        if ($wound->getValue() === 0) {
+            return;
+        }
+        if ($this->maySufferFromPain()) {
+            $this->reasonToRollAgainstMalus = ReasonToRollAgainstMalus::getWoundReason();
+        } elseif ($this->isConscious()) {
+            $this->malusFromWounds = MalusFromWounds::getIt(0);
+        } // otherwise left the previous malus - person will suffer by it when comes conscious again
     }
 
     /**
@@ -171,34 +180,27 @@ class Health extends StrictObject implements Entity
     /**
      * Also sets treatment boundary to unhealed wounds after. Even if the heal itself heals nothing!
      * @param HealingPower $healingPower
-     * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int amount of actually healed points of wounds
      */
-    public function healNewOrdinaryWoundsUpTo(HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function healNewOrdinaryWoundsUpTo(HealingPower $healingPower)
     {
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
-        $healed = 0;
+        $healedAmount = 0;
         foreach ($this->getUntreatedOrdinaryWounds() as $newOrdinaryWound) {
             if ($healingPower->getHealUpTo() > 0) { // we do not spent all the healing power
                 $currentlyHealed = $newOrdinaryWound->heal($healingPower);
+                /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                 $healingPower = $healingPower->decreaseByHealedAmount($currentlyHealed); // new instance
-                $healed += $currentlyHealed;
+                $healedAmount += $currentlyHealed;
             }
             // all new ordinary wounds become "old", healed or not (and those unhealed can be healed only by a professional or nature itself)
             $newOrdinaryWound->setOld();
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        if ($healed > 0) { // otherwise both wounds remain the same and pain remains the same
-            if ($this->maySufferFromPain()) {
-                $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
-            } else if ($this->isConscious()) {
-                $this->malusFromWounds = null; // pain is gone and person feel it - lets remove the malus
-            }
-        }
+        $this->resolveMalusAfterHeal($healedAmount);
 
-        return $healed;
+        return $healedAmount;
     }
 
     /**
@@ -213,16 +215,26 @@ class Health extends StrictObject implements Entity
         );
     }
 
+    private function resolveMalusAfterHeal($healedAmount)
+    {
+        if ($healedAmount === 0) { // both wounds remain the same and pain remains the same
+            return;
+        }
+        if ($this->maySufferFromPain()) {
+            $this->reasonToRollAgainstMalus = ReasonToRollAgainstMalus::getHealReason();
+        } else if ($this->isConscious()) {
+            $this->malusFromWounds = MalusFromWounds::getIt(0); // pain is gone and person feel it - lets remove the malus
+        } // otherwise left the previous malus - person will suffer by it when comes conscious again
+    }
+
     /**
      * @param SeriousWound $seriousWound
      * @param HealingPower $healingPower
-     * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int amount of healed points of wounds
      * @throws \DrdPlus\Person\Health\Exceptions\UnknownSeriousWoundToHeal
      * @throws \DrdPlus\Person\Health\Exceptions\ExpectedFreshWoundToHeal
      */
-    public function healSeriousWound(SeriousWound $seriousWound, HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function healSeriousWound(SeriousWound $seriousWound, HealingPower $healingPower)
     {
         if (!$this->doesHaveThatWound($seriousWound)) {
             throw new Exceptions\UnknownSeriousWoundToHeal(
@@ -234,51 +246,40 @@ class Health extends StrictObject implements Entity
                 "Given serious wound of value {$seriousWound->getValue()} and origin {$seriousWound->getWoundOrigin()} should not be old to be healed."
             );
         }
-        $healed = $seriousWound->heal($healingPower);
+        $healedAmount = $seriousWound->heal($healingPower);
         $seriousWound->setOld();
         // treatment boundary is taken with wounds down together
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $this->treatmentBoundary = TreatmentBoundary::getIt($this->treatmentBoundary->getValue() - $healed);
-        if ($this->maySufferFromPain()) {
-            $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
-        } else if ($this->isConscious()) {
-            $this->malusFromWounds = null; // pain is gone and person feel it - lets remove the malus
-        }
+        $this->treatmentBoundary = TreatmentBoundary::getIt($this->treatmentBoundary->getValue() - $healedAmount);
+        $this->resolveMalusAfterHeal($healedAmount);
 
-        return $healed;
+        return $healedAmount;
     }
 
     /**
      * Regenerate any wound, both ordinary and serious, both new and old, by natural or unnatural way.
      * @param HealingPower $healingPower
-     * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int actually regenerated amount
      */
-    public function regenerate(HealingPower $healingPower, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function regenerate(HealingPower $healingPower)
     {
         // every wound becomes old after this
-        $regenerated = 0;
+        $regeneratedAmount = 0;
         foreach ($this->getUnhealedWounds() as $unhealedWound) {
             if ($healingPower->getHealUpTo() > 0) { // we do not spent all the healing power yet
                 $currentlyRegenerated = $unhealedWound->heal($healingPower);
+                /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                 $healingPower = $healingPower->decreaseByHealedAmount($currentlyRegenerated); // new instance
-                $regenerated += $currentlyRegenerated;
+                $regeneratedAmount += $currentlyRegenerated;
             }
             // all unhealed wounds become "old", healed or not (and can be healed only by this regeneration)
             $unhealedWound->setOld();
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        if ($regenerated > 0) { // otherwise both wounds remain the same and pain remains the same
-            if ($this->maySufferFromPain()) {
-                $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
-            } else if ($this->isConscious()) {
-                $this->malusFromWounds = null; // pain is gone and person feel it - lets remove the malus
-            }
-        }
+        $this->resolveMalusAfterHeal($regeneratedAmount);
 
-        return $regenerated;
+        return $regeneratedAmount;
     }
 
     /**
@@ -401,10 +402,8 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param WoundsLimit $woundsLimit
-     * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
      */
-    public function changeWoundsLimit(WoundsLimit $woundsLimit, Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function changeWoundsLimit(WoundsLimit $woundsLimit)
     {
         if ($this->getWoundsLimitValue() === $woundsLimit->getValue()) {
             return;
@@ -412,31 +411,10 @@ class Health extends StrictObject implements Entity
         $previousHealthMaximum = $this->getHealthMaximum();
         $this->woundsLimitValue = $woundsLimit->getValue();
         if ($previousHealthMaximum > $this->getHealthMaximum()) { // current wounds relatively increases
-            $this->reRollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
+            $this->reasonToRollAgainstMalus = ReasonToRollAgainstMalus::getWoundReason();
         } elseif ($previousHealthMaximum < $this->getHealthMaximum()) { // current wounds relatively decreases
-            $this->reRollAgainstMalusFromWoundsOnHeal($will, $roller2d6DrdPlus);
+            $this->reasonToRollAgainstMalus = ReasonToRollAgainstMalus::getHealReason();
         }
-    }
-
-    private function reRollAgainstMalusFromWoundsOnWound(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
-    {
-        if ($this->malusFromWounds === null) {
-            return;
-        }
-        $this->rollAgainstMalusFromWoundsOnWound($will, $roller2d6DrdPlus);
-    }
-
-    private function reRollAgainstMalusFromWoundsOnHeal(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
-    {
-        if ($this->malusFromWounds === null) {
-            return;
-        }
-        $newRoll = $this->createRollAgainstMalusFromWounds($will, $roller2d6DrdPlus);
-        // lesser (or same of course) malus remains; can not be increased on healing
-        if ($this->malusFromWounds->getValue() >= $newRoll->getMalusValue()) { // greater in mathematical meaning (malus is negative)
-            return;
-        }
-        $this->malusFromWounds = MalusFromWounds::getIt($newRoll->getMalusValue());
     }
 
     /**
@@ -469,14 +447,6 @@ class Health extends StrictObject implements Entity
     }
 
     /**
-     * @return bool
-     */
-    public function isConscious()
-    {
-        return $this->getGridOfWounds()->getNumberOfFilledRows() < GridOfWounds::UNCONSCIOUS_NUMBER_OF_ROWS;
-    }
-
-    /**
      *
      * @return int
      */
@@ -496,8 +466,11 @@ class Health extends StrictObject implements Entity
      */
     public function getMalusCausedByWounds()
     {
-        if ($this->getGridOfWounds()->getNumberOfFilledRows() === 0 // else even unconscious can has a malus (but would be wrong if applied)
-            || $this->malusFromWounds === null // no roll against malus happened so far, therefore no malus at all
+        if ($this->needsToRollAgainstMalus()) {
+            throw new \LogicException('Roll first');
+        }
+        if ($this->malusFromWounds === null // no roll against malus happened so far, therefore no malus at all
+            || $this->getGridOfWounds()->getNumberOfFilledRows() === 0 // else even unconscious can has a malus (but would be wrong if applied)
         ) {
             return 0;
         }
@@ -512,13 +485,84 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * @return bool
+     */
+    public function needsToRollAgainstMalus()
+    {
+        return $this->reasonToRollAgainstMalus !== null;
+    }
+
+    /**
+     * @return ReasonToRollAgainstMalus|null
+     */
+    public function getReasonToRollAgainstMalus()
+    {
+        return $this->reasonToRollAgainstMalus;
+    }
+
+    /**
+     * @param Will $will
+     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @return bool|MalusFromWounds
+     */
+    public function rollAgainstMalus(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    {
+        if (!$this->needsToRollAgainstMalus()) {
+            throw new \LogicException;
+        }
+
+        return $this->reasonToRollAgainstMalus->becauseOfHeal()
+            ? $this->rollAgainstMalusOnHeal($will, $roller2d6DrdPlus)
+            : $this->rollAgainstMalusOnWound($will, $roller2d6DrdPlus);
+    }
+
+    /**
+     * @param Will $will
+     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @return bool|MalusFromWounds
+     */
+    private function rollAgainstMalusOnHeal(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    {
+        if ($this->malusFromWounds->getValue() === 0) {
+            return false;
+        }
+        $newRoll = $this->createRollOnWillAgainstMalus($will, $roller2d6DrdPlus);
+        // lesser (or same of course) malus remains; can not be increased on healing
+        if ($this->malusFromWounds->getValue() >= $newRoll->getMalusValue()) { // greater in mathematical meaning (malus is negative)
+            return false;
+        }
+
+        return $this->malusFromWounds = MalusFromWounds::getIt($newRoll->getMalusValue());
+    }
+
+    /**
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return RollOnWillAgainstMalus
      */
-    private function createRollAgainstMalusFromWounds(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    private function createRollOnWillAgainstMalus(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         return new RollOnWillAgainstMalus(new RollOnWill($will, $roller2d6DrdPlus->roll()));
+    }
+
+    /**
+     * @param Will $will
+     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @return bool|MalusFromWounds
+     */
+    private function rollAgainstMalusOnWound(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    {
+        if ($this->malusFromWounds->getValue() === MalusFromWounds::MOST) {
+            return false;
+        }
+        $newRoll = $this->createRollOnWillAgainstMalus($will, $roller2d6DrdPlus);
+        // bigger (or same of course) malus remains; can not be decreased on new wounds
+        if ($this->malusFromWounds->getValue() <= $newRoll->getMalusValue() // lesser in mathematical meaning (malus is negative)
+        ) {
+            return false;
+        }
+
+        return $this->malusFromWounds = MalusFromWounds::getIt($newRoll->getMalusValue());
     }
 
     /**

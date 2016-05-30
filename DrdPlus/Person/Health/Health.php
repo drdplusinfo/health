@@ -314,7 +314,7 @@ class Health extends StrictObject implements Entity
      * Usable for info about amount of wounds which can be healed by basic healing
      * @return int
      */
-    public function getNewOrdinaryWoundsSum()
+    public function getUnhealedNewOrdinaryWoundsSum()
     {
         return array_sum(
             array_map(
@@ -429,18 +429,18 @@ class Health extends StrictObject implements Entity
     }
 
     /**
-     * @param WoundBoundary $woundsLimit
+     * @param WoundBoundary $woundBoundary
      */
-    public function changeWoundBoundary(WoundBoundary $woundsLimit)
+    public function changeWoundBoundary(WoundBoundary $woundBoundary)
     {
-        if ($this->getWoundsLimitValue() === $woundsLimit->getValue()) {
+        if ($this->getWoundsLimitValue() === $woundBoundary->getValue()) {
             return;
         }
         $previousHealthMaximum = $this->getHealthMaximum();
-        $this->woundsLimitValue = $woundsLimit->getValue();
-        if ($previousHealthMaximum > $this->getHealthMaximum()) { // current wounds relatively increases
+        $this->woundsLimitValue = $woundBoundary->getValue();
+        if ($previousHealthMaximum > $this->getHealthMaximum()) { // current wounds relatively increases (if any)
             $this->resolveMalusAfterWound($previousHealthMaximum - $this->getHealthMaximum());
-        } elseif ($previousHealthMaximum < $this->getHealthMaximum()) { // current wounds relatively decreases
+        } elseif ($previousHealthMaximum < $this->getHealthMaximum()) { // current wounds relatively decreases (if any)
             $this->resolveMalusAfterHeal($this->getHealthMaximum() - $previousHealthMaximum);
         }
     }
@@ -532,11 +532,13 @@ class Health extends StrictObject implements Entity
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
      * @return int resulted malus
-     * @throws \DrdPlus\Person\Health\Exceptions\NeedsToRollAgainstMalusFirst
+     * @throws \DrdPlus\Person\Health\Exceptions\UselessRollAgainstMalus
      */
     public function rollAgainstMalusFromWounds(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
-        $this->checkIfNeedsToRollAgainstMalusFirst();
+        if (!$this->needsToRollAgainstMalus()) {
+            throw new Exceptions\UselessRollAgainstMalus('There is no need to roll against malus fom wounds');
+        }
 
         $malusValue = $this->reasonToRollAgainstMalus->becauseOfHeal()
             ? $this->rollAgainstMalusOnHeal($will, $roller2d6DrdPlus)
@@ -604,7 +606,7 @@ class Health extends StrictObject implements Entity
             return $this->malusFromWounds->getValue(); // greater malus remains
         }
 
-        return $this->setMalusFromWounds($newRoll);
+        return $this->setMalusFromWounds($newRoll)->getValue();
     }
 
     /**

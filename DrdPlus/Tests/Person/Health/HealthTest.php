@@ -553,6 +553,21 @@ class HealthTest extends TestWithMockery
     }
 
     /**
+     * @param Wound $wound
+     * @return \Mockery\MockInterface|AfflictionByWound
+     */
+    private function createAffliction(Wound $wound)
+    {
+        $affliction = $this->mockery(AfflictionByWound::class);
+        $affliction->shouldReceive('getSeriousWound')
+            ->andReturn($wound);
+        $affliction->shouldReceive('getName')
+            ->andReturn('some terrible affliction');
+
+        return $affliction;
+    }
+
+    /**
      * @test
      * @expectedException \DrdPlus\Person\Health\Exceptions\UnknownAfflictionOriginatingWound
      */
@@ -696,7 +711,6 @@ class HealthTest extends TestWithMockery
         self::assertSame(0, $health->getSignificantMalus());
         self::assertTrue($health->needsToRollAgainstMalus());
         self::assertNull($health->getReasonToRollAgainstMalus());
-
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             0,
@@ -730,17 +744,14 @@ class HealthTest extends TestWithMockery
         return $healingPower;
     }
 
-    // TODO simplify following tests
-
     /**
      * @test
      */
-    public function I_can_be_seriously_wounded_and_healed()
+    public function I_can_be_seriously_wounded()
     {
-        $health = new Health($this->createWoundBoundary(6));
-        self::assertSame(18, $health->getRemainingHealthAmount());
-        $this->assertUnwounded($health);
+        $health = $this->createHealthToTest(6);
 
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWoundByStab = $health->createWound(
             $this->createWoundSize(3),
             $specificWoundOrigin = SpecificWoundOrigin::getMechanicalStabWoundOrigin()
@@ -749,14 +760,16 @@ class HealthTest extends TestWithMockery
         self::assertSame(3, $seriousWoundByStab->getValue());
         self::assertSame($specificWoundOrigin, $seriousWoundByStab->getWoundOrigin());
         self::assertCount(1, $health->getUnhealedWounds());
-        self::assertSame($seriousWoundByStab, $health->getUnhealedWounds()->current());
+        self::assertSame($seriousWoundByStab, $health->getUnhealedWounds()->last());
         self::assertSame(15, $health->getRemainingHealthAmount());
         self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(3, $health->getUnhealedSeriousWoundsSum());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalus(), 'There are not enough wounds to suffer from them yet.');
         self::assertFalse($health->needsToRollAgainstMalus());
         self::assertNull($health->getReasonToRollAgainstMalus());
 
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWoundByPsyche = $health->createWound(
             $this->createWoundSize(5),
             $specificWoundOrigin = SpecificWoundOrigin::getPsychicalWoundOrigin()
@@ -766,6 +779,12 @@ class HealthTest extends TestWithMockery
         self::assertTrue($seriousWoundByPsyche->isSerious());
         self::assertSame($specificWoundOrigin, $seriousWoundByPsyche->getWoundOrigin());
         self::assertCount(2, $health->getUnhealedWounds());
+        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(8, $health->getUnhealedSeriousWoundsSum());
+        self::assertSame(8, $health->getUnhealedWoundsSum());
+        self::assertSame(10, $health->getRemainingHealthAmount());
+        self::assertTrue($health->needsToRollAgainstMalus());
+        self::assertSame(ReasonToRollAgainstMalus::getWoundReason(), $health->getReasonToRollAgainstMalus());
         $woundSum = 0;
         $collectedWounds = [];
         foreach ($health->getUnhealedWounds() as $unhealedWound) {
@@ -779,19 +798,35 @@ class HealthTest extends TestWithMockery
         self::assertSame($unhealedWounds, $collectedWounds);
         self::assertCount(2, $health->getUnhealedWounds());
         self::assertSame(8, $woundSum);
-        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
-        self::assertSame(8, $health->getUnhealedSeriousWoundsSum());
-        self::assertSame(8, $health->getUnhealedWoundsSum());
-        self::assertSame(10, $health->getRemainingHealthAmount());
-        self::assertTrue($health->needsToRollAgainstMalus());
-        self::assertSame(ReasonToRollAgainstMalus::getWoundReason(), $health->getReasonToRollAgainstMalus());
-//        self::assertSame(-3, $health->getSignificantMalus());
+    }
 
-        self::assertSame(0, $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1, 0)));
+    /**
+     * @test
+     */
+    public function I_can_be_seriously_healed()
+    {
+        $health = $this->createHealthToTest(6);
+
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $seriousWoundByStab = $health->createWound(
+            $this->createWoundSize(3),
+            $specificWoundOrigin = SpecificWoundOrigin::getMechanicalStabWoundOrigin()
+        );
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $seriousWoundByPsyche = $health->createWound(
+            $this->createWoundSize(5),
+            $specificWoundOrigin = SpecificWoundOrigin::getPsychicalWoundOrigin()
+        );
+
+        self::assertSame(-3, $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(1)));
+        self::assertSame(
+            0,
+            $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1, 0)),
+            'Nothing should be healed because there is no ordinary wound'
+        );
         self::assertSame(8, $health->getUnhealedWoundsSum());
         self::assertCount(2, $health->getUnhealedWounds());
         self::assertSame(10, $health->getRemainingHealthAmount());
-
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(3, $health->healSeriousWound($seriousWoundByPsyche, $this->createHealingPower(3, 3)));
         self::assertSame(13, $health->getRemainingHealthAmount());
@@ -799,17 +834,16 @@ class HealthTest extends TestWithMockery
         self::assertSame(5, $health->getUnhealedWoundsSum());
         self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(5, $health->getUnhealedSeriousWoundsSum());
-        self::assertSame(2, $health->getNumberOfSeriousInjuries());
+        self::assertSame(2, $health->getNumberOfSeriousInjuries(), 'Both serious wounds are still unhealed');
         self::assertSame(0, $health->getSignificantMalus(), 'Malus should be gone because of low damage after heal');
 
-        $smallScratch = $health->createWound(
-            $this->createWoundSize(1), // just a small scratch to test immovable treatment boundary for ordinary wounds
-            $specificWoundOrigin = SpecificWoundOrigin::getPsychicalWoundOrigin()
-        );
-        self::assertFalse($smallScratch->isSerious());
-//        self::assertSame(-3, $health->getSignificantMalus(), 'Even such scratch should cause malus because of filled row of wounds and low roll against');
-        self::assertTrue($health->needsToRollAgainstMalus());
-        self::assertSame('wound', $health->getReasonToRollAgainstMalus());
+        self::assertSame(3, $health->healSeriousWound($seriousWoundByStab, $this->createHealingPower(10, 3)));
+        self::assertSame(16, $health->getRemainingHealthAmount());
+        self::assertCount(1, $health->getUnhealedWounds());
+        self::assertSame(2, $health->getUnhealedWoundsSum());
+        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(2, $health->getUnhealedSeriousWoundsSum());
+        self::assertSame(1, $health->getNumberOfSeriousInjuries(), 'Single serious wound is unhealed');
     }
 
     /**
@@ -839,21 +873,6 @@ class HealthTest extends TestWithMockery
         });
 
         return $wounds;
-    }
-
-    /**
-     * @param Wound $wound
-     * @return \Mockery\MockInterface|AfflictionByWound
-     */
-    private function createAffliction(Wound $wound)
-    {
-        $affliction = $this->mockery(AfflictionByWound::class);
-        $affliction->shouldReceive('getSeriousWound')
-            ->andReturn($wound);
-        $affliction->shouldReceive('getName')
-            ->andReturn('some terrible affliction');
-
-        return $affliction;
     }
 
     /**
@@ -898,6 +917,8 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->healSeriousWound($seriousWound, $this->createHealingPower());
     }
+
+    // TODO simplify following tests
 
     /**
      * @test

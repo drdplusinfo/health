@@ -100,7 +100,7 @@ class Health extends StrictObject implements Entity
     {
         if ($this->needsToRollAgainstMalus()) {
             throw new Exceptions\NeedsToRollAgainstMalusFirst(
-                'You need to roll on will against malus caused by wounds because of previous ' . $this->reasonToRollAgainstMalus
+                'Need to roll on will against malus caused by wounds because of previous ' . $this->reasonToRollAgainstMalus
             );
         }
     }

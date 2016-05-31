@@ -537,7 +537,7 @@ class Health extends StrictObject implements Entity
     public function rollAgainstMalusFromWounds(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         if (!$this->needsToRollAgainstMalus()) {
-            throw new Exceptions\UselessRollAgainstMalus('There is no need to roll against malus fom wounds');
+            throw new Exceptions\UselessRollAgainstMalus('There is no need to roll against malus from wounds');
         }
 
         $malusValue = $this->reasonToRollAgainstMalus->becauseOfHeal()

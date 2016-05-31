@@ -49,7 +49,7 @@ class GridOfWounds extends StrictObject
      */
     public function getWoundsPerRowMaximum()
     {
-        return $this->health->getWoundsLimitValue();
+        return $this->health->getWoundBoundaryValue();
     }
 
     /**

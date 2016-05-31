@@ -40,7 +40,7 @@ class Health extends StrictObject implements Entity
      * @var int
      * @ORM\Column(type="smallint")
      */
-    private $woundsLimitValue;
+    private $woundBoundaryValue;
     /**
      * Separates new and old (or serious) injuries.
      * @var TreatmentBoundary
@@ -65,7 +65,7 @@ class Health extends StrictObject implements Entity
     public function __construct(WoundBoundary $woundsLimit)
     {
         $this->wounds = new ArrayCollection();
-        $this->woundsLimitValue = $woundsLimit->getValue();
+        $this->woundBoundaryValue = $woundsLimit->getValue();
         $this->afflictions = new ArrayCollection();
         $this->treatmentBoundary = TreatmentBoundary::getIt(0);
         $this->malusFromWounds = MalusFromWounds::getIt(0);
@@ -366,7 +366,7 @@ class Health extends StrictObject implements Entity
      */
     public function getHealthMaximum()
     {
-        return $this->getWoundsLimitValue() * GridOfWounds::TOTAL_NUMBER_OF_ROWS;
+        return $this->getWoundBoundaryValue() * GridOfWounds::TOTAL_NUMBER_OF_ROWS;
     }
 
     /**
@@ -423,9 +423,9 @@ class Health extends StrictObject implements Entity
     /**
      * @return int
      */
-    public function getWoundsLimitValue()
+    public function getWoundBoundaryValue()
     {
-        return $this->woundsLimitValue;
+        return $this->woundBoundaryValue;
     }
 
     /**
@@ -433,11 +433,11 @@ class Health extends StrictObject implements Entity
      */
     public function changeWoundBoundary(WoundBoundary $woundBoundary)
     {
-        if ($this->getWoundsLimitValue() === $woundBoundary->getValue()) {
+        if ($this->getWoundBoundaryValue() === $woundBoundary->getValue()) {
             return;
         }
         $previousHealthMaximum = $this->getHealthMaximum();
-        $this->woundsLimitValue = $woundBoundary->getValue();
+        $this->woundBoundaryValue = $woundBoundary->getValue();
         if ($previousHealthMaximum > $this->getHealthMaximum()) { // current wounds relatively increases (if any)
             $this->resolveMalusAfterWound($previousHealthMaximum - $this->getHealthMaximum());
         } elseif ($previousHealthMaximum < $this->getHealthMaximum()) { // current wounds relatively decreases (if any)

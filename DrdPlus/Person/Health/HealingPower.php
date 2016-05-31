@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Person\Health;
 
+use DrdPlus\Tables\Measurements\Wounds\Wounds as WoundsFromTable;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
@@ -11,9 +12,9 @@ use Granam\Strict\Object\StrictObject;
 class HealingPower extends StrictObject implements IntegerInterface
 {
     /**
-     * @var int
+     * @var WoundsFromTable
      */
-    private $woundsBonus;
+    private $healUpToWounds;
     /**
      * @var WoundsTable
      */
@@ -26,7 +27,7 @@ class HealingPower extends StrictObject implements IntegerInterface
      */
     public function __construct($healingPowerValue, WoundsTable $woundsTable)
     {
-        $this->woundsBonus = new WoundsBonus($healingPowerValue, $woundsTable);
+        $this->healUpToWounds = (new WoundsBonus($healingPowerValue, $woundsTable))->getWounds();
         $this->woundsTable = $woundsTable;
     }
 
@@ -35,7 +36,7 @@ class HealingPower extends StrictObject implements IntegerInterface
      */
     public function getValue()
     {
-        return $this->woundsBonus->getValue();
+        return $this->healUpToWounds->getBonus()->getValue();
     }
 
     /**
@@ -43,7 +44,7 @@ class HealingPower extends StrictObject implements IntegerInterface
      */
     public function getHealUpTo()
     {
-        return $this->woundsBonus->getWounds()->getValue();
+        return $this->healUpToWounds->getValue();
     }
 
     /**
@@ -65,9 +66,10 @@ class HealingPower extends StrictObject implements IntegerInterface
             return $this;
         }
         $remainingHealUpTo = $this->getHealUpTo() - $healedAmount;
-        $healingHealingPowerValue = $this->woundsTable->toBonus(new Wounds($remainingHealUpTo, $this->woundsTable))->getValue();
+        $decreasedHealingPower = clone $this;
+        $decreasedHealingPower->healUpToWounds = new Wounds($remainingHealUpTo, $this->woundsTable);
 
-        return new static($healingHealingPowerValue, $this->woundsTable);
+        return $decreasedHealingPower;
     }
 
     /**

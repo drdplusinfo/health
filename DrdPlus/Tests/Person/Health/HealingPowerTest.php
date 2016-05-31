@@ -78,4 +78,22 @@ class HealingPowerTest extends TestWithMockery
         $healingPower = new HealingPower(123, $woundsTable = $this->createWoundsTable(10, 123));
         $healingPower->decreaseByHealedAmount(11);
     }
+
+    /**
+     * @test
+     */
+    public function I_can_continually_spent_all_the_healing_power()
+    {
+        $healingPower = new HealingPower(26, new WoundsTable());
+        self::assertSame(26, $healingPower->getValue());
+        while ($healingPower->getHealUpTo() > 0) {
+            $previousHealUpTo = $healingPower->getHealUpTo();
+            $healingPower = $healingPower->decreaseByHealedAmount(1);
+            self::assertSame(
+                $previousHealUpTo - 1,
+                $healingPower->getHealUpTo(),
+                "Expected new 'heal up to' to be one less than previous $previousHealUpTo"
+            );
+        }
+    }
 }

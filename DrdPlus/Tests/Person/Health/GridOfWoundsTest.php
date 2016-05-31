@@ -35,19 +35,19 @@ class GridOfWoundsTest extends TestWithMockery
 
     /**
      * @param array|Wound[] $unhealedWounds
-     * @param $woundsLimitValue
+     * @param $woundBoundaryValue
      * @return \Mockery\MockInterface|Health
      */
-    private function createHealth(array $unhealedWounds = null, $woundsLimitValue = false)
+    private function createHealth(array $unhealedWounds = null, $woundBoundaryValue = false)
     {
         $health = $this->mockery(Health::class);
         if ($unhealedWounds !== null) {
             $health->shouldReceive('getUnhealedWounds')
                 ->andReturn($unhealedWounds);
         }
-        if ($woundsLimitValue !== false) {
-            $health->shouldReceive('getWoundsLimitValue')
-                ->andReturn($woundsLimitValue);
+        if ($woundBoundaryValue !== false) {
+            $health->shouldReceive('getWoundBoundaryValue')
+                ->andReturn($woundBoundaryValue);
         }
 
         return $health;

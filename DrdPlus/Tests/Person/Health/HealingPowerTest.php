@@ -34,6 +34,8 @@ class HealingPowerTest extends TestWithMockery
                 $wounds = $this->mockery(Wounds::class);
                 $wounds->shouldReceive('getValue')
                     ->andReturn($woundsValue);
+                $wounds->shouldReceive('getBonus')
+                    ->andReturn($woundBonus);
 
                 return $wounds;
             });

@@ -850,7 +850,9 @@ class HealthTest extends TestWithMockery
             $specificWoundOrigin = SpecificWoundOrigin::getPsychicalWoundOrigin()
         );
 
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(-3, $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(1)));
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             0,
             $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1, 0)),
@@ -867,8 +869,10 @@ class HealthTest extends TestWithMockery
         self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(5, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(2, $health->getNumberOfSeriousInjuries(), 'Both serious wounds are still unhealed');
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalus(), 'Malus should be gone because of low damage after heal');
 
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(3, $health->healSeriousWound($seriousWoundByStab, $this->createHealingPower(10, 3)));
         self::assertSame(16, $health->getRemainingHealthAmount());
         self::assertCount(1, $health->getUnhealedWounds());
@@ -950,7 +954,7 @@ class HealthTest extends TestWithMockery
 
     /**
      * @test
-     * @dataProvider provideRollForIncreasingMalus
+     * @dataProvider provideRollForMalus
      * @param $willValue
      * @param $rollValue
      * @param $expectedMalus
@@ -972,10 +976,10 @@ class HealthTest extends TestWithMockery
         ) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $seriousWound = $health->createWound($this->createWoundSize(3), SpecificWoundOrigin::getElementalWoundOrigin());
-            $currentlyExpectedMalus = -(int)max(0, floor($currentWillValue + $currentRollValue) / 5) - 3; // 0; -1; -2; -3
+            $currentlyExpectedMalus = max(0, min(3, (int)floor(($currentWillValue + $currentRollValue) / 5))) - 3; // 0; -1; -2; -3
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             self::assertSame(
-                $currentlyExpectedMalus, // malus can increases (be more negative)
+                $currentlyExpectedMalus, // malus can increase (be more negative)
                 $health->rollAgainstMalusFromWounds($this->createWill($currentWillValue), $this->createRoller2d6Plus($currentRollValue)),
                 "For will $currentWillValue and roll $currentRollValue has been expected malus $currentlyExpectedMalus"
             );
@@ -989,17 +993,24 @@ class HealthTest extends TestWithMockery
         }
     }
 
-    public function provideRollForIncreasingMalus()
+    public function provideRollForMalus()
     {
-        // TODO
         return [
             [1, 1, -3],
+            [-5, -5, -3],
+            [10, 5, 0],
+            [15, 0, 0],
+            [13, 1, -1],
+            [2, 7, -2],
+            [3, 7, -1],
+            [3, 1, -3],
+            [3, 2, -2],
         ];
     }
 
     /**
      * @test
-     * @dataProvider provideRollForNotDecreasingMalus
+     * @dataProvider provideRollForMalus
      * @param $willValue
      * @param $rollValue
      * @param $expectedMalus
@@ -1037,30 +1048,31 @@ class HealthTest extends TestWithMockery
         }
     }
 
-    public function provideRollForNotDecreasingMalus()
-    {
-        // TODO
-        return [
-            [1, 1, -3],
-        ];
-    }
-
     /**
      * @test
      */
     public function Malus_is_not_increased_on_new_heal_by_worse_roll()
     {
         $health = $this->createHealthToTest(5);
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalus());
 
         // 3 ordinary wounds to reach some malus
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->createWound($this->createWoundSize(2), SpecificWoundOrigin::getElementalWoundOrigin());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->createWound($this->createWoundSize(2), SpecificWoundOrigin::getElementalWoundOrigin());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->createWound($this->createWoundSize(2), SpecificWoundOrigin::getElementalWoundOrigin());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(0), $this->createRoller2d6Plus(11));
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(-1, $health->getSignificantMalus());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(1, $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1, 1)));
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(0), $this->createRoller2d6Plus(-2)); // much worse roll
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(-1, $health->getSignificantMalus(), 'Malus should not be increased');
     }
 

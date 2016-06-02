@@ -24,29 +24,6 @@ class GridOfWounds extends StrictObject
     /**
      * @return int
      */
-    public function getSumOfWounds()
-    {
-        return count($this->getPointsOfWounds()); // presumes each point of value 1 and only 1
-    }
-
-    /**
-     * @return array|PointOfWound[]
-     */
-    private function getPointsOfWounds()
-    {
-        $pointsOfWounds = [];
-        foreach ($this->health->getUnhealedWounds() as $unhealedWound) {
-            foreach ($unhealedWound->getPointsOfWound() as $pointOfWound) {
-                $pointsOfWounds[] = $pointOfWound;
-            }
-        }
-
-        return $pointsOfWounds;
-    }
-
-    /**
-     * @return int
-     */
     public function getWoundsPerRowMaximum()
     {
         return $this->health->getWoundBoundaryValue();
@@ -85,7 +62,7 @@ class GridOfWounds extends StrictObject
      */
     public function getNumberOfFilledRows()
     {
-        $numberOfFilledRows = SumAndRound::floor($this->getSumOfWounds() / $this->getWoundsPerRowMaximum());
+        $numberOfFilledRows = SumAndRound::floor($this->health->getUnhealedWoundsSum() / $this->getWoundsPerRowMaximum());
 
         return $numberOfFilledRows < self::TOTAL_NUMBER_OF_ROWS
             ? $numberOfFilledRows

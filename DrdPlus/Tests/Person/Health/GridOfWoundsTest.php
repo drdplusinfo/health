@@ -20,31 +20,24 @@ class GridOfWoundsTest extends TestWithMockery
     }
 
     /**
-     * @test
-     */
-    public function I_can_get_sum_of_wounds()
-    {
-        $gridOfWoundsWithoutWoundsAtAll = new GridOfWounds($this->createHealth([]));
-        self::assertSame(0, $gridOfWoundsWithoutWoundsAtAll->getSumOfWounds());
-
-        $gridOfWoundsWithHealedWoundsOnly = new GridOfWounds(
-            $this->createHealth($this->createWounds($woundValues = [1, 345, 789]))
-        );
-        self::assertSame(array_sum($woundValues), $gridOfWoundsWithHealedWoundsOnly->getSumOfWounds());
-    }
-
-    /**
      * @param array|Wound[] $unhealedWounds
      * @param $woundBoundaryValue
      * @return \Mockery\MockInterface|Health
      */
-    private function createHealth(array $unhealedWounds = null, $woundBoundaryValue = false)
+    private function createHealth(array $unhealedWounds = [], $woundBoundaryValue = false)
     {
         $health = $this->mockery(Health::class);
-        if ($unhealedWounds !== null) {
-            $health->shouldReceive('getUnhealedWounds')
-                ->andReturn($unhealedWounds);
-        }
+        $health->shouldReceive('getUnhealedWounds')
+            ->andReturn($unhealedWounds);
+        $health->shouldReceive('getUnhealedWoundsSum')
+            ->andReturn(
+                array_sum(array_map(
+                    function (Wound $wound) {
+                        return count($wound->getPointsOfWound());
+                    },
+                    $unhealedWounds
+                ))
+            );
         if ($woundBoundaryValue !== false) {
             $health->shouldReceive('getWoundBoundaryValue')
                 ->andReturn($woundBoundaryValue);
@@ -143,6 +136,9 @@ class GridOfWoundsTest extends TestWithMockery
      */
     public function I_can_get_number_of_filled_rows()
     {
+        $gridOfWounds = new GridOfWounds($this->createHealth($this->createWounds([3, 1]), 23));
+        self::assertSame(0, $gridOfWounds->getNumberOfFilledRows());
+
         $gridOfWounds = new GridOfWounds($this->createHealth($this->createWounds([1, 21, 5, 14]), 23));
         self::assertSame(1, $gridOfWounds->getNumberOfFilledRows());
 

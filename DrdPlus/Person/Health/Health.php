@@ -358,7 +358,14 @@ class Health extends StrictObject implements Entity
      */
     public function getUnhealedWoundsSum()
     {
-        return $this->getGridOfWounds()->getSumOfWounds();
+        return array_sum(
+            array_map(
+                function (Wound $unhealedWound) {
+                    return $unhealedWound->getValue();
+                },
+                $this->getUnhealedWounds()->toArray()
+            )
+        );
     }
 
     /**

@@ -33,7 +33,7 @@ class Health extends StrictObject implements Entity
     private $wounds;
     /**
      * @var ArrayCollection|AfflictionByWound[]
-     * @ORM\OneToMany(targetEntity="AfflictionByWound", mappedBy="health", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="\DrdPlus\Person\Health\Afflictions\AfflictionByWound", mappedBy="health", cascade={"all"}, orphanRemoval=true)
      */
     private $afflictions;
     /**

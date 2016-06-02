@@ -1,6 +1,8 @@
 <?php
 namespace DrdPlus\Person\Health;
 
+use Doctrine\ORM\Mapping AS ORM;
+
 /**
  * @ORM\Entity
  */

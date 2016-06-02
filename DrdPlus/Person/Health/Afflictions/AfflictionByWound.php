@@ -8,6 +8,9 @@ use DrdPlus\Person\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Person\Health\SeriousWound;
 use Granam\Strict\Object\StrictObject;
 
+/**
+ * @ORM\MappedSuperclass()
+ */
 abstract class AfflictionByWound extends StrictObject implements Entity
 {
     /**

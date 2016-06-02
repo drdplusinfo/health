@@ -30,7 +30,7 @@ abstract class Wound extends StrictObject implements Entity
 
     /**
      * @var ArrayCollection|PointOfWound[]
-     * @ORM\OneToMany(cascade={"all"}, targetEntity="PointOfWound", orphanRemoval=true)
+     * @ORM\OneToMany(cascade={"all"}, targetEntity="PointOfWound", mappedBy="wound", orphanRemoval=true)
      */
     private $pointsOfWound;
 

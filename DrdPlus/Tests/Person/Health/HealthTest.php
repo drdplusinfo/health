@@ -82,7 +82,6 @@ class HealthTest extends TestWithMockery
         self::assertSame(0, $health->getTreatmentBoundary()->getValue());
 
         self::assertInstanceOf(GridOfWounds::class, $health->getGridOfWounds());
-        self::assertSame(0, $health->getGridOfWounds()->getSumOfWounds());
     }
 
     /**
@@ -196,8 +195,6 @@ class HealthTest extends TestWithMockery
         );
         self::assertSame(1, $health->getUnhealedWoundsSum());
     }
-
-    // TODO getUnhealedOrdinaryWoundsValue should be same value as GridOfWounds()->getSumOfWounds() - TreatmentBoundary()->getValue()
 
     // ROLL ON MALUS RESULT
 
@@ -951,6 +948,37 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->healSeriousWound($seriousWound, $this->createHealingPower());
     }
+
+    /**
+     * @test
+     */
+    public function I_can_be_wounded_both_ordinary_and_seriously()
+    {
+        $health = $this->createHealthToTest(4);
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $health->createWound($this->createWoundSize(1), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $health->createWound($this->createWoundSize(1), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $health->createWound($this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        self::assertSame(2, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(5, $health->getUnhealedSeriousWoundsSum());
+        self::assertSame(
+            $health->getUnhealedNewOrdinaryWoundsSum(),
+            $health->getUnhealedWoundsSum() - $health->getTreatmentBoundary()->getValue()
+        );
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $health->rollAgainstMalusFromWounds($this->createWill(1), $this->createRoller2d6Plus(5));
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        self::assertSame(0, $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(-21, 0)));
+        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum(), 'All ordinary wounds should be marked as old');
+        self::assertSame(
+            $health->getUnhealedNewOrdinaryWoundsSum(),
+            $health->getUnhealedWoundsSum() - $health->getTreatmentBoundary()->getValue()
+        );
+    }
+
+    // MALUS
 
     /**
      * @test

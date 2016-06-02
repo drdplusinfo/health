@@ -27,7 +27,7 @@ class Pain extends AfflictionByWound
      * @param AfflictionVirulence $virulence
      * @param AfflictionSize $painSize
      * @param ElementalPertinence $elementalPertinence
-     * @return Cold
+     * @return Pain
      * @throws \DrdPlus\Person\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
     public static function createIt(
@@ -50,5 +50,13 @@ class Pain extends AfflictionByWound
             new \DateInterval('PT0S'), // immediately
             AfflictionName::getIt(self::PAIN)
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getMalus()
+    {
+        return $this->getEffect()->getMalusFromPain($this);
     }
 }

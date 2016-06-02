@@ -18,42 +18,44 @@ class PainTest extends AfflictionByWoundTest
      */
     public function I_can_use_it()
     {
-        $wound = $this->createWound();
-        $crackedBones = Pain::createIt(
-            $wound,
+        $seriousWound = $this->createWound();
+        $someTerriblePain = Pain::createIt(
+            $seriousWound,
             $virulence = $this->createAfflictionVirulence(),
             $size = $this->createAfflictionSize($painValue = 123),
             $elementalPertinence = $this->createElementalPertinence()
         );
 
-        self::assertNull($crackedBones->getId());
-        self::assertSame($wound, $crackedBones->getSeriousWound());
+        self::assertNull($someTerriblePain->getId());
+        self::assertSame($seriousWound, $someTerriblePain->getSeriousWound());
 
-        self::assertInstanceOf(AfflictionDomain::class, $crackedBones->getDomain());
-        self::assertSame(AfflictionDomain::PHYSICAL, $crackedBones->getDomain()->getValue());
+        self::assertInstanceOf(AfflictionDomain::class, $someTerriblePain->getDomain());
+        self::assertSame(AfflictionDomain::PHYSICAL, $someTerriblePain->getDomain()->getValue());
 
-        self::assertSame($virulence, $crackedBones->getVirulence());
+        self::assertSame($virulence, $someTerriblePain->getVirulence());
 
-        self::assertInstanceOf(AfflictionSource::class, $crackedBones->getSource());
-        self::assertSame(AfflictionSource::EXTERNAL, $crackedBones->getSource()->getValue());
+        self::assertInstanceOf(AfflictionSource::class, $someTerriblePain->getSource());
+        self::assertSame(AfflictionSource::EXTERNAL, $someTerriblePain->getSource()->getValue());
 
-        self::assertInstanceOf(AfflictionProperty::class, $crackedBones->getProperty());
-        self::assertSame(PropertyCodes::WILL, $crackedBones->getProperty()->getValue());
+        self::assertInstanceOf(AfflictionProperty::class, $someTerriblePain->getProperty());
+        self::assertSame(PropertyCodes::WILL, $someTerriblePain->getProperty()->getValue());
 
-        self::assertInstanceOf(AfflictionDangerousness::class, $crackedBones->getDangerousness());
-        self::assertSame($painValue + 10, $crackedBones->getDangerousness()->getValue());
+        self::assertInstanceOf(AfflictionDangerousness::class, $someTerriblePain->getDangerousness());
+        self::assertSame($painValue + 10, $someTerriblePain->getDangerousness()->getValue());
 
-        self::assertSame($size, $crackedBones->getSize());
+        self::assertSame($size, $someTerriblePain->getSize());
 
-        self::assertSame($elementalPertinence, $crackedBones->getElementalPertinence());
+        self::assertSame($elementalPertinence, $someTerriblePain->getElementalPertinence());
 
-        self::assertInstanceOf(PainEffect::class, $crackedBones->getEffect());
+        self::assertInstanceOf(PainEffect::class, $someTerriblePain->getEffect());
+        
+        self::assertSame(-$painValue, $someTerriblePain->getMalus());
 
-        self::assertInstanceOf(\DateInterval::class, $crackedBones->getOutbreakPeriod());
-        self::assertSame('0y0m0d0h0i0s', $crackedBones->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));
+        self::assertInstanceOf(\DateInterval::class, $someTerriblePain->getOutbreakPeriod());
+        self::assertSame('0y0m0d0h0i0s', $someTerriblePain->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));
 
-        self::assertInstanceOf(AfflictionName::class, $crackedBones->getName());
-        self::assertSame('pain', $crackedBones->getName()->getValue());
+        self::assertInstanceOf(AfflictionName::class, $someTerriblePain->getName());
+        self::assertSame('pain', $someTerriblePain->getName()->getValue());
     }
 
 }

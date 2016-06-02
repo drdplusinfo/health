@@ -999,7 +999,7 @@ class HealthTest extends TestWithMockery
         self::assertSame($expectedMalus, $health->getSignificantMalus());
 
         for ($currentWillValue = $willValue, $currentRollValue = $rollValue;
-            $currentRollValue > -10 && $currentWillValue > -10;
+            $currentRollValue > -2 && $currentWillValue > -2;
             $currentRollValue--, $currentWillValue--
         ) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1055,7 +1055,7 @@ class HealthTest extends TestWithMockery
         self::assertSame($expectedMalus, $health->getSignificantMalus());
 
         for ($currentWillValue = $willValue, $currentRollValue = $rollValue;
-            $currentRollValue < 20 && $currentWillValue < 20;
+            $currentRollValue < 16 && $currentWillValue < 10;
             $currentRollValue++, $currentWillValue++
         ) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */

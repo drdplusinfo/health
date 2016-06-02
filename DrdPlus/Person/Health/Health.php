@@ -617,16 +617,16 @@ class Health extends StrictObject implements Entity
     }
 
     /**
-     * @return array|Pain[]
+     * @return Collection|Pain[]
      */
     public function getPains()
     {
-        $pains = [];
+        $pains = new ArrayCollection();
         foreach ($this->getAfflictions() as $affliction) {
             if (!($affliction instanceof Pain)) {
                 continue;
             }
-            $pains[] = $affliction;
+            $pains->add($affliction);
         }
 
         return $pains;

@@ -918,8 +918,8 @@ class HealthTest extends TestWithMockery
             $woundSum += $unhealedWound->getValue();
             $collectedWounds[] = $unhealedWound;
         }
-        $collectedWounds = $this->sortWoundsByValue($collectedWounds);
-        $unhealedWounds = $this->sortWoundsByValue($health->getUnhealedWounds()->toArray());
+        $collectedWounds = $this->sortObjects($collectedWounds);
+        $unhealedWounds = $this->sortObjects($health->getUnhealedWounds()->toArray());
         self::assertSame($unhealedWounds, $collectedWounds);
         self::assertCount(2, $health->getUnhealedWounds());
         self::assertSame(8, $woundSum);
@@ -938,20 +938,13 @@ class HealthTest extends TestWithMockery
         return $woundSize;
     }
 
-    private function sortWoundsByValue(array $wounds)
+    private function sortObjects(array $objects)
     {
-        usort($wounds, function (Wound $wound1, Wound $wound2) {
-            if ($wound1->getValue() < $wound2->getValue()) {
-                return -1;
-            }
-            if ($wound1->getValue() === $wound2->getValue()) {
-                return 0;
-            }
-
-            return 1;
+        usort($objects, function ($object1, $object2) {
+            return strcasecmp(spl_object_hash($object1), spl_object_hash($object2));
         });
 
-        return $wounds;
+        return $objects;
     }
 
     /**
@@ -1141,7 +1134,22 @@ class HealthTest extends TestWithMockery
             ->andReturn($wound);
         $pain->shouldReceive('getMalus')
             ->andReturn($malus);
-        
+
         return $pain;
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_all_pains_and_afflictions()
+    {
+        $health = $this->createHealthToTest(123);
+        $seriousWound = $health->createWound($this->createWoundSize(70), SpecificWoundOrigin::getPsychicalWoundOrigin());
+        $health->addAffliction($firstPain = $this->createPain($seriousWound, -10));
+        $health->addAffliction($someAffliction = $this->createAffliction($seriousWound));
+        $health->addAffliction($secondPain = $this->createPain($seriousWound, -20));
+        $health->addAffliction($thirdPain = $this->createPain($seriousWound, -30));
+        self::assertSame($this->sortObjects([$firstPain, $secondPain, $thirdPain]), $this->sortObjects($health->getPains()->toArray()));
+        self::assertSame($this->sortObjects([$firstPain, $secondPain, $someAffliction, $thirdPain]), $this->sortObjects($health->getAfflictions()->toArray()));
     }
 }

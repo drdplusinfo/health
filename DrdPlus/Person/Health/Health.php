@@ -491,10 +491,10 @@ class Health extends StrictObject implements Entity
         $maluses = [$this->getMalusCausedByWounds()];
         foreach ($this->getPains() as $pain) {
             // for Pain see PPH page 79, left column
-            $maluses[] = $pain->getEffect()->getMalusFromPain($pain);
+            $maluses[] = $pain->getMalus();
         }
 
-        return max($maluses);
+        return min($maluses); // the most significant malus, therefore the lowest value
     }
 
     /**

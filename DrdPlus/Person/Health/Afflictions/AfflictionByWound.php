@@ -9,7 +9,16 @@ use DrdPlus\Person\Health\SeriousWound;
 use Granam\Strict\Object\StrictObject;
 
 /**
- * @ORM\MappedSuperclass()
+ * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "bleeding" = "\DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Bleeding",
+ *     "severed_arm" = "\DrdPlus\Person\Health\Afflictions\SpecificAfflictions\SeveredArm",
+ *     "cold" = "\DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Cold",
+ *     "cracked_bones" = "\DrdPlus\Person\Health\Afflictions\SpecificAfflictions\CrackedBones",
+ *     "pain" = "\DrdPlus\Person\Health\Afflictions\SpecificAfflictions\Pain",
+ * })
  */
 abstract class AfflictionByWound extends StrictObject implements Entity
 {

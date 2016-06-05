@@ -206,7 +206,7 @@ class Health extends StrictObject implements Entity
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
         $healedAmount = 0;
-        foreach ($this->getUntreatedOrdinaryWounds() as $newOrdinaryWound) {
+        foreach ($this->getUnhealedOrdinaryWounds() as $newOrdinaryWound) {
             if ($healingPower->getHealUpTo() > 0) { // we do not spent all the healing power
                 $currentlyHealed = $newOrdinaryWound->heal($healingPower);
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -226,7 +226,7 @@ class Health extends StrictObject implements Entity
     /**
      * @return OrdinaryWound[]|Collection
      */
-    private function getUntreatedOrdinaryWounds()
+    private function getUnhealedOrdinaryWounds()
     {
         return $this->wounds->filter(
             function (Wound $wound) {
@@ -321,7 +321,7 @@ class Health extends StrictObject implements Entity
                 function (OrdinaryWound $ordinaryWound) {
                     return $ordinaryWound->getValue();
                 },
-                $this->getUntreatedOrdinaryWounds()->toArray()
+                $this->getUnhealedOrdinaryWounds()->toArray()
             )
         );
     }

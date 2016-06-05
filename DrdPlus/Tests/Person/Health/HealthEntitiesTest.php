@@ -5,9 +5,6 @@ use Doctrineum\Tests\Entity\AbstractDoctrineEntitiesTest;
 use DrdPlus\Codes\RaceCodes;
 use DrdPlus\Person\Health\EnumTypes\PersonHealthEnumsRegistrar;
 use DrdPlus\Person\Health\Health;
-use DrdPlus\Person\Health\OrdinaryWound;
-use DrdPlus\Person\Health\PointOfWound;
-use DrdPlus\Person\Health\SeriousWound;
 use DrdPlus\Person\Health\SpecificWoundOrigin;
 use DrdPlus\Person\Health\WoundSize;
 use DrdPlus\Properties\Base\Strength;
@@ -33,26 +30,20 @@ class HealthEntitiesTest extends AbstractDoctrineEntitiesTest
 
     protected function createEntitiesToPersist()
     {
-        $ordinaryWound = new OrdinaryWound(
-            $health = new Health(
-                new WoundBoundary(
-                    new Toughness(new Strength(3), RaceCodes::ORC, RaceCodes::GOBLIN, new RacesTable()),
-                    new WoundsTable()
-                )
-            ),
-            new WoundSize(1)
+        $health = new Health(
+            new WoundBoundary(
+                new Toughness(new Strength(3), RaceCodes::ORC, RaceCodes::GOBLIN, new RacesTable()),
+                new WoundsTable()
+            )
         );
-        $seriousWound = new SeriousWound(
-            $health,
-            new WoundSize(5),
-            SpecificWoundOrigin::getMechanicalCrushWoundOrigin()
-        );
+        $ordinaryWound = $health->createWound(new WoundSize(1), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $seriousWound = $health->createWound(new WoundSize(7), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
 
         return [
             $health,
             $ordinaryWound,
             $seriousWound,
-            new PointOfWound($ordinaryWound)
+            $ordinaryWound->getPointsOfWound()->last()
         ];
     }
 

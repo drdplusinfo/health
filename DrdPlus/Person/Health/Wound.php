@@ -2,8 +2,10 @@
 namespace DrdPlus\Person\Health;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrineum\Entity\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Granam\Integer\IntegerInterface;
 use Granam\Strict\Object\StrictObject;
 
 /**
@@ -12,7 +14,7 @@ use Granam\Strict\Object\StrictObject;
  * @ORM\DiscriminatorColumn(name="severity", type="string")
  * @ORM\DiscriminatorMap({"ordinary" = "OrdinaryWound", "serious" = "SeriousWound"})
  */
-abstract class Wound extends StrictObject implements Entity
+abstract class Wound extends StrictObject implements Entity, IntegerInterface
 {
     /**
      * @var int
@@ -90,11 +92,11 @@ abstract class Wound extends StrictObject implements Entity
     }
 
     /**
-     * @return array|PointOfWound[]
+     * @return Collection|PointOfWound[]
      */
     public function getPointsOfWound()
     {
-        return $this->pointsOfWound->toArray(); // to avoid external changes of the collection
+        return clone $this->pointsOfWound; // to avoid external changes of the collection
     }
 
     /**

@@ -65,7 +65,7 @@ abstract class WoundTest extends TestWithMockery
     private function createHealth($openForNewWounds = true)
     {
         $health = $this->mockery(Health::class);
-        $health->shouldReceive('isOpenForNewWounds')
+        $health->shouldReceive('isOpenForNewWound')
             ->andReturn($openForNewWounds);
 
         return $health;

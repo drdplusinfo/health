@@ -64,7 +64,7 @@ class Health extends StrictObject implements Entity
     /**
      * @var bool helper to avoid side-adding of new wounds - created on their own and linked by Doctrine relation instead of directly here.
      */
-    private $openForNewWounds = false;
+    private $openForNewWound = false;
 
     public function __construct(WoundBoundary $woundsLimit)
     {
@@ -84,11 +84,12 @@ class Health extends StrictObject implements Entity
     public function createWound(WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
-        $this->openForNewWounds = true;
+        $this->openForNewWound = true;
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $this->isSeriousInjury($woundSize)
             ? new SeriousWound($this, $woundSize, $specificWoundOrigin)
             : new OrdinaryWound($this, $woundSize);
-        $this->openForNewWounds = false;
+        $this->openForNewWound = false;
         $this->wounds->add($wound);
         if ($wound->isSerious()) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -114,9 +115,9 @@ class Health extends StrictObject implements Entity
     /**
      * @return boolean
      */
-    public function isOpenForNewWounds()
+    public function isOpenForNewWound()
     {
-        return $this->openForNewWounds;
+        return $this->openForNewWound;
     }
 
     /**

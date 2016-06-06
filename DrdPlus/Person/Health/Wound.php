@@ -69,7 +69,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
      */
     private function checkIfCreatedByGivenHealth(Health $health)
     {
-        if (!$health->isOpenForNewWounds()) {
+        if (!$health->isOpenForNewWound()) {
             throw new Exceptions\WoundHasToBeCreatedByHealthItself(
                 'Given health is not open for new wounds. Every wound has to be created by health itself.'
             );

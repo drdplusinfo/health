@@ -52,13 +52,28 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
      * @param Health $health
      * @param WoundSize $woundSize (it can be also zero; usable for afflictions without a damage at all)
      * @param WoundOrigin $woundOrigin Ordinary origin is for lesser wound, others for serious wound
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToBeCreatedByHealthItself
      */
     protected function __construct(Health $health, WoundSize $woundSize, WoundOrigin $woundOrigin)
     {
+        $this->checkIfCreatedByGivenHealth($health);
         $this->health = $health;
         $this->pointsOfWound = new ArrayCollection($this->createPointsOfWound($woundSize));
         $this->woundOrigin = $woundOrigin;
         $this->old = false;
+    }
+
+    /**
+     * @param Health $health
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToBeCreatedByHealthItself
+     */
+    private function checkIfCreatedByGivenHealth(Health $health)
+    {
+        if (!$health->isOpenForNewWounds()) {
+            throw new Exceptions\WoundHasToBeCreatedByHealthItself(
+                'Given health is not open for new wounds. Every wound has to be created by health itself.'
+            );
+        }
     }
 
     /**

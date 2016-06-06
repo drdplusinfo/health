@@ -59,11 +59,16 @@ abstract class WoundTest extends TestWithMockery
     abstract protected function createWound(Health $health, WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin);
 
     /**
+     * @param bool $openForNewWounds
      * @return \Mockery\MockInterface|Health
      */
-    private function createHealth()
+    private function createHealth($openForNewWounds = true)
     {
-        return $this->mockery(Health::class);
+        $health = $this->mockery(Health::class);
+        $health->shouldReceive('isOpenForNewWounds')
+            ->andReturn($openForNewWounds);
+
+        return $health;
     }
 
     /**
@@ -135,5 +140,18 @@ abstract class WoundTest extends TestWithMockery
         self::assertSame(0, $wound->getValue());
         self::assertTrue($wound->isHealed());
         self::assertFalse($wound->isOld());
+    }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\Person\Health\Exceptions\WoundHasToBeCreatedByHealthItself
+     */
+    public function I_can_not_create_wound_directly()
+    {
+        $this->createWound(
+            $this->createHealth(false /* not open for new wounds */),
+            new WoundSize(1),
+            SpecificWoundOrigin::getMechanicalCrushWoundOrigin()
+        );
     }
 }

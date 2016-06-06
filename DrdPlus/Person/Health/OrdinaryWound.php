@@ -11,6 +11,7 @@ class OrdinaryWound extends Wound
     /**
      * @param Health $health
      * @param WoundSize $woundSize
+     * @throws \DrdPlus\Person\Health\Exceptions\WoundHasToBeCreatedByHealthItself
      */
     public function __construct(Health $health, WoundSize $woundSize)
     {

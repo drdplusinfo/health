@@ -10,7 +10,6 @@ use DrdPlus\Person\Health\HealingPower;
 use DrdPlus\Person\Health\Health;
 use DrdPlus\Person\Health\OrdinaryWoundOrigin;
 use DrdPlus\Person\Health\ReasonToRollAgainstMalus;
-use DrdPlus\Person\Health\SeriousWound;
 use DrdPlus\Person\Health\SpecificWoundOrigin;
 use DrdPlus\Person\Health\TreatmentBoundary;
 use DrdPlus\Person\Health\Wound;
@@ -746,13 +745,13 @@ class HealthTest extends TestWithMockery
     public function I_can_not_add_affliction_with_to_health_unknown_wound()
     {
         $health = $this->createHealthToTest(5);
-        $wound = new SeriousWound(
-            $health,
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $seriousWound = $health->createWound(
             $this->createWoundSize(6),
             SpecificWoundOrigin::getElementalWoundOrigin()
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->addAffliction($this->createAffliction($wound));
+        $health->addAffliction($this->createAffliction($seriousWound));
     }
 
     // NEW WOUND
@@ -1003,7 +1002,9 @@ class HealthTest extends TestWithMockery
      */
     public function I_can_not_heal_serious_wound_from_different_health()
     {
-        $seriousWound = new SeriousWound($this->createHealthToTest(5), $this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $health = $this->createHealthToTest(5);
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $seriousWound = $health->createWound($this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
         $anotherHealth = $this->createHealthToTest(3);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $anotherHealth->healSeriousWound($seriousWound, $this->createHealingPower());
@@ -1015,7 +1016,11 @@ class HealthTest extends TestWithMockery
      */
     public function I_can_not_heal_serious_wound_not_created_by_current_health()
     {
-        $seriousWound = new SeriousWound($health = $this->createHealthToTest(5), $this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $health = $this->createHealthToTest(5);
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $seriousWound = $health->createWound($this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $health->rollAgainstMalusFromWounds($this->createWill(123), $this->createRoller2d6Plus(321));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->healSeriousWound($seriousWound, $this->createHealingPower());
     }

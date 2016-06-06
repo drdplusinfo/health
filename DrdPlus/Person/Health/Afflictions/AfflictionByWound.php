@@ -46,11 +46,12 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     private $domain;
     /**
      * @var AfflictionVirulence
-     * @ORM\Column(type="virulence")
+     * @ORM\Column(type="affliction_virulence")
      */
     private $virulence;
     /**
      * @var AfflictionSource
+     * @ORM\Column(type="affliction_source")
      */
     private $source;
     /**

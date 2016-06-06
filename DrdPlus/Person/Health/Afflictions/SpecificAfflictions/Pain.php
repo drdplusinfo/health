@@ -13,10 +13,13 @@ use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\PainEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Person\Health\SeriousWound;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * see PPH page 79 left column
  * @method PainEffect getEffect
+ * 
+ * @ORM\Entity
  */
 class Pain extends AfflictionByWound
 {

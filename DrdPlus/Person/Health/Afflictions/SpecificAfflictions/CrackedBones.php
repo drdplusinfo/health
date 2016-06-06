@@ -13,7 +13,11 @@ use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\CrackedBonesEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Person\Health\SeriousWound;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ */
 class CrackedBones extends AfflictionByWound
 {
     const CRACKED_BONES = 'cracked_bones';

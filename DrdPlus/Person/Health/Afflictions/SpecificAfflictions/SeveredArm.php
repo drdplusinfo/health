@@ -13,9 +13,12 @@ use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\SeveredArmEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Person\Health\SeriousWound;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * See PPH page 78, right column
+ *
+ * @ORM\Entity
  */
 class SeveredArm extends AfflictionByWound
 {

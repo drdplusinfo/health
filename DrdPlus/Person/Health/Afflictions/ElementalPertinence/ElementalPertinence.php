@@ -11,7 +11,7 @@ abstract class ElementalPertinence extends StringEnum
     /**
      * @return ElementalPertinence
      */
-    public static function getMinus()
+    protected static function getMinus()
     {
         return static::getEnum(self::MINUS . static::getPertinenceCode());
     }
@@ -37,7 +37,7 @@ abstract class ElementalPertinence extends StringEnum
     /**
      * @return ElementalPertinence
      */
-    public static function getPlus()
+    protected static function getPlus()
     {
         return static::getEnum(self::PLUS . static::getPertinenceCode());
     }

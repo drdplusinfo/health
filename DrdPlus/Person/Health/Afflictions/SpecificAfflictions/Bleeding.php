@@ -14,9 +14,11 @@ use DrdPlus\Person\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Person\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative;
 use DrdPlus\Person\Health\SeriousWound;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * See PPH page 78, right column
+ * @ORM\Entity
  */
 class Bleeding extends AfflictionByWound
 {

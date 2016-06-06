@@ -13,9 +13,11 @@ use DrdPlus\Person\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Person\Health\Afflictions\Effects\ColdEffect;
 use DrdPlus\Person\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Person\Health\SeriousWound;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * See PPH page 78, left column
+ * @ORM\Entity
  */
 class Cold extends AfflictionByWound
 {

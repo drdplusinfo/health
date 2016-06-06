@@ -46,11 +46,11 @@ class HealthEntitiesTest extends AbstractDoctrineEntitiesTest
         );
         $ordinaryWound = $health->createWound(new WoundSize(1), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
         $seriousWound = $health->createWound(new WoundSize(7), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
-        $health->addAffliction($bleeding = Bleeding::createIt($seriousWound));
-        $health->addAffliction($cold = Cold::createIt($seriousWound));
-        $health->addAffliction($crackedBones = CrackedBones::createIt($seriousWound));
-        $health->addAffliction($pain = Pain::createIt($seriousWound, AfflictionVirulence::getDayVirulence(), AfflictionSize::getIt(5), WaterPertinence::getPlus()));
-        $health->addAffliction($severedArm = SeveredArm::createIt($seriousWound));
+        $bleeding = Bleeding::createIt($seriousWound);
+        $cold = Cold::createIt($seriousWound);
+        $crackedBones = CrackedBones::createIt($seriousWound);
+        $pain = Pain::createIt($seriousWound, AfflictionVirulence::getDayVirulence(), AfflictionSize::getIt(5), WaterPertinence::getPlus());
+        $severedArm = SeveredArm::createIt($seriousWound);
 
         return [
             $health,

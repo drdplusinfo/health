@@ -125,6 +125,8 @@ abstract class AfflictionByWound extends StrictObject implements Entity
             );
         }
         $this->seriousWound = $seriousWound;
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $seriousWound->getHealth()->addAffliction($this);
         $this->health = $seriousWound->getHealth();
         $this->domain = $domain;
         $this->virulence = $virulence;

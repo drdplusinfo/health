@@ -16,6 +16,8 @@ use DrdPlus\Person\Health\OrdinaryWound;
 use DrdPlus\Person\Health\SeriousWound;
 use DrdPlus\Person\Health\SpecificWoundOrigin;
 use DrdPlus\Person\Health\WoundOrigin;
+use DrdPlus\Person\Health\WoundSize;
+use DrdPlus\Properties\Derived\WoundBoundary;
 use Granam\Tests\Tools\TestWithMockery;
 
 abstract class AfflictionByWoundTest extends TestWithMockery
@@ -59,6 +61,45 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     /**
      * @test
      */
+    public function It_is_linked_with_health_immediately()
+    {
+        $woundBoundary = $this->mockery(WoundBoundary::class);
+        $woundBoundary->shouldReceive('getValue')
+            ->andReturn(5);
+        /** @var WoundBoundary $woundBoundary */
+        $health = new Health($woundBoundary);
+        $woundSize = $this->mockery(WoundSize::class);
+        $woundSize->shouldReceive('getValue')
+            ->andReturn(5);
+        /** @var WoundSize $woundSize */
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $seriousWound = $health->createWound($woundSize, SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $afflictionReflection = new \ReflectionClass($this->getSutClass());
+        $afflictionConstructor = $afflictionReflection->getConstructor();
+        $afflictionConstructor->setAccessible(true);
+
+        $afflictionInstance = $afflictionReflection->newInstanceWithoutConstructor();
+        $afflictionConstructor->invoke(
+            $afflictionInstance,
+            $seriousWound,
+            $this->mockery(AfflictionDomain::class),
+            $this->mockery(AfflictionVirulence::class),
+            $this->mockery(AfflictionSource::class),
+            $this->mockery(AfflictionProperty::class),
+            $this->mockery(AfflictionDangerousness::class),
+            $this->mockery(AfflictionSize::class),
+            $this->mockery(ElementalPertinence::class),
+            $this->mockery(AfflictionEffect::class),
+            $this->mockery(\DateInterval::class),
+            $this->mockery(AfflictionName::class)
+        );
+
+        self::assertSame([$afflictionInstance], $health->getAfflictions()->toArray());
+    }
+
+    /**
+     * @test
+     */
     abstract public function I_can_use_it();
 
     /**
@@ -72,7 +113,9 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     {
         $wound = $this->mockery($isSerious ? SeriousWound::class : OrdinaryWound::class);
         $wound->shouldReceive('getHealth')
-            ->andReturn($this->mockery(Health::class));
+            ->andReturn($health = $this->mockery(Health::class));
+        $health->shouldReceive('addAffliction')
+            ->with(\Mockery::type($this->getSutClass()));
         $wound->shouldReceive('isSerious')
             ->andReturn($isSerious);
         $wound->shouldReceive('isOld')

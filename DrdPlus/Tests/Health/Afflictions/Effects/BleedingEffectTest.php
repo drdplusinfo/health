@@ -1,0 +1,72 @@
+<?php
+namespace DrdPlus\Tests\Health\Afflictions\Effects;
+
+use DrdPlus\Health\Afflictions\Effects\BleedingEffect;
+use DrdPlus\Health\Afflictions\SpecificAfflictions\Bleeding;
+use DrdPlus\Health\Health;
+use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\Wound;
+use DrdPlus\Health\WoundSize;
+use DrdPlus\Properties\Derived\WoundBoundary;
+use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
+
+/** @noinspection LongInheritanceChainInspection */
+class BleedingEffectTest extends AfflictionEffectTest
+{
+    /**
+     * @test
+     */
+    public function I_can_find_out_if_apply_even_on_success_against_trap()
+    {
+        $bleedingEffect = BleedingEffect::getIt();
+        self::assertTrue($bleedingEffect->isEffectiveEvenOnSuccessAgainstTrap());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_wound_caused_by_bleeding()
+    {
+        $bleedingEffect = BleedingEffect::getIt();
+        $health = new Health($this->createWoundsLimit(10));
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $woundCausedBleeding = $health->createWound(
+            new WoundSize(25),
+            $specificWoundOrigin = $this->createSpecificWoundOrigin()
+        );
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $wound = $bleedingEffect->bleed(
+            Bleeding::createIt($woundCausedBleeding),
+            new WoundsTable()
+        );
+        self::assertInstanceOf(Wound::class, $wound);
+        self::assertSame(3, $wound->getValue()); // 4 bleeding size ... some calculation ... see wounds table for details
+        self::assertTrue($wound->getWoundOrigin()->isOrdinaryWoundOrigin()); // because not a serious injury
+        self::assertNotEquals($specificWoundOrigin, $wound->getWoundOrigin());
+    }
+
+    /**
+     * @param $value
+     * @return \Mockery\MockInterface|WoundBoundary
+     */
+    private function createWoundsLimit($value)
+    {
+        $woundsLimit = $this->mockery(WoundBoundary::class);
+        $woundsLimit->shouldReceive('getValue')
+            ->andReturn($value);
+
+        return $woundsLimit;
+    }
+
+    /**
+     * @return \Mockery\MockInterface|SpecificWoundOrigin
+     */
+    private function createSpecificWoundOrigin()
+    {
+        $specificWoundOrigin = $this->mockery(SpecificWoundOrigin::class);
+        $specificWoundOrigin->shouldReceive('isOrdinaryWoundOrigin')
+            ->andReturn(false);
+
+        return $specificWoundOrigin;
+    }
+}

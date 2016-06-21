@@ -43,7 +43,7 @@ class SeriousWoundOriginTest extends WoundOriginTest
     /**
      * @test
      * @expectedException \DrdPlus\Health\Exceptions\UnknownWoundOriginCode
-     * @expectedExceptionMessageRegExp ~Kitchen accident~
+     * @expectedExceptionMessageRegExp ~Bathroom slipping~
      */
     public function I_can_not_create_custom_origin()
     {

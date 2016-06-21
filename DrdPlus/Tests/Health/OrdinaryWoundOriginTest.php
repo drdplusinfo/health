@@ -2,7 +2,6 @@
 namespace DrdPlus\Tests\Health;
 
 use DrdPlus\Health\OrdinaryWoundOrigin;
-use Granam\String\StringTools;
 
 class OrdinaryWoundOriginTest extends WoundOriginTest
 {
@@ -15,11 +14,6 @@ class OrdinaryWoundOriginTest extends WoundOriginTest
         self::assertSame($ordinaryWoundOrigin, OrdinaryWoundOrigin::getEnum('ordinary'));
         self::assertTrue($ordinaryWoundOrigin->isOrdinaryWoundOrigin());
         self::assertFalse($ordinaryWoundOrigin->isSeriousWoundOrigin());
-
-        foreach ($this->getSeriousWoundOriginCodes() as $otherOrigin) {
-            $isOtherWoundOrigin = StringTools::assembleGetterForName($otherOrigin, 'is') . 'WoundOrigin';
-            self::assertFalse($ordinaryWoundOrigin->$isOtherWoundOrigin());
-        }
     }
 
     /**

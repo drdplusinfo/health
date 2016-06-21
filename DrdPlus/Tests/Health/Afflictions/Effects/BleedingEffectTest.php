@@ -4,7 +4,7 @@ namespace DrdPlus\Tests\Health\Afflictions\Effects;
 use DrdPlus\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Bleeding;
 use DrdPlus\Health\Health;
-use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Properties\Derived\WoundBoundary;
@@ -32,7 +32,7 @@ class BleedingEffectTest extends AfflictionEffectTest
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $woundCausedBleeding = $health->createWound(
             new WoundSize(25),
-            $specificWoundOrigin = $this->createSpecificWoundOrigin()
+            $seriousWoundOrigin = $this->createSpecificWoundOrigin()
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $bleedingEffect->bleed(
@@ -42,7 +42,7 @@ class BleedingEffectTest extends AfflictionEffectTest
         self::assertInstanceOf(Wound::class, $wound);
         self::assertSame(3, $wound->getValue()); // 4 bleeding size ... some calculation ... see wounds table for details
         self::assertTrue($wound->getWoundOrigin()->isOrdinaryWoundOrigin()); // because not a serious injury
-        self::assertNotEquals($specificWoundOrigin, $wound->getWoundOrigin());
+        self::assertNotEquals($seriousWoundOrigin, $wound->getWoundOrigin());
     }
 
     /**
@@ -59,14 +59,14 @@ class BleedingEffectTest extends AfflictionEffectTest
     }
 
     /**
-     * @return \Mockery\MockInterface|SpecificWoundOrigin
+     * @return \Mockery\MockInterface|SeriousWoundOrigin
      */
     private function createSpecificWoundOrigin()
     {
-        $specificWoundOrigin = $this->mockery(SpecificWoundOrigin::class);
-        $specificWoundOrigin->shouldReceive('isOrdinaryWoundOrigin')
+        $seriousWoundOrigin = $this->mockery(SeriousWoundOrigin::class);
+        $seriousWoundOrigin->shouldReceive('isOrdinaryWoundOrigin')
             ->andReturn(false);
 
-        return $specificWoundOrigin;
+        return $seriousWoundOrigin;
     }
 }

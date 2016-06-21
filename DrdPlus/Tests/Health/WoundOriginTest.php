@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health;
 
-use DrdPlus\Codes\WoundsOriginCodes;
+use DrdPlus\Codes\WoundsOriginCode;
 use Granam\Tests\Tools\TestWithMockery;
 
 abstract class WoundOriginTest extends TestWithMockery
@@ -11,6 +11,6 @@ abstract class WoundOriginTest extends TestWithMockery
      */
     protected function getSeriousWoundOriginCodes()
     {
-        return WoundsOriginCodes::getOriginWithTypeCodes();
+        return WoundsOriginCode::getWoundsOriginCodes(); // de facto all of them can be serious
     }
 }

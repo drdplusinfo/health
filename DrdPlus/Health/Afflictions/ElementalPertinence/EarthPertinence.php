@@ -1,11 +1,11 @@
 <?php
 namespace DrdPlus\Health\Afflictions\ElementalPertinence;
 
-use DrdPlus\Codes\ElementCodes;
+use DrdPlus\Codes\ElementCode;
 
 class EarthPertinence extends ElementalPertinence
 {
-    const EARTH = ElementCodes::EARTH;
+    const EARTH = ElementCode::EARTH;
 
     /**
      * @return EarthPertinence

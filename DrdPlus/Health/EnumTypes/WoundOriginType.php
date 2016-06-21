@@ -3,7 +3,7 @@ namespace DrdPlus\Health\EnumTypes;
 
 use Doctrineum\String\StringEnumType;
 use DrdPlus\Health\OrdinaryWoundOrigin;
-use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\SeriousWoundOrigin;
 
 class WoundOriginType extends StringEnumType
 {
@@ -14,7 +14,7 @@ class WoundOriginType extends StringEnumType
         parent::registerSelf();
         self::registerSubTypeEnum(OrdinaryWoundOrigin::class, '~^' . OrdinaryWoundOrigin::ORDINARY . '$~');
         self::registerSubTypeEnum(
-            SpecificWoundOrigin::class,
+            SeriousWoundOrigin::class,
             '~^(?:(?!' . OrdinaryWoundOrigin::ORDINARY . ').)+$~' // just not the "ordinary" string
         );
     }

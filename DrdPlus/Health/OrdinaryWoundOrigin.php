@@ -31,4 +31,20 @@ class OrdinaryWoundOrigin extends WoundOrigin
 
         return $enumFinalValue;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSeriousWoundOrigin()
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOrdinaryWoundOrigin()
+    {
+        return true;
+    }
 }

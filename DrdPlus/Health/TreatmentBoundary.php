@@ -2,6 +2,7 @@
 namespace DrdPlus\Health;
 
 use Doctrineum\Integer\IntegerEnum;
+use Granam\Scalar\ScalarInterface;
 use Granam\Tools\ValueDescriber;
 
 class TreatmentBoundary extends IntegerEnum
@@ -17,7 +18,7 @@ class TreatmentBoundary extends IntegerEnum
     }
 
     /**
-     * @param bool|float|int|object|string $enumValue
+     * @param bool|float|int|ScalarInterface|string $enumValue
      * @throws \DrdPlus\Health\Exceptions\TreatmentBoundaryCanNotBeNegative
      * @return int
      */

@@ -11,7 +11,7 @@ use DrdPlus\Health\Health;
 use DrdPlus\Health\OrdinaryWoundOrigin;
 use DrdPlus\Health\ReasonToRollAgainstMalus;
 use DrdPlus\Health\SeriousWound;
-use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\TreatmentBoundary;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
@@ -97,7 +97,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest($woundsLimit);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize($wound), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize($wound), SeriousWoundOrigin::getElementalWoundOrigin());
 
         self::assertSame($isConscious, $health->isConscious());
         self::assertSame($isAlive, $health->isAlive());
@@ -123,7 +123,7 @@ class HealthTest extends TestWithMockery
         $health = $this->createHealthToTest(10);
         self::assertSame(0, $health->getTreatmentBoundary()->getValue());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(4), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $health->createWound($this->createWoundSize(4), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
         self::assertSame(0, $health->getTreatmentBoundary()->getValue());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1, 1));
@@ -139,7 +139,7 @@ class HealthTest extends TestWithMockery
         $health = $this->createHealthToTest(10);
         self::assertSame(0, $health->getTreatmentBoundary()->getValue());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(7), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $health->createWound($this->createWoundSize(7), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
         self::assertSame(7, $health->getTreatmentBoundary()->getValue());
         self::assertSame($health->getUnhealedWoundsSum(), $health->getTreatmentBoundary()->getValue());
     }
@@ -152,7 +152,7 @@ class HealthTest extends TestWithMockery
         $health = $this->createHealthToTest(10);
         self::assertSame(0, $health->getTreatmentBoundary()->getValue());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $seriousWound = $health->createWound($this->createWoundSize(7), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $seriousWound = $health->createWound($this->createWoundSize(7), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->healSeriousWound($seriousWound, $this->createHealingPower(5));
         self::assertSame(2, $health->getTreatmentBoundary()->getValue());
@@ -165,9 +165,9 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(3), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $health->createWound($this->createWoundSize(3), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(6), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $health->createWound($this->createWoundSize(6), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
         self::assertSame(6, $health->getTreatmentBoundary()->getValue());
         self::assertSame(9, $health->getUnhealedWoundsSum());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -183,9 +183,9 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(3), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $health->createWound($this->createWoundSize(3), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(6), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $health->createWound($this->createWoundSize(6), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
         self::assertSame(6, $health->getTreatmentBoundary()->getValue());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->regenerate(new HealingPower(8, new WoundsTable()));
@@ -210,7 +210,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(10), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(10), SeriousWoundOrigin::getElementalWoundOrigin());
         self::assertTrue($health->needsToRollAgainstMalus());
         self::assertSame(ReasonToRollAgainstMalus::getWoundReason(), $health->getReasonToRollAgainstMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -283,11 +283,11 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(4), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(4), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(4), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(4), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(4), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(4), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(3)); // -3 malus as a result
         self::assertFalse($health->needsToRollAgainstMalus());
@@ -330,7 +330,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $seriousWound = $health->createWound($this->createWoundSize(15), SpecificWoundOrigin::getElementalWoundOrigin());
+        $seriousWound = $health->createWound($this->createWoundSize(15), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(3)); // -3 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -359,7 +359,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(15), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(15), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(3)); // -3 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -388,7 +388,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(15), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(15), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(3)); // -3 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -417,7 +417,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(15), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(15), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(5), $this->createRoller2d6Plus(10)); // 0 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -456,12 +456,12 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         try {
-            $health->createWound($this->createWoundSize(10), SpecificWoundOrigin::getElementalWoundOrigin());
+            $health->createWound($this->createWoundSize(10), SeriousWoundOrigin::getElementalWoundOrigin());
         } catch (\Exception $exception) {
             self::fail('No exception expected so far: ' . $exception->getTraceAsString());
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(10), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(10), SeriousWoundOrigin::getElementalWoundOrigin());
     }
 
     /**
@@ -472,9 +472,9 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         try {
-            $health->createWound($this->createWoundSize(4), SpecificWoundOrigin::getElementalWoundOrigin());
-            $health->createWound($this->createWoundSize(4), SpecificWoundOrigin::getElementalWoundOrigin());
-            $health->createWound($this->createWoundSize(4), SpecificWoundOrigin::getElementalWoundOrigin());
+            $health->createWound($this->createWoundSize(4), SeriousWoundOrigin::getElementalWoundOrigin());
+            $health->createWound($this->createWoundSize(4), SeriousWoundOrigin::getElementalWoundOrigin());
+            $health->createWound($this->createWoundSize(4), SeriousWoundOrigin::getElementalWoundOrigin());
         } catch (\Exception $exception) {
             self::fail('No exception expected so far: ' . $exception->getTraceAsString());
         }
@@ -490,7 +490,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         try {
-            $seriousWound = $health->createWound($this->createWoundSize(14), SpecificWoundOrigin::getElementalWoundOrigin());
+            $seriousWound = $health->createWound($this->createWoundSize(14), SeriousWoundOrigin::getElementalWoundOrigin());
         } catch (\Exception $exception) {
             self::fail('No exception expected so far: ' . $exception->getTraceAsString());
         }
@@ -507,7 +507,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         try {
-            $health->createWound($this->createWoundSize(14), SpecificWoundOrigin::getElementalWoundOrigin());
+            $health->createWound($this->createWoundSize(14), SeriousWoundOrigin::getElementalWoundOrigin());
         } catch (\Exception $exception) {
             self::fail('No exception expected so far: ' . $exception->getTraceAsString());
         }
@@ -523,7 +523,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(10);
         try {
-            $health->createWound($this->createWoundSize(14), SpecificWoundOrigin::getElementalWoundOrigin());
+            $health->createWound($this->createWoundSize(14), SeriousWoundOrigin::getElementalWoundOrigin());
         } catch (\Exception $exception) {
             self::fail('No exception expected so far: ' . $exception->getTraceAsString());
         }
@@ -545,7 +545,7 @@ class HealthTest extends TestWithMockery
         $health = $this->createHealthToTest(5);
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(5), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(5), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame($expectedMalus, $health->rollAgainstMalusFromWounds($this->createWill($willValue), $this->createRoller2d6Plus($rollValue)));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -556,7 +556,7 @@ class HealthTest extends TestWithMockery
             $currentRollValue--, $currentWillValue--
         ) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-            $seriousWound = $health->createWound($this->createWoundSize(3), SpecificWoundOrigin::getElementalWoundOrigin());
+            $seriousWound = $health->createWound($this->createWoundSize(3), SeriousWoundOrigin::getElementalWoundOrigin());
             $currentlyExpectedMalus = max(0, min(3, (int)floor(($currentWillValue + $currentRollValue) / 5))) - 3; // 0; -1; -2; -3
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             self::assertSame(
@@ -601,7 +601,7 @@ class HealthTest extends TestWithMockery
         $health = $this->createHealthToTest(5);
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(5), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(5), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame($expectedMalus, $health->rollAgainstMalusFromWounds($this->createWill($willValue), $this->createRoller2d6Plus($rollValue)));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -612,7 +612,7 @@ class HealthTest extends TestWithMockery
             $currentRollValue++, $currentWillValue++
         ) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-            $seriousWound = $health->createWound($this->createWoundSize(3), SpecificWoundOrigin::getElementalWoundOrigin());
+            $seriousWound = $health->createWound($this->createWoundSize(3), SeriousWoundOrigin::getElementalWoundOrigin());
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             self::assertSame(
                 $expectedMalus, // malus should not be decreased (be closer to zero)
@@ -640,11 +640,11 @@ class HealthTest extends TestWithMockery
 
         // 3 ordinary wounds to reach some malus
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(2), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(2), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(2), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(2), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(2), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(2), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(0), $this->createRoller2d6Plus(11));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -666,7 +666,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(5);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $wound = $health->createWound($this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $wound = $health->createWound($this->createWoundSize(5), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         $affliction = $this->createAffliction($wound);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->addAffliction($affliction);
@@ -710,7 +710,7 @@ class HealthTest extends TestWithMockery
         $wound->shouldReceive('getHealth')
             ->andReturn($this->mockery(Health::class));
         $wound->shouldReceive('getWoundOrigin')
-            ->andReturn(SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+            ->andReturn(SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         $wound->shouldReceive('__toString')
             ->andReturn('123');
 
@@ -727,7 +727,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $health->createWound(
             $this->createWoundSize(6),
-            SpecificWoundOrigin::getElementalWoundOrigin()
+            SeriousWoundOrigin::getElementalWoundOrigin()
         );
         $affliction = $this->createAffliction($wound);
         try {
@@ -749,7 +749,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWound = $health->createWound(
             $this->createWoundSize(6),
-            SpecificWoundOrigin::getElementalWoundOrigin()
+            SeriousWoundOrigin::getElementalWoundOrigin()
         );
         $anotherHealth = $this->createHealthToTest(5);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -767,7 +767,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $ordinaryWound = $health->createWound(
             $this->createWoundSize(2),
-            SpecificWoundOrigin::getElementalWoundOrigin()
+            SeriousWoundOrigin::getElementalWoundOrigin()
         );
         self::assertInstanceOf(Wound::class, $ordinaryWound);
         self::assertSame(2, $ordinaryWound->getValue());
@@ -788,7 +788,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $anotherOrdinaryWound = $health->createWound(
             $this->createWoundSize(1),
-            SpecificWoundOrigin::getElementalWoundOrigin()
+            SeriousWoundOrigin::getElementalWoundOrigin()
         );
         self::assertInstanceOf(Wound::class, $anotherOrdinaryWound);
         self::assertSame(1, $anotherOrdinaryWound->getValue());
@@ -816,11 +816,11 @@ class HealthTest extends TestWithMockery
         $health = $this->createHealthToTest(7);
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(1), SpecificWoundOrigin::getElementalWoundOrigin());
+        $health->createWound($this->createWoundSize(1), SeriousWoundOrigin::getElementalWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(3), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $health->createWound($this->createWoundSize(3), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(2), SpecificWoundOrigin::getMechanicalStabWoundOrigin());
+        $health->createWound($this->createWoundSize(2), SeriousWoundOrigin::getMechanicalStabWoundOrigin());
 
         self::assertSame(15, $health->getRemainingHealthAmount());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -880,11 +880,11 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWoundByStab = $health->createWound(
             $this->createWoundSize(3),
-            $specificWoundOrigin = SpecificWoundOrigin::getMechanicalStabWoundOrigin()
+            $seriousWoundOrigin = SeriousWoundOrigin::getMechanicalStabWoundOrigin()
         );
         self::assertInstanceOf(Wound::class, $seriousWoundByStab);
         self::assertSame(3, $seriousWoundByStab->getValue());
-        self::assertSame($specificWoundOrigin, $seriousWoundByStab->getWoundOrigin());
+        self::assertSame($seriousWoundOrigin, $seriousWoundByStab->getWoundOrigin());
         self::assertCount(1, $health->getUnhealedWounds());
         self::assertSame($seriousWoundByStab, $health->getUnhealedWounds()->last());
         self::assertSame(15, $health->getRemainingHealthAmount());
@@ -898,12 +898,12 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWoundByPsyche = $health->createWound(
             $this->createWoundSize(5),
-            $specificWoundOrigin = SpecificWoundOrigin::getPsychicalWoundOrigin()
+            $seriousWoundOrigin = SeriousWoundOrigin::getPsychicalWoundOrigin()
         );
         self::assertInstanceOf(Wound::class, $seriousWoundByPsyche);
         self::assertSame(5, $seriousWoundByPsyche->getValue());
         self::assertTrue($seriousWoundByPsyche->isSerious());
-        self::assertSame($specificWoundOrigin, $seriousWoundByPsyche->getWoundOrigin());
+        self::assertSame($seriousWoundOrigin, $seriousWoundByPsyche->getWoundOrigin());
         self::assertCount(2, $health->getUnhealedWounds());
         self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(8, $health->getUnhealedSeriousWoundsSum());
@@ -958,12 +958,12 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWoundByStab = $health->createWound(
             $this->createWoundSize(3),
-            $specificWoundOrigin = SpecificWoundOrigin::getMechanicalStabWoundOrigin()
+            $seriousWoundOrigin = SeriousWoundOrigin::getMechanicalStabWoundOrigin()
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWoundByPsyche = $health->createWound(
             $this->createWoundSize(5),
-            $specificWoundOrigin = SpecificWoundOrigin::getPsychicalWoundOrigin()
+            $seriousWoundOrigin = SeriousWoundOrigin::getPsychicalWoundOrigin()
         );
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1006,7 +1006,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(5);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $seriousWound = $health->createWound($this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $seriousWound = $health->createWound($this->createWoundSize(5), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
         $anotherHealth = $this->createHealthToTest(3);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $anotherHealth->healSeriousWound($seriousWound, $this->createHealingPower());
@@ -1024,7 +1024,7 @@ class HealthTest extends TestWithMockery
         $openForNewWound->setAccessible(true);
         $openForNewWound->setValue($health, true);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $seriousWound = new SeriousWound($health, $this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $seriousWound = new SeriousWound($health, $this->createWoundSize(5), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->healSeriousWound($seriousWound, $this->createHealingPower());
     }
@@ -1039,7 +1039,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWound = $health->createWound(
             $this->createWoundSize(5),
-            SpecificWoundOrigin::getMechanicalCutWoundOrigin()
+            SeriousWoundOrigin::getMechanicalCutWoundOrigin()
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(0), $this->createRoller2d6Plus(10));
@@ -1060,7 +1060,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWound = $health->createWound(
             $this->createWoundSize(5),
-            SpecificWoundOrigin::getMechanicalCutWoundOrigin()
+            SeriousWoundOrigin::getMechanicalCutWoundOrigin()
         );
         self::assertTrue($seriousWound->isSerious());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1083,11 +1083,11 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest(4);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(1), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $health->createWound($this->createWoundSize(1), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(1), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $health->createWound($this->createWoundSize(1), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->createWound($this->createWoundSize(5), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $health->createWound($this->createWoundSize(5), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         self::assertSame(2, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(5, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(
@@ -1122,7 +1122,7 @@ class HealthTest extends TestWithMockery
     public function I_get_highest_malus_from_wound_and_pains()
     {
         $health = $this->createHealthToTest(12);
-        $damnSeriousWound = $health->createWound($this->createWoundSize(15), SpecificWoundOrigin::getPsychicalWoundOrigin());
+        $damnSeriousWound = $health->createWound($this->createWoundSize(15), SeriousWoundOrigin::getPsychicalWoundOrigin());
         $health->rollAgainstMalusFromWounds($this->createWill(1), $this->createRoller2d6Plus(7));
         self::assertSame(-2, $health->getSignificantMalus());
         $health->addAffliction($this->createAffliction($damnSeriousWound));
@@ -1153,7 +1153,7 @@ class HealthTest extends TestWithMockery
     public function I_can_get_all_pains_and_afflictions()
     {
         $health = $this->createHealthToTest(123);
-        $seriousWound = $health->createWound($this->createWoundSize(70), SpecificWoundOrigin::getPsychicalWoundOrigin());
+        $seriousWound = $health->createWound($this->createWoundSize(70), SeriousWoundOrigin::getPsychicalWoundOrigin());
         $health->addAffliction($firstPain = $this->createPain($seriousWound, -10));
         $health->addAffliction($someAffliction = $this->createAffliction($seriousWound));
         $health->addAffliction($secondPain = $this->createPain($seriousWound, -20));

@@ -1,11 +1,11 @@
 <?php
 namespace DrdPlus\Health\Afflictions\ElementalPertinence;
 
-use DrdPlus\Codes\ElementCodes;
+use DrdPlus\Codes\ElementCode;
 
 class AirPertinence extends ElementalPertinence
 {
-    const AIR = ElementCodes::AIR;
+    const AIR = ElementCode::AIR;
 
     /**
      * @return AirPertinence

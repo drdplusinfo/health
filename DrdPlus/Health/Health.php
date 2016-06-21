@@ -77,17 +77,17 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param WoundSize $woundSize
-     * @param SpecificWoundOrigin $specificWoundOrigin Beware if the wound size is considered as serious than OrdinaryWoundOrigin will be used instead
+     * @param SeriousWoundOrigin $seriousWoundOrigin Beware if the wound size is considered as serious than OrdinaryWoundOrigin will be used instead
      * @return OrdinaryWound|SeriousWound
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function createWound(WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin)
+    public function createWound(WoundSize $woundSize, SeriousWoundOrigin $seriousWoundOrigin)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         $this->openForNewWound = true;
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $this->isSeriousInjury($woundSize)
-            ? new SeriousWound($this, $woundSize, $specificWoundOrigin)
+            ? new SeriousWound($this, $woundSize, $seriousWoundOrigin)
             : new OrdinaryWound($this, $woundSize);
         $this->openForNewWound = false;
         $this->wounds->add($wound);

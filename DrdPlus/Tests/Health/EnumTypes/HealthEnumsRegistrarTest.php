@@ -6,7 +6,7 @@ use Doctrineum\DateInterval\DBAL\Types\DateIntervalType;
 use DrdPlus\Health\EnumTypes\HealthEnumsRegistrar;
 use DrdPlus\Health\EnumTypes\WoundOriginType;
 use DrdPlus\Health\OrdinaryWoundOrigin;
-use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\SeriousWoundOrigin;
 use Granam\String\StringTools;
 
 class HealthEnumsRegistrarTest extends \PHPUnit_Framework_TestCase
@@ -31,7 +31,7 @@ class HealthEnumsRegistrarTest extends \PHPUnit_Framework_TestCase
             );
         }
         self::assertTrue(WoundOriginType::hasSubTypeEnum(OrdinaryWoundOrigin::class));
-        self::assertTrue(WoundOriginType::hasSubTypeEnum(SpecificWoundOrigin::class));
+        self::assertTrue(WoundOriginType::hasSubTypeEnum(SeriousWoundOrigin::class));
     }
 
     /**

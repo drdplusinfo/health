@@ -2,7 +2,7 @@
 namespace DrdPlus\Health\Afflictions;
 
 use Doctrineum\String\StringEnum;
-use DrdPlus\Codes\AfflictionByWoundDomainCodes;
+use DrdPlus\Codes\AfflictionByWoundDomainCode;
 use Granam\Tools\ValueDescriber;
 
 class AfflictionDomain extends StringEnum
@@ -16,7 +16,7 @@ class AfflictionDomain extends StringEnum
         return static::getEnum($domainCode);
     }
 
-    const PHYSICAL = AfflictionByWoundDomainCodes::PHYSICAL;
+    const PHYSICAL = AfflictionByWoundDomainCode::PHYSICAL;
 
     /**
      * @return AfflictionDomain
@@ -26,7 +26,7 @@ class AfflictionDomain extends StringEnum
         return static::getEnum(self::PHYSICAL);
     }
 
-    const PSYCHICAL = AfflictionByWoundDomainCodes::PSYCHICAL;
+    const PSYCHICAL = AfflictionByWoundDomainCode::PSYCHICAL;
 
     /**
      * @return AfflictionDomain
@@ -39,7 +39,7 @@ class AfflictionDomain extends StringEnum
     protected static function convertToEnumFinalValue($enumValue)
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
-        if (!in_array($finalValue, AfflictionByWoundDomainCodes::getAfflictionDomainCodes(), true)) {
+        if (!in_array($finalValue, AfflictionByWoundDomainCode::getAfflictionByWoundDomainCodes(), true)) {
             throw new Exceptions\UnknownAfflictionDomain('unexpected affliction domain ' . ValueDescriber::describe($enumValue));
         }
 

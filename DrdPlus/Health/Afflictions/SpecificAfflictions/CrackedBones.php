@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Afflictions\SpecificAfflictions;
 
-use DrdPlus\Codes\PropertyCodes;
+use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
@@ -38,7 +38,7 @@ class CrackedBones extends AfflictionByWound
             AfflictionDomain::getPhysicalAffliction(),
             AfflictionVirulence::getDayVirulence(),
             AfflictionSource::getPassiveSource(),
-            AfflictionProperty::getIt(PropertyCodes::TOUGHNESS),
+            AfflictionProperty::getIt(PropertyCode::TOUGHNESS),
             AfflictionDangerousness::getIt(15),
             AfflictionSize::getIt($sizeValue),
             EarthPertinence::getMinus(),

@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions\SpecificAfflictions;
 
-use DrdPlus\Codes\PropertyCodes;
+use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use DrdPlus\Health\Afflictions\AfflictionName;
@@ -36,7 +36,7 @@ class ColdTest extends AfflictionByWoundTest
         self::assertSame(AfflictionSource::ACTIVE, $cold->getSource()->getValue());
 
         self::assertInstanceOf(AfflictionProperty::class, $cold->getProperty());
-        self::assertSame(PropertyCodes::TOUGHNESS, $cold->getProperty()->getValue());
+        self::assertSame(PropertyCode::TOUGHNESS, $cold->getProperty()->getValue());
 
         self::assertInstanceOf(AfflictionDangerousness::class, $cold->getDangerousness());
         self::assertSame(7, $cold->getDangerousness()->getValue());

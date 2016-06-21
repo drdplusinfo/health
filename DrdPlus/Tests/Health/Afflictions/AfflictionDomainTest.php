@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions;
 
-use DrdPlus\Codes\AfflictionByWoundDomainCodes;
+use DrdPlus\Codes\AfflictionByWoundDomainCode;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use Granam\String\StringTools;
 
@@ -24,8 +24,8 @@ class AfflictionDomainTest extends \PHPUnit_Framework_TestCase
     public function provideDomain()
     {
         return [
-            [AfflictionByWoundDomainCodes::PHYSICAL],
-            [AfflictionByWoundDomainCodes::PSYCHICAL],
+            [AfflictionByWoundDomainCode::PHYSICAL],
+            [AfflictionByWoundDomainCode::PSYCHICAL],
         ];
     }
 

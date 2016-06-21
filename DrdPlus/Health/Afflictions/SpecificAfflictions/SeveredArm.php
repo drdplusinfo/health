@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Afflictions\SpecificAfflictions;
 
-use DrdPlus\Codes\PropertyCodes;
+use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
@@ -49,7 +49,7 @@ class SeveredArm extends AfflictionByWound
             AfflictionDomain::getPhysicalAffliction(),
             AfflictionVirulence::getDayVirulence(),
             AfflictionSource::getFullDeformationSource(),
-            AfflictionProperty::getIt(PropertyCodes::TOUGHNESS), // irrelevant, full deformation can not be avoided
+            AfflictionProperty::getIt(PropertyCode::TOUGHNESS), // irrelevant, full deformation can not be avoided
             AfflictionDangerousness::getIt(0), // irrelevant, full deformation can not be avoided
             $size,
             EarthPertinence::getMinus(),

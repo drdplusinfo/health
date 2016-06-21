@@ -5,7 +5,7 @@ use DrdPlus\Health\HealingPower;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\OrdinaryWoundOrigin;
 use DrdPlus\Health\PointOfWound;
-use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
@@ -25,7 +25,7 @@ abstract class WoundTest extends TestWithMockery
         $wound = $this->createWound(
             $health = $this->createHealth(),
             new WoundSize($woundSizeValue = 3),
-            $woundOrigin = SpecificWoundOrigin::getMechanicalCutWoundOrigin()
+            $woundOrigin = SeriousWoundOrigin::getMechanicalCutWoundOrigin()
         );
         self::assertNull($wound->getId());
         self::assertSame($health, $wound->getHealth());
@@ -53,10 +53,10 @@ abstract class WoundTest extends TestWithMockery
     /**
      * @param Health $health
      * @param WoundSize $woundSize
-     * @param SpecificWoundOrigin $specificWoundOrigin
+     * @param SeriousWoundOrigin $seriousWoundOrigin
      * @return Wound
      */
-    abstract protected function createWound(Health $health, WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin);
+    abstract protected function createWound(Health $health, WoundSize $woundSize, SeriousWoundOrigin $seriousWoundOrigin);
 
     /**
      * @param bool $openForNewWounds
@@ -85,7 +85,7 @@ abstract class WoundTest extends TestWithMockery
         $wound = $this->createWound(
             $health = $this->createHealth(),
             new WoundSize($woundSizeValue = 3),
-            $elementalWoundOrigin = SpecificWoundOrigin::getElementalWoundOrigin()
+            $elementalWoundOrigin = SeriousWoundOrigin::getElementalWoundOrigin()
         );
         self::assertSame($woundSizeValue, $wound->getValue(), 'Expected same value as created with');
         self::assertCount($woundSizeValue, $wound->getPointsOfWound());
@@ -135,7 +135,7 @@ abstract class WoundTest extends TestWithMockery
         $wound = $this->createWound(
             $this->createHealth(),
             new WoundSize(0),
-            SpecificWoundOrigin::getMechanicalCrushWoundOrigin()
+            SeriousWoundOrigin::getMechanicalCrushWoundOrigin()
         );
         self::assertSame(0, $wound->getValue());
         self::assertTrue($wound->isHealed());
@@ -151,7 +151,7 @@ abstract class WoundTest extends TestWithMockery
         $this->createWound(
             $this->createHealth(false /* not open for new wounds */),
             new WoundSize(1),
-            SpecificWoundOrigin::getMechanicalCrushWoundOrigin()
+            SeriousWoundOrigin::getMechanicalCrushWoundOrigin()
         );
     }
 }

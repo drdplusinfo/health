@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Afflictions\SpecificAfflictions;
 
-use DrdPlus\Codes\PropertyCodes;
+use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
@@ -45,7 +45,7 @@ class Pain extends AfflictionByWound
             AfflictionDomain::getPhysicalAffliction(),
             $virulence,
             AfflictionSource::getExternalSource(),
-            AfflictionProperty::getIt(PropertyCodes::WILL),
+            AfflictionProperty::getIt(PropertyCode::WILL),
             AfflictionDangerousness::getIt(10 + $painSize->getValue()),
             $painSize,
             $elementalPertinence,

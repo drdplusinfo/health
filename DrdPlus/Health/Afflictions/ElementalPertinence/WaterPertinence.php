@@ -1,11 +1,11 @@
 <?php
 namespace DrdPlus\Health\Afflictions\ElementalPertinence;
 
-use DrdPlus\Codes\ElementCodes;
+use DrdPlus\Codes\ElementCode;
 
 class WaterPertinence extends ElementalPertinence
 {
-    const WATER = ElementCodes::WATER;
+    const WATER = ElementCode::WATER;
 
     /**
      * @return WaterPertinence

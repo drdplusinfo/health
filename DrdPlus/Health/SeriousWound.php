@@ -11,12 +11,12 @@ class SeriousWound extends Wound
     /**
      * @param Health $health
      * @param WoundSize $woundSize
-     * @param SpecificWoundOrigin $specificWoundOrigin
+     * @param SeriousWoundOrigin $seriousWoundOrigin
      * @throws \DrdPlus\Health\Exceptions\WoundHasToBeCreatedByHealthItself
      */
-    public function __construct(Health $health, WoundSize $woundSize, SpecificWoundOrigin $specificWoundOrigin)
+    public function __construct(Health $health, WoundSize $woundSize, SeriousWoundOrigin $seriousWoundOrigin)
     {
-        parent::__construct($health, $woundSize, $specificWoundOrigin);
+        parent::__construct($health, $woundSize, $seriousWoundOrigin);
     }
 
     /**

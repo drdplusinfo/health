@@ -1,11 +1,11 @@
 <?php
 namespace DrdPlus\Health\Afflictions\ElementalPertinence;
 
-use DrdPlus\Codes\ElementCodes;
+use DrdPlus\Codes\ElementCode;
 
 class FirePertinence extends ElementalPertinence
 {
-    const FIRE = ElementCodes::FIRE;
+    const FIRE = ElementCode::FIRE;
 
     /**
      * @return FirePertinence

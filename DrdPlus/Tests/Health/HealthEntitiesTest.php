@@ -2,7 +2,7 @@
 namespace DrdPlus\Tests\Health;
 
 use Doctrineum\Tests\Entity\AbstractDoctrineEntitiesTest;
-use DrdPlus\Codes\RaceCodes;
+use DrdPlus\Codes\RaceCode;
 use DrdPlus\Health\Afflictions\AfflictionSize;
 use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
@@ -13,7 +13,7 @@ use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\SeveredArm;
 use DrdPlus\Health\EnumTypes\HealthEnumsRegistrar;
 use DrdPlus\Health\Health;
-use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Properties\Base\Strength;
 use DrdPlus\Properties\Derived\Toughness;
@@ -40,12 +40,12 @@ class HealthEntitiesTest extends AbstractDoctrineEntitiesTest
     {
         $health = new Health(
             new WoundBoundary(
-                new Toughness(new Strength(3), RaceCodes::ORC, RaceCodes::GOBLIN, new RacesTable()),
+                new Toughness(new Strength(3), RaceCode::ORC, RaceCode::GOBLIN, new RacesTable()),
                 new WoundsTable()
             )
         );
-        $ordinaryWound = $health->createWound(new WoundSize(1), SpecificWoundOrigin::getMechanicalCutWoundOrigin());
-        $seriousWound = $health->createWound(new WoundSize(7), SpecificWoundOrigin::getMechanicalCrushWoundOrigin());
+        $ordinaryWound = $health->createWound(new WoundSize(1), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
+        $seriousWound = $health->createWound(new WoundSize(7), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
         $bleeding = Bleeding::createIt($seriousWound);
         $cold = Cold::createIt($seriousWound);
         $crackedBones = CrackedBones::createIt($seriousWound);

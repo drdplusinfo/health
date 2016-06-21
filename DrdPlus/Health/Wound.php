@@ -115,7 +115,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     }
 
     /**
-     * @return SpecificWoundOrigin|OrdinaryWoundOrigin
+     * @return SeriousWoundOrigin|OrdinaryWoundOrigin
      */
     public function getWoundOrigin()
     {

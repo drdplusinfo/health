@@ -14,7 +14,7 @@ use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\OrdinaryWound;
 use DrdPlus\Health\SeriousWound;
-use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\WoundOrigin;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Properties\Derived\WoundBoundary;
@@ -73,7 +73,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
             ->andReturn(5);
         /** @var WoundSize $woundSize */
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $seriousWound = $health->createWound($woundSize, SpecificWoundOrigin::getMechanicalCutWoundOrigin());
+        $seriousWound = $health->createWound($woundSize, SeriousWoundOrigin::getMechanicalCutWoundOrigin());
         $afflictionReflection = new \ReflectionClass($this->getSutClass());
         $afflictionConstructor = $afflictionReflection->getConstructor();
         $afflictionConstructor->setAccessible(true);
@@ -125,7 +125,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
         $wound->shouldReceive('__toString')
             ->andReturn((string)$value);
         $wound->shouldReceive('getWoundOrigin')
-            ->andReturn($woundOrigin ?: SpecificWoundOrigin::getElementalWoundOrigin());
+            ->andReturn($woundOrigin ?: SeriousWoundOrigin::getElementalWoundOrigin());
 
         return $wound;
     }

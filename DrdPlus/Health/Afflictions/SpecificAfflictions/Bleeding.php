@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Afflictions\SpecificAfflictions;
 
-use DrdPlus\Codes\PropertyCodes;
+use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
@@ -48,7 +48,7 @@ class Bleeding extends AfflictionByWound
             AfflictionDomain::getPhysicalAffliction(),
             AfflictionVirulence::getRoundVirulence(),
             AfflictionSource::getActiveSource(),
-            AfflictionProperty::getIt(PropertyCodes::TOUGHNESS),
+            AfflictionProperty::getIt(PropertyCode::TOUGHNESS),
             AfflictionDangerousness::getIt(15),
             $size,
             WaterPertinence::getMinus(),

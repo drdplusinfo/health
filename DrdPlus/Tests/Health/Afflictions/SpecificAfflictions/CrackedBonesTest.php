@@ -7,7 +7,7 @@ use DrdPlus\Health\Afflictions\SpecificAfflictions\CrackedBones;
 use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\Wound;
 use DrdPlus\Tests\Health\Afflictions\AfflictionByWoundTest;
-use DrdPlus\Codes\PropertyCodes;
+use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use DrdPlus\Health\Afflictions\AfflictionName;
@@ -40,7 +40,7 @@ class CrackedBonesTest extends AfflictionByWoundTest
         self::assertSame(AfflictionSource::PASSIVE, $crackedBones->getSource()->getValue());
 
         self::assertInstanceOf(AfflictionProperty::class, $crackedBones->getProperty());
-        self::assertSame(PropertyCodes::TOUGHNESS, $crackedBones->getProperty()->getValue());
+        self::assertSame(PropertyCode::TOUGHNESS, $crackedBones->getProperty()->getValue());
 
         self::assertInstanceOf(AfflictionDangerousness::class, $crackedBones->getDangerousness());
         self::assertSame(15, $crackedBones->getDangerousness()->getValue());

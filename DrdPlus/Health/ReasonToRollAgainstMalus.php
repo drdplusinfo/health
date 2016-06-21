@@ -2,6 +2,7 @@
 namespace DrdPlus\Health;
 
 use Doctrineum\String\StringEnum;
+use Granam\Scalar\ScalarInterface;
 use Granam\Tools\ValueDescriber;
 
 class ReasonToRollAgainstMalus extends StringEnum
@@ -47,7 +48,7 @@ class ReasonToRollAgainstMalus extends StringEnum
     }
 
     /**
-     * @param bool|float|int|object|string $enumValue
+     * @param bool|float|int|ScalarInterface|string $enumValue
      * @return string
      * @throws \DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus
      */

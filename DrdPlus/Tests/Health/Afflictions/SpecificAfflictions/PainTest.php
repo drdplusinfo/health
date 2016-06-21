@@ -4,7 +4,7 @@ namespace DrdPlus\Tests\Health\Afflictions\SpecificAfflictions;
 use DrdPlus\Health\Afflictions\Effects\PainEffect;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 use DrdPlus\Tests\Health\Afflictions\AfflictionByWoundTest;
-use DrdPlus\Codes\PropertyCodes;
+use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use DrdPlus\Health\Afflictions\AfflictionName;
@@ -38,7 +38,7 @@ class PainTest extends AfflictionByWoundTest
         self::assertSame(AfflictionSource::EXTERNAL, $someTerriblePain->getSource()->getValue());
 
         self::assertInstanceOf(AfflictionProperty::class, $someTerriblePain->getProperty());
-        self::assertSame(PropertyCodes::WILL, $someTerriblePain->getProperty()->getValue());
+        self::assertSame(PropertyCode::WILL, $someTerriblePain->getProperty()->getValue());
 
         self::assertInstanceOf(AfflictionDangerousness::class, $someTerriblePain->getDangerousness());
         self::assertSame($painValue + 10, $someTerriblePain->getDangerousness()->getValue());

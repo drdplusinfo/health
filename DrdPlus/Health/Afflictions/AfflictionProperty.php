@@ -2,7 +2,7 @@
 namespace DrdPlus\Health\Afflictions;
 
 use Doctrineum\String\StringEnum;
-use DrdPlus\Codes\PropertyCodes;
+use DrdPlus\Codes\PropertyCode;
 use Granam\Tools\ValueDescriber;
 
 class AfflictionProperty extends StringEnum
@@ -36,14 +36,14 @@ class AfflictionProperty extends StringEnum
     public static function getProperties()
     {
         return [
-            PropertyCodes::STRENGTH,
-            PropertyCodes::AGILITY,
-            PropertyCodes::KNACK,
-            PropertyCodes::WILL,
-            PropertyCodes::INTELLIGENCE,
-            PropertyCodes::CHARISMA,
-            PropertyCodes::ENDURANCE,
-            PropertyCodes::TOUGHNESS,
+            PropertyCode::STRENGTH,
+            PropertyCode::AGILITY,
+            PropertyCode::KNACK,
+            PropertyCode::WILL,
+            PropertyCode::INTELLIGENCE,
+            PropertyCode::CHARISMA,
+            PropertyCode::ENDURANCE,
+            PropertyCode::TOUGHNESS,
             self::LEVEL,
         ];
     }

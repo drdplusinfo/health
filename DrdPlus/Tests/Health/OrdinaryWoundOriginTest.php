@@ -14,9 +14,7 @@ class OrdinaryWoundOriginTest extends WoundOriginTest
         $ordinaryWoundOrigin = OrdinaryWoundOrigin::getIt();
         self::assertSame($ordinaryWoundOrigin, OrdinaryWoundOrigin::getEnum('ordinary'));
         self::assertTrue($ordinaryWoundOrigin->isOrdinaryWoundOrigin());
-        self::assertTrue($ordinaryWoundOrigin->isOrdinaryWoundOrigin());
         self::assertFalse($ordinaryWoundOrigin->isSeriousWoundOrigin());
-        self::assertFalse($ordinaryWoundOrigin->isMechanical()); // unknown respectively
 
         foreach ($this->getSeriousWoundOriginCodes() as $otherOrigin) {
             $isOtherWoundOrigin = StringTools::assembleGetterForName($otherOrigin, 'is') . 'WoundOrigin';

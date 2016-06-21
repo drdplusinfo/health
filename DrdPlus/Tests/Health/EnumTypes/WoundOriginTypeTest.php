@@ -5,7 +5,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrineum\Tests\SelfRegisteringType\AbstractSelfRegisteringTypeTest;
 use DrdPlus\Health\EnumTypes\WoundOriginType;
 use DrdPlus\Health\OrdinaryWoundOrigin;
-use DrdPlus\Health\SpecificWoundOrigin;
+use DrdPlus\Health\SeriousWoundOrigin;
 
 class WoundOriginTypeTest extends AbstractSelfRegisteringTypeTest
 {
@@ -26,11 +26,11 @@ class WoundOriginTypeTest extends AbstractSelfRegisteringTypeTest
     {
         return [
             [OrdinaryWoundOrigin::ORDINARY, OrdinaryWoundOrigin::class],
-            [SpecificWoundOrigin::ELEMENTAL, SpecificWoundOrigin::class],
-            [SpecificWoundOrigin::MECHANICAL_CRUSH, SpecificWoundOrigin::class],
-            [SpecificWoundOrigin::MECHANICAL_CUT, SpecificWoundOrigin::class],
-            [SpecificWoundOrigin::MECHANICAL_STAB, SpecificWoundOrigin::class],
-            [SpecificWoundOrigin::PSYCHICAL, SpecificWoundOrigin::class],
+            [SeriousWoundOrigin::ELEMENTAL, SeriousWoundOrigin::class],
+            [SeriousWoundOrigin::MECHANICAL_CRUSH, SeriousWoundOrigin::class],
+            [SeriousWoundOrigin::MECHANICAL_CUT, SeriousWoundOrigin::class],
+            [SeriousWoundOrigin::MECHANICAL_STAB, SeriousWoundOrigin::class],
+            [SeriousWoundOrigin::PSYCHICAL, SeriousWoundOrigin::class],
         ];
     }
 

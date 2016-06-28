@@ -9,7 +9,7 @@ use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\HealingPower;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\OrdinaryWoundOrigin;
-use DrdPlus\Health\ReasonToRollAgainstMalus;
+use DrdPlus\Health\ReasonToRollAgainstWoundMalus;
 use DrdPlus\Health\SeriousWound;
 use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\TreatmentBoundary;
@@ -77,7 +77,7 @@ class HealthTest extends TestWithMockery
         self::assertTrue($health->isAlive());
         self::assertTrue($health->isConscious());
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
 
         self::assertInstanceOf(TreatmentBoundary::class, $health->getTreatmentBoundary());
         self::assertSame(0, $health->getTreatmentBoundary()->getValue());
@@ -212,7 +212,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->createWound($this->createWoundSize(10), SeriousWoundOrigin::getElementalWoundOrigin());
         self::assertTrue($health->needsToRollAgainstMalus());
-        self::assertSame(ReasonToRollAgainstMalus::getWoundReason(), $health->getReasonToRollAgainstMalus());
+        self::assertSame(ReasonToRollAgainstWoundMalus::getWoundReason(), $health->getReasonToRollAgainstWoundMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             $expectedMalus,
@@ -222,7 +222,7 @@ class HealthTest extends TestWithMockery
             )
         );
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
     }
 
     public function provideDecreasingRollAgainstMalusData()
@@ -293,7 +293,7 @@ class HealthTest extends TestWithMockery
         self::assertFalse($health->needsToRollAgainstMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(1, 1));
-        self::assertSame(ReasonToRollAgainstMalus::getHealReason(), $health->getReasonToRollAgainstMalus());
+        self::assertSame(ReasonToRollAgainstWoundMalus::getHealReason(), $health->getReasonToRollAgainstWoundMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             $expectedMalus,
@@ -303,7 +303,7 @@ class HealthTest extends TestWithMockery
             )
         );
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
     }
 
     public function provideIncreasingRollAgainstMalusData()
@@ -335,7 +335,7 @@ class HealthTest extends TestWithMockery
         $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(3)); // -3 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->healSeriousWound($seriousWound, $this->createHealingPower(1));
-        self::assertSame(ReasonToRollAgainstMalus::getHealReason(), $health->getReasonToRollAgainstMalus());
+        self::assertSame(ReasonToRollAgainstWoundMalus::getHealReason(), $health->getReasonToRollAgainstWoundMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             $expectedMalus,
@@ -345,7 +345,7 @@ class HealthTest extends TestWithMockery
             )
         );
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
     }
 
     /**
@@ -364,7 +364,7 @@ class HealthTest extends TestWithMockery
         $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(3)); // -3 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->regenerate($this->createHealingPower(5, 5));
-        self::assertSame(ReasonToRollAgainstMalus::getHealReason(), $health->getReasonToRollAgainstMalus());
+        self::assertSame(ReasonToRollAgainstWoundMalus::getHealReason(), $health->getReasonToRollAgainstWoundMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             $expectedMalus,
@@ -374,7 +374,7 @@ class HealthTest extends TestWithMockery
             )
         );
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
     }
 
     /**
@@ -393,7 +393,7 @@ class HealthTest extends TestWithMockery
         $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(3)); // -3 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->changeWoundBoundary($this->createWoundBoundary(11));
-        self::assertSame(ReasonToRollAgainstMalus::getHealReason(), $health->getReasonToRollAgainstMalus());
+        self::assertSame(ReasonToRollAgainstWoundMalus::getHealReason(), $health->getReasonToRollAgainstWoundMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             $expectedMalus,
@@ -403,7 +403,7 @@ class HealthTest extends TestWithMockery
             )
         );
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
     }
 
     /**
@@ -422,7 +422,7 @@ class HealthTest extends TestWithMockery
         $health->rollAgainstMalusFromWounds($this->createWill(5), $this->createRoller2d6Plus(10)); // 0 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->changeWoundBoundary($this->createWoundBoundary(9));
-        self::assertSame(ReasonToRollAgainstMalus::getWoundReason(), $health->getReasonToRollAgainstMalus());
+        self::assertSame(ReasonToRollAgainstWoundMalus::getWoundReason(), $health->getReasonToRollAgainstWoundMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             $expectedMalus,
@@ -432,7 +432,7 @@ class HealthTest extends TestWithMockery
             )
         );
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
     }
 
     /**
@@ -783,7 +783,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalus());
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $anotherOrdinaryWound = $health->createWound(
@@ -805,7 +805,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalus());
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
     }
 
     /**
@@ -836,7 +836,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalus());
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             0,
@@ -893,7 +893,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalus(), 'There are not enough wounds to suffer from them yet.');
         self::assertFalse($health->needsToRollAgainstMalus());
-        self::assertNull($health->getReasonToRollAgainstMalus());
+        self::assertNull($health->getReasonToRollAgainstWoundMalus());
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWoundByPsyche = $health->createWound(
@@ -910,7 +910,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(8, $health->getUnhealedWoundsSum());
         self::assertSame(10, $health->getRemainingHealthAmount());
         self::assertTrue($health->needsToRollAgainstMalus());
-        self::assertSame(ReasonToRollAgainstMalus::getWoundReason(), $health->getReasonToRollAgainstMalus());
+        self::assertSame(ReasonToRollAgainstWoundMalus::getWoundReason(), $health->getReasonToRollAgainstWoundMalus());
         $woundSum = 0;
         $collectedWounds = [];
         foreach ($health->getUnhealedWounds() as $unhealedWound) {

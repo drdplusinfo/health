@@ -16,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="health")
  */
 class Health extends StrictObject implements Entity
 {
@@ -53,16 +52,16 @@ class Health extends StrictObject implements Entity
      */
     private $malusFromWounds;
     /**
-     * @var ReasonToRollAgainstMalus|null
-     * @ORM\Column(type="reason_to_roll_against_malus", nullable=true)
+     * @var ReasonToRollAgainstWoundMalus|null
+     * @ORM\Column(type="reason_to_roll_against_wound_malus", nullable=true)
      */
-    private $reasonToRollAgainstMalus;
+    private $reasonToRollAgainstWoundMalus;
     /**
      * @var GridOfWounds|null is just a helper, does not need to be persisted
      */
     private $gridOfWounds;
     /**
-     * @var bool helper to avoid side-adding of new wounds - created on their own and linked by Doctrine relation instead of directly here.
+     * @var bool helper to avoid side-adding of new wounds (Those created on their own and linked by Doctrine relation instead of directly here).
      */
     private $openForNewWound = false;
 
@@ -107,7 +106,7 @@ class Health extends StrictObject implements Entity
     {
         if ($this->needsToRollAgainstMalus()) {
             throw new Exceptions\NeedsToRollAgainstMalusFirst(
-                'Need to roll on will against malus caused by wounds because of previous ' . $this->reasonToRollAgainstMalus
+                'Need to roll on will against malus caused by wounds because of previous ' . $this->reasonToRollAgainstWoundMalus
             );
         }
     }
@@ -155,7 +154,7 @@ class Health extends StrictObject implements Entity
             return;
         }
         if ($this->maySufferFromPain()) {
-            $this->reasonToRollAgainstMalus = ReasonToRollAgainstMalus::getWoundReason();
+            $this->reasonToRollAgainstWoundMalus = ReasonToRollAgainstWoundMalus::getWoundReason();
         } elseif ($this->isConscious()) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->malusFromWounds = MalusFromWounds::getIt(0);
@@ -259,7 +258,7 @@ class Health extends StrictObject implements Entity
             return;
         }
         if ($this->maySufferFromPain()) {
-            $this->reasonToRollAgainstMalus = ReasonToRollAgainstMalus::getHealReason();
+            $this->reasonToRollAgainstWoundMalus = ReasonToRollAgainstWoundMalus::getHealReason();
         } else if ($this->isConscious()) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->malusFromWounds = MalusFromWounds::getIt(0); // pain is gone and creature feel it - lets remove the malus
@@ -460,9 +459,9 @@ class Health extends StrictObject implements Entity
         }
         $previousHealthMaximum = $this->getHealthMaximum();
         $this->woundBoundaryValue = $woundBoundary->getValue();
-        if ($previousHealthMaximum > $this->getHealthMaximum()) { // current wounds relatively increases (if any)
+        if ($previousHealthMaximum > $this->getHealthMaximum()) { // current wounds relatively increase (if any)
             $this->resolveMalusAfterWound($previousHealthMaximum - $this->getHealthMaximum());
-        } elseif ($previousHealthMaximum < $this->getHealthMaximum()) { // current wounds relatively decreases (if any)
+        } elseif ($previousHealthMaximum < $this->getHealthMaximum()) { // current wounds relatively decrease (if any)
             $this->resolveMalusAfterHeal($this->getHealthMaximum() - $previousHealthMaximum);
         }
     }
@@ -503,7 +502,7 @@ class Health extends StrictObject implements Entity
      */
     public function getSignificantMalus()
     {
-        $maluses = [$this->getMalusCausedByWounds()];
+        $maluses = [$this->getMalusFromWoundsValue()];
         foreach ($this->getPains() as $pain) {
             // for Pain see PPH page 79, left column
             $maluses[] = $pain->getMalus();
@@ -516,12 +515,10 @@ class Health extends StrictObject implements Entity
      * @return int
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    private function getMalusCausedByWounds()
+    private function getMalusFromWoundsValue()
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
-        if ($this->malusFromWounds === null // no roll against malus happened so far, therefore no malus at all
-            || $this->getGridOfWounds()->getNumberOfFilledRows() === 0 // else even unconscious can has a malus (but would be wrong if applied)
-        ) {
+        if ($this->getGridOfWounds()->getNumberOfFilledRows() === 0) {
             return 0;
         }
 
@@ -529,6 +526,7 @@ class Health extends StrictObject implements Entity
          * note: Can grow only on new wound when reach second row in grid of wounds.
          * Can decrease only on heal of any wound when on second row in grid of wounds.
          * Is removed when first row of grid of wounds is not filled.
+         * Even unconscious can has a malus (but would be wrong if applied).
          * See PPH page 75 right column
          */
         return $this->malusFromWounds->getValue();
@@ -539,15 +537,15 @@ class Health extends StrictObject implements Entity
      */
     public function needsToRollAgainstMalus()
     {
-        return $this->reasonToRollAgainstMalus !== null;
+        return $this->reasonToRollAgainstWoundMalus !== null;
     }
 
     /**
-     * @return ReasonToRollAgainstMalus|null
+     * @return ReasonToRollAgainstWoundMalus|null
      */
-    public function getReasonToRollAgainstMalus()
+    public function getReasonToRollAgainstWoundMalus()
     {
-        return $this->reasonToRollAgainstMalus;
+        return $this->reasonToRollAgainstWoundMalus;
     }
 
     /**
@@ -562,11 +560,11 @@ class Health extends StrictObject implements Entity
             throw new Exceptions\UselessRollAgainstMalus('There is no need to roll against malus from wounds');
         }
 
-        $malusValue = $this->reasonToRollAgainstMalus->becauseOfHeal()
+        $malusValue = $this->reasonToRollAgainstWoundMalus->becauseOfHeal()
             ? $this->rollAgainstMalusOnHeal($will, $roller2d6DrdPlus)
             : $this->rollAgainstMalusOnWound($will, $roller2d6DrdPlus);
 
-        $this->reasonToRollAgainstMalus = null;
+        $this->reasonToRollAgainstWoundMalus = null;
 
         return $malusValue;
     }

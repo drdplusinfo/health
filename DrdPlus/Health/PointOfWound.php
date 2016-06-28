@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="point_of_wound")
  */
 class PointOfWound extends StrictObject implements Entity, IntegerInterface
 {

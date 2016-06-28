@@ -5,12 +5,12 @@ use Doctrineum\String\StringEnum;
 use Granam\Scalar\ScalarInterface;
 use Granam\Tools\ValueDescriber;
 
-class ReasonToRollAgainstMalus extends StringEnum
+class ReasonToRollAgainstWoundMalus extends StringEnum
 {
     const WOUND = 'wound';
 
     /**
-     * @return ReasonToRollAgainstMalus
+     * @return ReasonToRollAgainstWoundMalus
      */
     public static function getWoundReason()
     {
@@ -25,7 +25,7 @@ class ReasonToRollAgainstMalus extends StringEnum
     const HEAL = 'heal';
 
     /**
-     * @return ReasonToRollAgainstMalus
+     * @return ReasonToRollAgainstWoundMalus
      */
     public static function getHealReason()
     {
@@ -39,7 +39,7 @@ class ReasonToRollAgainstMalus extends StringEnum
 
     /**
      * @param string $reasonCode
-     * @return ReasonToRollAgainstMalus
+     * @return ReasonToRollAgainstWoundMalus
      * @throws \DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus
      */
     public static function getIt($reasonCode)

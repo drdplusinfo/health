@@ -20,6 +20,15 @@ class GridOfWoundsTest extends TestWithMockery
     }
 
     /**
+     * @test
+     */
+    public function I_can_get_maximum_of_wounds_per_row()
+    {
+        $gridOfWoundsWithoutWoundsAtAll = new GridOfWounds($this->createHealth([] /* no wounds*/, $woundBoundaryValue = 'foo'));
+        self::assertSame($woundBoundaryValue, $gridOfWoundsWithoutWoundsAtAll->getWoundsPerRowMaximum());
+    }
+
+    /**
      * @param array|Wound[] $unhealedWounds
      * @param $woundBoundaryValue
      * @return \Mockery\MockInterface|Health
@@ -76,15 +85,6 @@ class GridOfWoundsTest extends TestWithMockery
         }
 
         return $pointsOfWound;
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_get_maximum_of_wounds_per_row()
-    {
-        $gridOfWoundsWithoutWoundsAtAll = new GridOfWounds($this->createHealth([] /* no wounds*/, $woundsLimitValue = 'foo'));
-        self::assertSame($woundsLimitValue, $gridOfWoundsWithoutWoundsAtAll->getWoundsPerRowMaximum());
     }
 
     /**

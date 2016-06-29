@@ -1,8 +1,7 @@
 <?php
 namespace DrdPlus\Health;
 
-use DrdPlus\Tables\Measurements\Wounds\Wounds as WoundsFromTable;
-use DrdPlus\Tables\Measurements\Wounds\Wounds;
+use DrdPlus\Tables\Measurements\Wounds\Wounds as TableWounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use Granam\Integer\IntegerInterface;
@@ -12,7 +11,7 @@ use Granam\Strict\Object\StrictObject;
 class HealingPower extends StrictObject implements IntegerInterface
 {
     /**
-     * @var WoundsFromTable
+     * @var TableWounds
      */
     private $healUpToWounds;
     /**
@@ -67,7 +66,7 @@ class HealingPower extends StrictObject implements IntegerInterface
         }
         $remainingHealUpTo = $this->getHealUpTo() - $healedAmount;
         $decreasedHealingPower = clone $this;
-        $decreasedHealingPower->healUpToWounds = new Wounds($remainingHealUpTo, $this->woundsTable);
+        $decreasedHealingPower->healUpToWounds = new TableWounds($remainingHealUpTo, $this->woundsTable);
 
         return $decreasedHealingPower;
     }

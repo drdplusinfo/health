@@ -106,7 +106,8 @@ class Health extends StrictObject implements Entity
     {
         if ($this->needsToRollAgainstMalus()) {
             throw new Exceptions\NeedsToRollAgainstMalusFirst(
-                'Need to roll on will against malus caused by wounds because of previous ' . $this->reasonToRollAgainstWoundMalus
+                'Need to roll on will against malus caused by wounds because of previous '
+                . $this->reasonToRollAgainstWoundMalus
             );
         }
     }
@@ -557,7 +558,10 @@ class Health extends StrictObject implements Entity
     public function rollAgainstMalusFromWounds(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         if (!$this->needsToRollAgainstMalus()) {
-            throw new Exceptions\UselessRollAgainstMalus('There is no need to roll against malus from wounds');
+            throw new Exceptions\UselessRollAgainstMalus(
+                'There is no need to roll against malus from wounds'
+                . ($this->isConscious() ? '' : ' (being is unconscious)')
+            );
         }
 
         $malusValue = $this->reasonToRollAgainstWoundMalus->becauseOfHeal()

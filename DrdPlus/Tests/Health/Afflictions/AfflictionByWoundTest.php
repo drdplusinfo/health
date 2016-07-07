@@ -11,6 +11,7 @@ use DrdPlus\Health\Afflictions\AfflictionSource;
 use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
+use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\OrdinaryWound;
 use DrdPlus\Health\SeriousWound;
@@ -73,7 +74,11 @@ abstract class AfflictionByWoundTest extends TestWithMockery
             ->andReturn(5);
         /** @var WoundSize $woundSize */
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $seriousWound = $health->createWound($woundSize, SeriousWoundOrigin::getMechanicalCutWoundOrigin());
+        $seriousWound = $health->createWound(
+            $woundSize,
+            SeriousWoundOrigin::getMechanicalCutWoundOrigin(),
+            $woundBoundary
+        );
         $afflictionReflection = new \ReflectionClass($this->getSutClass());
         $afflictionConstructor = $afflictionReflection->getConstructor();
         $afflictionConstructor->setAccessible(true);
@@ -120,7 +125,9 @@ abstract class AfflictionByWoundTest extends TestWithMockery
             ->andReturn($isSerious);
         $wound->shouldReceive('isOld')
             ->andReturn($isOld);
-        $wound->shouldReceive('getValue')
+        $wound->shouldReceive('getWoundSize')
+            ->andReturn($woundSize = $this->mockery(WoundSize::class));
+        $woundSize->shouldReceive('getValue')
             ->andReturn($value);
         $wound->shouldReceive('__toString')
             ->andReturn((string)$value);
@@ -131,11 +138,16 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     }
 
     /**
-     * @return \Mockery\MockInterface|AfflictionDomain
+     * @param $value
+     * @return \Mockery\MockInterface|WoundBoundary
      */
-    protected function createAfflictionDomain()
+    protected function createWoundBoundary($value)
     {
-        return $this->mockery(AfflictionDomain::class);
+        $woundBoundary = $this->mockery(WoundBoundary::class);
+        $woundBoundary->shouldReceive('getValue')
+            ->andReturn($value);
+
+        return $woundBoundary;
     }
 
     /**
@@ -147,27 +159,11 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     }
 
     /**
-     * @return \Mockery\MockInterface|AfflictionSource
-     */
-    protected function createAfflictionSource()
-    {
-        return $this->mockery(AfflictionSource::class);
-    }
-
-    /**
      * @return \Mockery\MockInterface|AfflictionProperty
      */
     protected function createAfflictionProperty()
     {
         return $this->mockery(AfflictionProperty::class);
-    }
-
-    /**
-     * @return \Mockery\MockInterface|AfflictionDangerousness
-     */
-    protected function createAfflictionDangerousness()
-    {
-        return $this->mockery(AfflictionDangerousness::class);
     }
 
     /**
@@ -216,4 +212,22 @@ abstract class AfflictionByWoundTest extends TestWithMockery
     {
         return $this->mockery(AfflictionName::class);
     }
+
+    /**
+     * @param SeriousWound $wound
+     * @param WoundBoundary $woundBoundary
+     * @param int $filledHalfOfRows
+     */
+    protected function addSizeCalculation(SeriousWound $wound, WoundBoundary $woundBoundary, $filledHalfOfRows)
+    {
+        /** @var SeriousWound $wound */
+        $health = $wound->getHealth();
+        /** @var \Mockery\MockInterface $health */
+        $health->shouldReceive('getGridOfWounds')
+            ->andReturn($gridOfWounds = $this->mockery(GridOfWounds::class));
+        $gridOfWounds->shouldReceive('calculateFilledHalfRowsFor')
+            ->with($wound->getWoundSize(), $woundBoundary)
+            ->andReturn($filledHalfOfRows);
+    }
+
 }

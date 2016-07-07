@@ -39,17 +39,30 @@ class HealthEntitiesTest extends AbstractDoctrineEntitiesTest
     protected function createEntitiesToPersist()
     {
         $health = new Health(
-            new WoundBoundary(
+            $woundBoundary = new WoundBoundary(
                 new Toughness(new Strength(3), RaceCode::ORC, RaceCode::GOBLIN, new RacesTable()),
                 new WoundsTable()
             )
         );
-        $ordinaryWound = $health->createWound(new WoundSize(1), SeriousWoundOrigin::getMechanicalCutWoundOrigin());
-        $seriousWound = $health->createWound(new WoundSize(7), SeriousWoundOrigin::getMechanicalCrushWoundOrigin());
-        $bleeding = Bleeding::createIt($seriousWound);
+        $ordinaryWound = $health->createWound(
+            new WoundSize(1),
+            SeriousWoundOrigin::getMechanicalCutWoundOrigin(),
+            $woundBoundary
+        );
+        $seriousWound = $health->createWound(
+            new WoundSize(7),
+            SeriousWoundOrigin::getMechanicalCrushWoundOrigin(),
+            $woundBoundary
+        );
+        $bleeding = Bleeding::createIt($seriousWound, $woundBoundary);
         $cold = Cold::createIt($seriousWound);
-        $crackedBones = CrackedBones::createIt($seriousWound);
-        $pain = Pain::createIt($seriousWound, AfflictionVirulence::getDayVirulence(), AfflictionSize::getIt(5), WaterPertinence::getPlus());
+        $crackedBones = CrackedBones::createIt($seriousWound, $woundBoundary);
+        $pain = Pain::createIt(
+            $seriousWound,
+            AfflictionVirulence::getDayVirulence(),
+            AfflictionSize::getIt(5),
+            WaterPertinence::getPlus()
+        );
         $severedArm = SeveredArm::createIt($seriousWound);
 
         return [

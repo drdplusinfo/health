@@ -28,16 +28,18 @@ class BleedingEffectTest extends AfflictionEffectTest
     public function I_can_get_wound_caused_by_bleeding()
     {
         $bleedingEffect = BleedingEffect::getIt();
-        $health = new Health($this->createWoundsLimit(10));
+        $health = new Health($woundBoundary = $this->createWoundLimitBoundary(10));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $woundCausedBleeding = $health->createWound(
             new WoundSize(25),
-            $seriousWoundOrigin = $this->createSpecificWoundOrigin()
+            $seriousWoundOrigin = $this->createSpecificWoundOrigin(),
+            $woundBoundary
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $bleedingEffect->bleed(
-            Bleeding::createIt($woundCausedBleeding),
-            new WoundsTable()
+            Bleeding::createIt($woundCausedBleeding, $woundBoundary),
+            new WoundsTable(),
+            $woundBoundary
         );
         self::assertInstanceOf(Wound::class, $wound);
         self::assertSame(3, $wound->getValue()); // 4 bleeding size ... some calculation ... see wounds table for details
@@ -49,7 +51,7 @@ class BleedingEffectTest extends AfflictionEffectTest
      * @param $value
      * @return \Mockery\MockInterface|WoundBoundary
      */
-    private function createWoundsLimit($value)
+    private function createWoundLimitBoundary($value)
     {
         $woundsLimit = $this->mockery(WoundBoundary::class);
         $woundsLimit->shouldReceive('getValue')

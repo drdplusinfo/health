@@ -122,7 +122,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     {
         if ($seriousWound->isOld()) {
             throw new Exceptions\WoundHasToBeFreshForAffliction(
-                "Given wound of value {$seriousWound->getValue()} and origin '{$seriousWound->getWoundOrigin()}' should be untreated to create an affliction."
+                "Given wound of value {$seriousWound} and origin '{$seriousWound->getWoundOrigin()}' should be untreated to create an affliction."
             );
         }
         $this->seriousWound = $seriousWound;

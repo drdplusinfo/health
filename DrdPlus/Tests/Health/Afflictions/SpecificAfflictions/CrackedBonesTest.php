@@ -4,8 +4,6 @@ namespace DrdPlus\Tests\Health\Afflictions\SpecificAfflictions;
 use DrdPlus\Health\Afflictions\Effects\CrackedBonesEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\CrackedBones;
-use DrdPlus\Health\GridOfWounds;
-use DrdPlus\Health\Wound;
 use DrdPlus\Tests\Health\Afflictions\AfflictionByWoundTest;
 use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
@@ -24,8 +22,9 @@ class CrackedBonesTest extends AfflictionByWoundTest
     public function I_can_use_it()
     {
         $wound = $this->createWound();
-        $this->addSizeCalculation($wound, $filledHalfOfRows = 3);
-        $crackedBones = CrackedBones::createIt($wound);
+        $woundBoundary = $this->createWoundBoundary(15);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 3);
+        $crackedBones = CrackedBones::createIt($wound, $woundBoundary);
 
         self::assertNull($crackedBones->getId());
         self::assertSame($wound, $crackedBones->getSeriousWound());
@@ -58,22 +57,6 @@ class CrackedBonesTest extends AfflictionByWoundTest
 
         self::assertInstanceOf(AfflictionName::class, $crackedBones->getName());
         self::assertSame('cracked_bones', $crackedBones->getName()->getValue());
-    }
-
-    /**
-     * @param Wound $wound
-     * @param int $filledHalfOfRows
-     */
-    private function addSizeCalculation(Wound $wound, $filledHalfOfRows)
-    {
-        /** @var Wound $wound */
-        $health = $wound->getHealth();
-        /** @var \Mockery\MockInterface $health */
-        $health->shouldReceive('getGridOfWounds')
-            ->andReturn($gridOfWounds = $this->mockery(GridOfWounds::class));
-        $gridOfWounds->shouldReceive('calculateFilledHalfRowsFor')
-            ->with($wound->getValue())
-            ->andReturn($filledHalfOfRows);
     }
 
 }

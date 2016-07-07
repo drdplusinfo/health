@@ -12,8 +12,6 @@ use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Bleeding;
-use DrdPlus\Health\GridOfWounds;
-use DrdPlus\Health\Wound;
 use DrdPlus\Tests\Health\Afflictions\AfflictionByWoundTest;
 
 class BleedingTest extends AfflictionByWoundTest
@@ -24,8 +22,9 @@ class BleedingTest extends AfflictionByWoundTest
     public function I_can_use_it()
     {
         $wound = $this->createWound();
-        $this->addSizeCalculation($wound, $filledHalfOfRows = 123);
-        $bleeding = Bleeding::createIt($wound);
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $bleeding = Bleeding::createIt($wound, $woundBoundary);
 
         self::assertNull($bleeding->getId());
         self::assertSame($wound, $bleeding->getSeriousWound());
@@ -61,29 +60,14 @@ class BleedingTest extends AfflictionByWoundTest
     }
 
     /**
-     * @param Wound $wound
-     * @param int $filledHalfOfRows
-     */
-    private function addSizeCalculation(Wound $wound, $filledHalfOfRows)
-    {
-        /** @var Wound $wound */
-        $health = $wound->getHealth();
-        /** @var \Mockery\MockInterface $health */
-        $health->shouldReceive('getGridOfWounds')
-            ->andReturn($gridOfWounds = $this->mockery(GridOfWounds::class));
-        $gridOfWounds->shouldReceive('calculateFilledHalfRowsFor')
-            ->with($wound->getValue())
-            ->andReturn($filledHalfOfRows);
-    }
-
-    /**
      * @test
      * @expectedException \DrdPlus\Health\Afflictions\SpecificAfflictions\Exceptions\BleedingCanNotExistsDueToTooLowWound
      */
     public function I_can_not_create_it_from_too_low_wound()
     {
         $wound = $this->createWound();
-        $this->addSizeCalculation($wound, 0);
-        Bleeding::createIt($wound);
+        $woundBoundary = $this->createWoundBoundary(5);
+        $this->addSizeCalculation($wound, $woundBoundary, 0);
+        Bleeding::createIt($wound, $woundBoundary);
     }
 }

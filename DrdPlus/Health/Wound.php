@@ -115,7 +115,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     }
 
     /**
-     * @return SeriousWoundOrigin|OrdinaryWoundOrigin
+     * @return SeriousWoundOrigin|OrdinaryWoundOrigin|WoundOrigin
      */
     public function getWoundOrigin()
     {
@@ -129,6 +129,15 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     {
         // each point has value of 1, therefore count is enough
         return count($this->getPointsOfWound());
+    }
+
+    /**
+     * @return WoundSize
+     */
+    public function getWoundSize()
+    {
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        return WoundSize::createIt($this->getValue());
     }
 
     /**

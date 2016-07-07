@@ -3,6 +3,9 @@ namespace DrdPlus\Health\Afflictions;
 
 use Doctrineum\Integer\IntegerEnum;
 
+/**
+ * @method static getEnum($value)
+ */
 class AfflictionDangerousness extends IntegerEnum
 {
     /**

@@ -4,6 +4,9 @@ namespace DrdPlus\Health\Afflictions;
 use Doctrineum\Integer\IntegerEnum;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static AfflictionSize getEnum($value)
+ */
 class AfflictionSize extends IntegerEnum
 {
     /**

@@ -5,6 +5,9 @@ use Doctrineum\Integer\IntegerEnum;
 use Granam\Scalar\ScalarInterface;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static TreatmentBoundary getEnum($value)
+ */
 class TreatmentBoundary extends IntegerEnum
 {
     /**

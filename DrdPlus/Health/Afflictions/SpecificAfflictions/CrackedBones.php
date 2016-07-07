@@ -14,6 +14,7 @@ use DrdPlus\Health\Afflictions\Effects\CrackedBonesEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Health\SeriousWound;
 use Doctrine\ORM\Mapping as ORM;
+use DrdPlus\Properties\Derived\WoundBoundary;
 
 /**
  * @ORM\Entity
@@ -24,13 +25,15 @@ class CrackedBones extends AfflictionByWound
 
     /**
      * @param SeriousWound $seriousWound
+     * @param WoundBoundary $woundBoundary
      * @return CrackedBones
      * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
-    public static function createIt(SeriousWound $seriousWound)
+    public static function createIt(SeriousWound $seriousWound, WoundBoundary $woundBoundary)
     {
         // see PPH page 78 right column, Cracked bones
-        $sizeValue = $seriousWound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($seriousWound->getValue()) * 2;
+        $sizeValue = $seriousWound->getHealth()->getGridOfWounds()
+                ->calculateFilledHalfRowsFor($seriousWound->getWoundSize(), $woundBoundary) * 2;
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(

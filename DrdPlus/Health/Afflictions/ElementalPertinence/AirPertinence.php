@@ -8,7 +8,7 @@ class AirPertinence extends ElementalPertinence
     const AIR = ElementCode::AIR;
 
     /**
-     * @return AirPertinence
+     * @return AirPertinence|ElementalPertinence
      */
     public static function getMinus()
     {
@@ -16,7 +16,7 @@ class AirPertinence extends ElementalPertinence
     }
 
     /**
-     * @return AirPertinence
+     * @return AirPertinence|ElementalPertinence
      */
     public static function getPlus()
     {

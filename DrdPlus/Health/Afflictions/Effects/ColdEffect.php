@@ -4,6 +4,9 @@ namespace DrdPlus\Health\Afflictions\Effects;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Cold;
 use DrdPlus\Tools\Calculations\SumAndRound;
 
+/**
+ * @method static ColdEffect getEnum($enumValue)
+ */
 class ColdEffect extends AfflictionEffect
 {
     const COLD_EFFECT = 'cold_effect';

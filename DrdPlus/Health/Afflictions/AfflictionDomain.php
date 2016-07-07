@@ -5,6 +5,9 @@ use Doctrineum\String\StringEnum;
 use DrdPlus\Codes\AfflictionByWoundDomainCode;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static AfflictionDomain getEnum($value)
+ */
 class AfflictionDomain extends StringEnum
 {
     /**

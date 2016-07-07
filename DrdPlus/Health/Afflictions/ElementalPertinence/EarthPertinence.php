@@ -8,7 +8,7 @@ class EarthPertinence extends ElementalPertinence
     const EARTH = ElementCode::EARTH;
 
     /**
-     * @return EarthPertinence
+     * @return EarthPertinence|ElementalPertinence
      */
     public static function getMinus()
     {
@@ -16,7 +16,7 @@ class EarthPertinence extends ElementalPertinence
     }
 
     /**
-     * @return EarthPertinence
+     * @return EarthPertinence|ElementalPertinence
      */
     public static function getPlus()
     {

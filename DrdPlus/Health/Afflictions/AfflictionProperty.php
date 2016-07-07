@@ -5,6 +5,9 @@ use Doctrineum\String\StringEnum;
 use DrdPlus\Codes\PropertyCode;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static AfflictionProperty getEnum($value)
+ */
 class AfflictionProperty extends StringEnum
 {
     /**

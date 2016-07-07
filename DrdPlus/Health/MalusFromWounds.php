@@ -4,6 +4,9 @@ namespace DrdPlus\Health;
 use Doctrineum\Integer\IntegerEnum;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static MalusFromWounds getEnum($value)
+ */
 class MalusFromWounds extends IntegerEnum
 {
     /**

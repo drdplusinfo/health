@@ -3,6 +3,9 @@ namespace DrdPlus\Health\Afflictions\Effects;
 
 use DrdPlus\Health\Afflictions\SpecificAfflictions\CrackedBones;
 
+/**
+ * @method static CrackedBonesEffect getEnum($enumValue)
+ */
 class CrackedBonesEffect extends AfflictionEffect
 {
     const CRACKED_BONES_EFFECT = 'cracked_bones_effect';

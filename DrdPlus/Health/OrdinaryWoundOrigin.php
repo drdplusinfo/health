@@ -3,6 +3,9 @@ namespace DrdPlus\Health;
 
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static OrdinaryWoundOrigin getEnum($value)
+ */
 class OrdinaryWoundOrigin extends WoundOrigin
 {
     const ORDINARY = 'ordinary';

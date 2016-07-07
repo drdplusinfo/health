@@ -36,11 +36,6 @@ class Health extends StrictObject implements Entity
      */
     private $afflictions;
     /**
-     * @var int
-     * @ORM\Column(type="smallint")
-     */
-    private $woundBoundaryValue;
-    /**
      * Separates new and old (or serious) injuries.
      * @var TreatmentBoundary
      * @ORM\Column(type="treatment_boundary")
@@ -65,10 +60,9 @@ class Health extends StrictObject implements Entity
      */
     private $openForNewWound = false;
 
-    public function __construct(WoundBoundary $woundsLimit)
+    public function __construct()
     {
         $this->wounds = new ArrayCollection();
-        $this->woundBoundaryValue = $woundsLimit->getValue();
         $this->afflictions = new ArrayCollection();
         $this->treatmentBoundary = TreatmentBoundary::getIt(0);
         $this->malusFromWounds = MalusFromWounds::getIt(0);
@@ -77,15 +71,20 @@ class Health extends StrictObject implements Entity
     /**
      * @param WoundSize $woundSize
      * @param SeriousWoundOrigin $seriousWoundOrigin Beware if the wound size is considered as serious than OrdinaryWoundOrigin will be used instead
+     * @param WoundBoundary $woundBoundary
      * @return OrdinaryWound|SeriousWound
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function createWound(WoundSize $woundSize, SeriousWoundOrigin $seriousWoundOrigin)
+    public function createWound(
+        WoundSize $woundSize,
+        SeriousWoundOrigin $seriousWoundOrigin,
+        WoundBoundary $woundBoundary
+    )
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         $this->openForNewWound = true;
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $wound = $this->isSeriousInjury($woundSize)
+        $wound = $this->isSeriousInjury($woundSize, $woundBoundary)
             ? new SeriousWound($this, $woundSize, $seriousWoundOrigin)
             : new OrdinaryWound($this, $woundSize);
         $this->openForNewWound = false;
@@ -94,7 +93,7 @@ class Health extends StrictObject implements Entity
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->treatmentBoundary = TreatmentBoundary::getIt($this->getTreatmentBoundary()->getValue() + $wound->getValue());
         }
-        $this->resolveMalusAfterWound($wound->getValue());
+        $this->resolveMalusAfterWound($wound->getValue(), $woundBoundary);
 
         return $wound;
     }
@@ -122,41 +121,47 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param WoundSize $woundSize
+     * @param WoundBoundary $woundBoundary
      * @return bool
      */
-    private function isSeriousInjury(WoundSize $woundSize)
+    private function isSeriousInjury(WoundSize $woundSize, WoundBoundary $woundBoundary)
     {
-        return $this->getGridOfWounds()->calculateFilledHalfRowsFor($woundSize->getValue()) > 0;
+        return $this->getGridOfWounds()->calculateFilledHalfRowsFor($woundSize, $woundBoundary) > 0;
     }
 
     /**
+     * @param WoundBoundary $woundBoundary
      * @return bool
      */
-    private function maySufferFromPain()
+    private function maySufferFromPain(WoundBoundary $woundBoundary)
     {
-        // if the creature became unconscious than the roll against pain malus is not re-rolled
-        return $this->getGridOfWounds()->getNumberOfFilledRows() >= GridOfWounds::PAIN_NUMBER_OF_ROWS && $this->isConscious();
+        // if the being became unconscious than the roll against pain malus is not re-rolled
+        return
+            $this->getGridOfWounds()->getNumberOfFilledRows($woundBoundary) >= GridOfWounds::PAIN_NUMBER_OF_ROWS
+            && $this->isConscious($woundBoundary);
     }
 
     /**
+     * @param WoundBoundary $woundBoundary
      * @return bool
      */
-    public function isConscious()
+    public function isConscious(WoundBoundary $woundBoundary)
     {
-        return $this->getGridOfWounds()->getNumberOfFilledRows() < GridOfWounds::UNCONSCIOUS_NUMBER_OF_ROWS;
+        return $this->getGridOfWounds()->getNumberOfFilledRows($woundBoundary) < GridOfWounds::UNCONSCIOUS_NUMBER_OF_ROWS;
     }
 
     /**
      * @param int $woundAmount
+     * @param WoundBoundary $woundBoundary
      */
-    private function resolveMalusAfterWound($woundAmount)
+    private function resolveMalusAfterWound($woundAmount, WoundBoundary $woundBoundary)
     {
         if ($woundAmount === 0) {
             return;
         }
-        if ($this->maySufferFromPain()) {
+        if ($this->maySufferFromPain($woundBoundary)) {
             $this->reasonToRollAgainstWoundMalus = ReasonToRollAgainstWoundMalus::getWoundReason();
-        } elseif ($this->isConscious()) {
+        } elseif ($this->isConscious($woundBoundary)) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->malusFromWounds = MalusFromWounds::getIt(0);
         } // otherwise left the previous malus - creature will suffer by it when comes conscious again
@@ -213,10 +218,11 @@ class Health extends StrictObject implements Entity
     /**
      * Also sets treatment boundary to unhealed wounds after. Even if the heal itself heals nothing!
      * @param HealingPower $healingPower
+     * @param WoundBoundary $woundBoundary
      * @return int amount of actually healed points of wounds
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function healNewOrdinaryWoundsUpTo(HealingPower $healingPower)
+    public function healNewOrdinaryWoundsUpTo(HealingPower $healingPower, WoundBoundary $woundBoundary)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
@@ -233,7 +239,7 @@ class Health extends StrictObject implements Entity
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        $this->resolveMalusAfterHeal($healedAmount);
+        $this->resolveMalusAfterHeal($healedAmount, $woundBoundary);
 
         return $healedAmount;
     }
@@ -251,16 +257,17 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * @param WoundBoundary $woundBoundary
      * @param int $healedAmount
      */
-    private function resolveMalusAfterHeal($healedAmount)
+    private function resolveMalusAfterHeal($healedAmount, WoundBoundary $woundBoundary)
     {
         if ($healedAmount === 0) { // both wounds remain the same and pain remains the same
             return;
         }
-        if ($this->maySufferFromPain()) {
+        if ($this->maySufferFromPain($woundBoundary)) {
             $this->reasonToRollAgainstWoundMalus = ReasonToRollAgainstWoundMalus::getHealReason();
-        } else if ($this->isConscious()) {
+        } else if ($this->isConscious($woundBoundary)) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->malusFromWounds = MalusFromWounds::getIt(0); // pain is gone and creature feel it - lets remove the malus
         } // otherwise left the previous malus - creature will suffer by it when comes conscious again
@@ -269,12 +276,13 @@ class Health extends StrictObject implements Entity
     /**
      * @param SeriousWound $seriousWound
      * @param HealingPower $healingPower
+     * @param WoundBoundary $woundBoundary
      * @return int amount of healed points of wounds
      * @throws \DrdPlus\Health\Exceptions\UnknownSeriousWoundToHeal
      * @throws \DrdPlus\Health\Exceptions\ExpectedFreshWoundToHeal
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function healSeriousWound(SeriousWound $seriousWound, HealingPower $healingPower)
+    public function healSeriousWound(SeriousWound $seriousWound, HealingPower $healingPower, WoundBoundary $woundBoundary)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         if (!$this->doesHaveThatWound($seriousWound)) {
@@ -292,7 +300,7 @@ class Health extends StrictObject implements Entity
         // treatment boundary is taken with wounds down together
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->treatmentBoundary->getValue() - $healedAmount);
-        $this->resolveMalusAfterHeal($healedAmount);
+        $this->resolveMalusAfterHeal($healedAmount, $woundBoundary);
 
         return $healedAmount;
     }
@@ -300,10 +308,11 @@ class Health extends StrictObject implements Entity
     /**
      * Regenerate any wound, both ordinary and serious, both new and old, by natural or unnatural way.
      * @param HealingPower $healingPower
+     * @param WoundBoundary $woundBoundary
      * @return int actually regenerated amount
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function regenerate(HealingPower $healingPower)
+    public function regenerate(HealingPower $healingPower, WoundBoundary $woundBoundary)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // every wound becomes old after this
@@ -320,7 +329,7 @@ class Health extends StrictObject implements Entity
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        $this->resolveMalusAfterHeal($regeneratedAmount);
+        $this->resolveMalusAfterHeal($regeneratedAmount, $woundBoundary);
 
         return $regeneratedAmount;
     }
@@ -384,19 +393,21 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * @param WoundBoundary $woundBoundary
      * @return int
      */
-    public function getHealthMaximum()
+    public function getHealthMaximum(WoundBoundary $woundBoundary)
     {
-        return $this->getWoundBoundaryValue() * GridOfWounds::TOTAL_NUMBER_OF_ROWS;
+        return $woundBoundary->getValue() * GridOfWounds::TOTAL_NUMBER_OF_ROWS;
     }
 
     /**
+     * @param WoundBoundary $woundBoundary
      * @return int
      */
-    public function getRemainingHealthAmount()
+    public function getRemainingHealthAmount(WoundBoundary $woundBoundary)
     {
-        return max(0, $this->getHealthMaximum() - $this->getUnhealedWoundsSum());
+        return max(0, $this->getHealthMaximum($woundBoundary) - $this->getUnhealedWoundsSum());
     }
 
     /**
@@ -443,31 +454,6 @@ class Health extends StrictObject implements Entity
     }
 
     /**
-     * @return int
-     */
-    public function getWoundBoundaryValue()
-    {
-        return $this->woundBoundaryValue;
-    }
-
-    /**
-     * @param WoundBoundary $woundBoundary
-     */
-    public function changeWoundBoundary(WoundBoundary $woundBoundary)
-    {
-        if ($this->getWoundBoundaryValue() === $woundBoundary->getValue()) {
-            return;
-        }
-        $previousHealthMaximum = $this->getHealthMaximum();
-        $this->woundBoundaryValue = $woundBoundary->getValue();
-        if ($previousHealthMaximum > $this->getHealthMaximum()) { // current wounds relatively increase (if any)
-            $this->resolveMalusAfterWound($previousHealthMaximum - $this->getHealthMaximum());
-        } elseif ($previousHealthMaximum < $this->getHealthMaximum()) { // current wounds relatively decrease (if any)
-            $this->resolveMalusAfterHeal($this->getHealthMaximum() - $previousHealthMaximum);
-        }
-    }
-
-    /**
      * Treatment boundary is set automatically on any heal (lowering wounds) or new serious injury
      * @return TreatmentBoundary
      */
@@ -487,23 +473,24 @@ class Health extends StrictObject implements Entity
     const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
 
     /**
+     * @param WoundBoundary $woundBoundary
      * @return bool
      */
-    public function isAlive()
+    public function isAlive(WoundBoundary $woundBoundary)
     {
         return
-            $this->getRemainingHealthAmount() > 0
+            $this->getRemainingHealthAmount($woundBoundary) > 0
             && $this->getNumberOfSeriousInjuries() < self::DEADLY_NUMBER_OF_SERIOUS_INJURIES;
     }
 
     /**
-     *
+     * @param WoundBoundary $woundBoundary
      * @return int
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function getSignificantMalus()
+    public function getSignificantMalus(WoundBoundary $woundBoundary)
     {
-        $maluses = [$this->getMalusFromWoundsValue()];
+        $maluses = [$this->getMalusFromWoundsValue($woundBoundary)];
         foreach ($this->getPains() as $pain) {
             // for Pain see PPH page 79, left column
             $maluses[] = $pain->getMalus();
@@ -513,13 +500,14 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * @param WoundBoundary $woundBoundary
      * @return int
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    private function getMalusFromWoundsValue()
+    private function getMalusFromWoundsValue(WoundBoundary $woundBoundary)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
-        if ($this->getGridOfWounds()->getNumberOfFilledRows() === 0) {
+        if ($this->getGridOfWounds()->getNumberOfFilledRows($woundBoundary) === 0) {
             return 0;
         }
 
@@ -552,15 +540,20 @@ class Health extends StrictObject implements Entity
     /**
      * @param Will $will
      * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param WoundBoundary $woundBoundary
      * @return int resulted malus
      * @throws \DrdPlus\Health\Exceptions\UselessRollAgainstMalus
      */
-    public function rollAgainstMalusFromWounds(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
+    public function rollAgainstMalusFromWounds(
+        Will $will,
+        Roller2d6DrdPlus $roller2d6DrdPlus,
+        WoundBoundary $woundBoundary
+    )
     {
         if (!$this->needsToRollAgainstMalus()) {
             throw new Exceptions\UselessRollAgainstMalus(
                 'There is no need to roll against malus from wounds'
-                . ($this->isConscious() ? '' : ' (being is unconscious)')
+                . ($this->isConscious($woundBoundary) ? '' : ' (being is unconscious)')
             );
         }
 

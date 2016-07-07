@@ -8,7 +8,7 @@ class FirePertinence extends ElementalPertinence
     const FIRE = ElementCode::FIRE;
 
     /**
-     * @return FirePertinence
+     * @return FirePertinence|ElementalPertinence
      */
     public static function getMinus()
     {
@@ -16,7 +16,7 @@ class FirePertinence extends ElementalPertinence
     }
 
     /**
-     * @return FirePertinence
+     * @return FirePertinence|ElementalPertinence
      */
     public static function getPlus()
     {

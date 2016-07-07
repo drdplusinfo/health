@@ -4,6 +4,9 @@ namespace DrdPlus\Health\Afflictions;
 use Doctrineum\String\StringEnum;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static AfflictionSource getEnum($value)
+ */
 class AfflictionSource extends StringEnum
 {
     const AFFLICTION_SOURCE = 'affliction_source';

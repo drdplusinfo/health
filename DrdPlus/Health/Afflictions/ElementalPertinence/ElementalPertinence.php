@@ -4,6 +4,9 @@ namespace DrdPlus\Health\Afflictions\ElementalPertinence;
 use Doctrineum\String\StringEnum;
 use Granam\String\StringTools;
 
+/**
+ * @method static ElementalPertinence getEnum($enumValue)
+ */
 abstract class ElementalPertinence extends StringEnum
 {
     const MINUS = '-';

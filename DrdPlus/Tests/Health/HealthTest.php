@@ -28,21 +28,19 @@ class HealthTest extends TestWithMockery
      */
     public function I_can_use_it()
     {
-        $health = $this->createHealthToTest(123);
-
-        self::assertSame(123, $health->getWoundBoundaryValue());
-        self::assertSame(369, $health->getRemainingHealthAmount());
-        self::assertSame(369, $health->getHealthMaximum());
+        $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(123));
+        self::assertSame(369, $health->getRemainingHealthAmount($woundBoundary));
+        self::assertSame(369, $health->getHealthMaximum($woundBoundary));
     }
 
     /**
-     * @param int $woundBoundaryValue
+     * @param WoundBoundary $woundBoundary
      * @return Health
      */
-    private function createHealthToTest($woundBoundaryValue)
+    private function createHealthToTest(WoundBoundary $woundBoundary)
     {
-        $health = new Health($woundBoundary = $this->createWoundBoundary($woundBoundaryValue));
-        $this->assertUnwounded($health, $woundBoundary);
+        $health = new Health();
+        $this->assertUnwounded($health, $this->createWoundBoundary($woundBoundary));
 
         return $health;
     }
@@ -53,18 +51,17 @@ class HealthTest extends TestWithMockery
      */
     private function createWoundBoundary($value)
     {
-        $wounds = $this->mockery(WoundBoundary::class);
-        $wounds->shouldReceive('getValue')
+        $woundBoundary = $this->mockery(WoundBoundary::class);
+        $woundBoundary->shouldReceive('getValue')
             ->andReturn($value);
 
-        return $wounds;
+        return $woundBoundary;
     }
 
     private function assertUnwounded(Health $health, WoundBoundary $woundBoundary)
     {
         self::assertNull($health->getId(), 'Not yet persisted health should not has filled ID (it is database responsibility in this case)');
-        self::assertSame($woundBoundary->getValue(), $health->getWoundBoundaryValue());
-        self::assertSame($health->getGridOfWounds()->getWoundsPerRowMaximum(), $health->getWoundBoundaryValue());
+        self::assertSame($health->getGridOfWounds()->getWoundsPerRowMaximum($woundBoundary), $woundBoundary->getValue());
         self::assertSame($health->getGridOfWounds()->getWoundsPerRowMaximum() * 3, $health->getHealthMaximum());
         self::assertSame($health->getGridOfWounds()->getWoundsPerRowMaximum() * 3, $health->getRemainingHealthAmount());
         self::assertCount(0, $health->getUnhealedWounds());

@@ -3,6 +3,9 @@ namespace DrdPlus\Health\Afflictions\Effects;
 
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 
+/**
+ * @method static PainEffect getEnum($enumValue)
+ */
 class PainEffect extends AfflictionEffect
 {
     const PAIN_EFFECT = 'pain_effect';

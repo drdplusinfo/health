@@ -8,7 +8,8 @@ use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Health\SeriousWound;
 use Granam\Strict\Object\StrictObject;
 
-/**
+/** @noinspection SingletonFactoryPatternViolationInspection
+ *
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")

@@ -4,6 +4,9 @@ namespace DrdPlus\Health;
 use DrdPlus\Codes\WoundsOriginCode;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static SeriousWoundOrigin getEnum($value)
+ */
 class SeriousWoundOrigin extends WoundOrigin
 {
     const MECHANICAL_STAB = WoundsOriginCode::MECHANICAL_STAB;

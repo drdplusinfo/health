@@ -15,6 +15,7 @@ use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative;
 use DrdPlus\Health\SeriousWound;
 use Doctrine\ORM\Mapping as ORM;
+use DrdPlus\Properties\Derived\WoundBoundary;
 
 /**
  * See PPH page 78, right column
@@ -26,14 +27,16 @@ class Bleeding extends AfflictionByWound
 
     /**
      * @param SeriousWound $seriousWound
+     * @param WoundBoundary $woundBoundary
      * @return Bleeding
      * @throws \DrdPlus\Health\Afflictions\SpecificAfflictions\Exceptions\BleedingCanNotExistsDueToTooLowWound
      * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
-    public static function createIt(SeriousWound $seriousWound)
+    public static function createIt(SeriousWound $seriousWound, WoundBoundary $woundBoundary)
     {
         // see PPH page 78 right column, Bleeding
-        $bleedingSizeValue= $seriousWound->getHealth()->getGridOfWounds()->calculateFilledHalfRowsFor($seriousWound->getValue()) - 1;
+        $bleedingSizeValue = $seriousWound->getHealth()->getGridOfWounds()
+                ->calculateFilledHalfRowsFor($seriousWound->getWoundSize(), $woundBoundary) - 1;
         try {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $size = AfflictionSize::getIt($bleedingSizeValue);

@@ -3,6 +3,9 @@ namespace DrdPlus\Health\Afflictions\Effects;
 
 use DrdPlus\Health\Afflictions\SpecificAfflictions\SeveredArm;
 
+/**
+ * @method static SeveredArmEffect getEnum($enumValue)
+ */
 class SeveredArmEffect extends AfflictionEffect
 {
     const SEVERED_ARM_EFFECT = 'severed_arm_effect';

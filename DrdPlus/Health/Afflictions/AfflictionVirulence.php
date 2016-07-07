@@ -5,6 +5,9 @@ use Doctrineum\String\StringEnum;
 use DrdPlus\Codes\TimeCode;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static AfflictionVirulence getEnum($enumValue)
+ */
 class AfflictionVirulence extends StringEnum
 {
     const AFFLICTION_VIRULENCE = 'affliction_virulence';

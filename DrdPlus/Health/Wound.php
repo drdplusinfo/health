@@ -5,6 +5,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrineum\Entity\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use DrdPlus\Properties\Derived\Toughness;
 use Granam\Integer\IntegerInterface;
 use Granam\Strict\Object\StrictObject;
 
@@ -147,20 +148,21 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
 
     /**
      * @param HealingPower $healingPower
+     * @param Toughness $toughness
      * @return int amount of healed points of wound
      */
-    public function heal(HealingPower $healingPower)
+    public function heal(HealingPower $healingPower, Toughness $toughness)
     {
         $this->setOld(); // any wound is "old", treated and can be healed by regeneration or professional only
         // technical note: orphaned points of wound are removed automatically on persistence
-        if ($healingPower->getHealUpTo() >= $this->getValue()) { // there is power to heal it all
+        if ($healingPower->getHealUpTo($toughness) >= $this->getValue()) { // there is power to heal it all
             $healed = $this->getValue();
             $this->pointsOfWound->clear(); // unbinds all the points of wound
 
             return $healed;
         }
         $healed = 0;
-        for ($healing = 1; $healing <= $healingPower->getHealUpTo(); $healing++) {
+        for ($healing = 1; $healing <= $healingPower->getHealUpTo($toughness); $healing++) {
             $this->pointsOfWound->removeElement($this->pointsOfWound->last());
             $healed++;
         }

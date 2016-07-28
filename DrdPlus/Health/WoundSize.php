@@ -1,16 +1,17 @@
 <?php
 namespace DrdPlus\Health;
 
-use Granam\Integer\IntegerObject;
-use Granam\Tools\ValueDescriber;
+use Granam\Integer\PositiveIntegerObject;
+use Granam\Integer\Tools\Exceptions\PositiveIntegerCanNotBeNegative;
 
-class WoundSize extends IntegerObject
+class WoundSize extends PositiveIntegerObject
 {
     /**
      * @param $value
      * @return WoundSize
-     * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
      * @throws \DrdPlus\Health\Exceptions\WoundSizeCanNotBeNegative
+     * @throws \Granam\Integer\Tools\Exceptions\ValueLostOnCast
+     * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
      */
     public static function createIt($value)
     {
@@ -19,17 +20,16 @@ class WoundSize extends IntegerObject
 
     /**
      * @param mixed $value
-     * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
      * @throws \DrdPlus\Health\Exceptions\WoundSizeCanNotBeNegative
+     * @throws \Granam\Integer\Tools\Exceptions\ValueLostOnCast
+     * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
      */
     public function __construct($value)
     {
-        parent::__construct($value);
-
-        if ($this->getValue() < 0) {
-            throw new Exceptions\WoundSizeCanNotBeNegative(
-                'Expected at least zero, got ' . ValueDescriber::describe($value)
-            );
+        try {
+            parent::__construct($value);
+        } catch (PositiveIntegerCanNotBeNegative $positiveIntegerCanNotBeNegative) {
+            throw new Exceptions\WoundSizeCanNotBeNegative($positiveIntegerCanNotBeNegative->getMessage());
         }
     }
 }

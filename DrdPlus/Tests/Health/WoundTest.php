@@ -8,6 +8,7 @@ use DrdPlus\Health\PointOfWound;
 use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
+use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
@@ -93,16 +94,37 @@ abstract class WoundTest extends TestWithMockery
         $this->assertIsSeriousAsExpected($wound);
         self::assertFalse($wound->isOld());
 
-        self::assertSame(1, $wound->heal(new HealingPower(123, $this->createWoundsTable(1, 123))), 'Expected reported healed value to be 1');
+        self::assertSame(
+            1,
+            $wound->heal(HealingPower::createForTreatment(123, $this->createWoundsTable(3, 123)), $this->createToughness(-2)),
+            'Expected reported healed value to be 1'
+        );
         self::assertSame(2, $wound->getValue(), 'Expected one point of wound to be already healed');
         self::assertCount(2, $wound->getPointsOfWound());
         self::assertFalse($wound->isHealed());
         self::assertTrue($wound->isOld(), 'Wound should become "old" after any heal attempt');
 
-        self::assertSame(2, $wound->heal(new HealingPower(123, $this->createWoundsTable(999, 123))), 'Expected reported healed value to be the remaining value, 2');
+        self::assertSame(
+            2,
+            $wound->heal(HealingPower::createForTreatment(123, $this->createWoundsTable(999, 123)), $this->createToughness(456)),
+            'Expected reported healed value to be the remaining value, 2'
+        );
         self::assertEmpty($wound->getPointsOfWound());
         self::assertTrue($wound->isHealed());
         self::assertTrue($wound->isOld(), 'Wound should become "old" after any heal attempt');
+    }
+
+    /**
+     * @param $value
+     * @return \Mockery\MockInterface|Toughness
+     */
+    private function createToughness($value)
+    {
+        $toughness = $this->mockery(Toughness::class);
+        $toughness->shouldReceive('getValue')
+            ->andReturn($value);
+
+        return $toughness;
     }
 
     /**

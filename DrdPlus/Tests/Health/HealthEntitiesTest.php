@@ -3,6 +3,7 @@ namespace DrdPlus\Tests\Health;
 
 use Doctrineum\Tests\Entity\AbstractDoctrineEntitiesTest;
 use DrdPlus\Codes\RaceCode;
+use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Health\Afflictions\AfflictionSize;
 use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
@@ -40,7 +41,7 @@ class HealthEntitiesTest extends AbstractDoctrineEntitiesTest
     {
         $health = new Health(
             $woundBoundary = new WoundBoundary(
-                new Toughness(new Strength(3), RaceCode::ORC, RaceCode::GOBLIN, new RacesTable()),
+                new Toughness(new Strength(3), RaceCode::ORC, SubRaceCode::GOBLIN, new RacesTable()),
                 new WoundsTable()
             )
         );

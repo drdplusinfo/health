@@ -22,7 +22,7 @@ use DrdPlus\Properties\Derived\WoundBoundary;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Races\RacesTable;
 
-class HealthEntitiesTest extends AbstractDoctrineEntitiesTest
+class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
 {
     protected function setUp()
     {

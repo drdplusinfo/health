@@ -17,10 +17,7 @@
     </testsuites>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="false">
-            <directory>./DrdPlus</directory>
-            <exclude>
-                <directory>./DrdPlus/Tests</directory>
-            </exclude>
+            <directory>./DrdPlus/Health</directory>
         </whitelist>
     </filter>
 </phpunit>

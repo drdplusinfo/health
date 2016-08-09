@@ -19,7 +19,9 @@ use DrdPlus\Properties\Derived\WoundBoundary;
 
 /**
  * See PPH page 78, right column
+ *
  * @ORM\Entity
+ * @method BleedingEffect getAfflictionEffect()
  */
 class Bleeding extends AfflictionByWound
 {
@@ -59,5 +61,45 @@ class Bleeding extends AfflictionByWound
             new \DateInterval('PT0S'), // immediately
             AfflictionName::getIt(self::BLEEDING)
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMalusToActivities()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrengthMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAgilityMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getKnackMalus()
+    {
+        return 0;
     }
 }

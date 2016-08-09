@@ -50,7 +50,7 @@ class BleedingTest extends AfflictionByWoundTest
         self::assertInstanceOf(WaterPertinence::class, $bleeding->getElementalPertinence());
         self::assertTrue($bleeding->getElementalPertinence()->isMinus());
 
-        self::assertInstanceOf(BleedingEffect::class, $bleeding->getEffect());
+        self::assertInstanceOf(BleedingEffect::class, $bleeding->getAfflictionEffect());
 
         self::assertInstanceOf(\DateInterval::class, $bleeding->getOutbreakPeriod());
         self::assertSame('0y0m0d0h0i0s', $bleeding->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));

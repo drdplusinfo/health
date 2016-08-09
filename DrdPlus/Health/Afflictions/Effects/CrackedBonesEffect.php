@@ -32,7 +32,7 @@ class CrackedBonesEffect extends AfflictionEffect
      */
     public function getHealingMalus(CrackedBones $crackedBones)
     {
-        // note: affliction size is always at least zero
+        // note: affliction size is always at least zero, therefore this malus is at least zero or less
         return -$crackedBones->getSize()->getValue();
     }
 

@@ -70,8 +70,8 @@ class HealthTest extends TestWithMockery
         self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(0, $health->getNumberOfSeriousInjuries());
-        self::assertCount(0, $health->getAfflictions());
-        self::assertSame(0, $health->getSignificantMalus($woundBoundary));
+        self::assertCount(0, $health->getAfflictionsByWound());
+        self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary));
         self::assertCount(0, $health->getPains());
         self::assertTrue($health->isAlive($woundBoundary));
         self::assertTrue($health->isConscious($woundBoundary));
@@ -598,7 +598,7 @@ class HealthTest extends TestWithMockery
             self::fail('No exception expected so far: ' . $exception->getTraceAsString());
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->getSignificantMalus($woundBoundary);
+        $health->getSignificantMalusFromPains($woundBoundary);
     }
 
     // MALUS CONDITIONAL CHANGES
@@ -625,7 +625,7 @@ class HealthTest extends TestWithMockery
             $woundBoundary
         ));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame($expectedMalus, $health->getSignificantMalus($woundBoundary));
+        self::assertSame($expectedMalus, $health->getSignificantMalusFromPains($woundBoundary));
 
         for ($currentWillValue = $willValue, $currentRollValue = $rollValue;
             $currentRollValue > -2 && $currentWillValue > -2;
@@ -648,7 +648,7 @@ class HealthTest extends TestWithMockery
                 "For will $currentWillValue and roll $currentRollValue has been expected malus $currentlyExpectedMalus"
             );
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-            self::assertSame($currentlyExpectedMalus, $health->getSignificantMalus($woundBoundary));
+            self::assertSame($currentlyExpectedMalus, $health->getSignificantMalusFromPains($woundBoundary));
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $health->healSeriousWound($seriousWound,
                 $this->createHealingPower(5, 3),
@@ -701,7 +701,7 @@ class HealthTest extends TestWithMockery
             $woundBoundary
         ));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame($expectedMalus, $health->getSignificantMalus($woundBoundary));
+        self::assertSame($expectedMalus, $health->getSignificantMalusFromPains($woundBoundary));
 
         for ($currentWillValue = $willValue, $currentRollValue = $rollValue;
             $currentRollValue < 16 && $currentWillValue < 10;
@@ -723,7 +723,7 @@ class HealthTest extends TestWithMockery
                 "Even for will $currentWillValue and roll $currentRollValue has been expected previous malus $expectedMalus"
             );
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-            self::assertSame($expectedMalus, $health->getSignificantMalus($woundBoundary));
+            self::assertSame($expectedMalus, $health->getSignificantMalusFromPains($woundBoundary));
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $health->healSeriousWound($seriousWound,
                 $this->createHealingPower(5, 3),
@@ -746,7 +746,7 @@ class HealthTest extends TestWithMockery
     {
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(5));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame(0, $health->getSignificantMalus($woundBoundary));
+        self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary));
 
         // 3 ordinary wounds to reach some malus
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -770,7 +770,7 @@ class HealthTest extends TestWithMockery
             $woundBoundary
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame(-1, $health->getSignificantMalus($woundBoundary));
+        self::assertSame(-1, $health->getSignificantMalusFromPains($woundBoundary));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             1,
@@ -786,7 +786,7 @@ class HealthTest extends TestWithMockery
             $woundBoundary
         ); // much worse roll
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame(-1, $health->getSignificantMalus($woundBoundary), 'Malus should not be increased');
+        self::assertSame(-1, $health->getSignificantMalusFromPains($woundBoundary), 'Malus should not be increased');
     }
 
     // AFFLICTION
@@ -805,8 +805,8 @@ class HealthTest extends TestWithMockery
         $affliction = $this->createAffliction($wound);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->addAffliction($affliction);
-        self::assertCount(1, $health->getAfflictions());
-        self::assertSame($affliction, $health->getAfflictions()->current());
+        self::assertCount(1, $health->getAfflictionsByWound());
+        self::assertSame($affliction, $health->getAfflictionsByWound()->current());
     }
 
     /**
@@ -925,7 +925,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(13, $health->getRemainingHealthAmount($woundBoundary));
         self::assertSame(2, $health->getUnhealedNewOrdinaryWoundsSum());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame(0, $health->getSignificantMalus($woundBoundary));
+        self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary));
         self::assertFalse($health->needsToRollAgainstMalus());
         self::assertNull($health->getReasonToRollAgainstWoundMalus());
 
@@ -950,7 +950,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(3, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(12, $health->getRemainingHealthAmount($woundBoundary));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame(0, $health->getSignificantMalus($woundBoundary));
+        self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary));
         self::assertFalse($health->needsToRollAgainstMalus());
         self::assertNull($health->getReasonToRollAgainstWoundMalus());
     }
@@ -994,7 +994,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(0, $health->getNumberOfSeriousInjuries());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame(0, $health->getSignificantMalus($woundBoundary));
+        self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary));
         self::assertFalse($health->needsToRollAgainstMalus());
         self::assertNull($health->getReasonToRollAgainstWoundMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1064,7 +1064,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(3, $health->getUnhealedSeriousWoundsSum());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame(0, $health->getSignificantMalus($woundBoundary), 'There are not enough wounds to suffer from them yet.');
+        self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary), 'There are not enough wounds to suffer from them yet.');
         self::assertFalse($health->needsToRollAgainstMalus());
         self::assertNull($health->getReasonToRollAgainstWoundMalus());
 
@@ -1179,7 +1179,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(5, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(2, $health->getNumberOfSeriousInjuries(), 'Both serious wounds are still unhealed');
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        self::assertSame(0, $health->getSignificantMalus($woundBoundary), 'Malus should be gone because of low damage after heal');
+        self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary), 'Malus should be gone because of low damage after heal');
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(3, $health->healSeriousWound($seriousWoundByStab,
@@ -1369,11 +1369,11 @@ class HealthTest extends TestWithMockery
             $this->createRoller2d6Plus(7),
             $woundBoundary
         );
-        self::assertSame(-2, $health->getSignificantMalus($woundBoundary));
+        self::assertSame(-2, $health->getSignificantMalusFromPains($woundBoundary));
         $health->addAffliction($this->createAffliction($damnSeriousWound));
-        self::assertSame(-2, $health->getSignificantMalus($woundBoundary));
+        self::assertSame(-2, $health->getSignificantMalusFromPains($woundBoundary));
         $health->addAffliction($this->createPain($damnSeriousWound, -5));
-        self::assertSame(-5, $health->getSignificantMalus($woundBoundary));
+        self::assertSame(-5, $health->getSignificantMalusFromPains($woundBoundary));
     }
 
     /**
@@ -1386,7 +1386,7 @@ class HealthTest extends TestWithMockery
         $pain = $this->mockery(Pain::class);
         $pain->shouldReceive('getSeriousWound')
             ->andReturn($wound);
-        $pain->shouldReceive('getMalus')
+        $pain->shouldReceive('getMalusToActivities')
             ->andReturn($malus);
 
         return $pain;
@@ -1407,6 +1407,6 @@ class HealthTest extends TestWithMockery
         $health->addAffliction($secondPain = $this->createPain($seriousWound, -20));
         $health->addAffliction($thirdPain = $this->createPain($seriousWound, -30));
         self::assertSame($this->sortObjects([$firstPain, $secondPain, $thirdPain]), $this->sortObjects($health->getPains()->toArray()));
-        self::assertSame($this->sortObjects([$firstPain, $secondPain, $someAffliction, $thirdPain]), $this->sortObjects($health->getAfflictions()->toArray()));
+        self::assertSame($this->sortObjects([$firstPain, $secondPain, $someAffliction, $thirdPain]), $this->sortObjects($health->getAfflictionsByWound()->toArray()));
     }
 }

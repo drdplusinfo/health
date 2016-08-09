@@ -18,6 +18,7 @@ use DrdPlus\Properties\Derived\WoundBoundary;
 
 /**
  * @ORM\Entity
+ * @method CrackedBonesEffect getAfflictionEffect()
  */
 class CrackedBones extends AfflictionByWound
 {
@@ -49,5 +50,45 @@ class CrackedBones extends AfflictionByWound
             new \DateInterval('PT0S'), // immediately
             AfflictionName::getIt(self::CRACKED_BONES)
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealMalus()
+    {
+        return $this->getAfflictionEffect()->getHealingMalus($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getMalusToActivities()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrengthMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAgilityMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getKnackMalus()
+    {
+        return 0;
     }
 }

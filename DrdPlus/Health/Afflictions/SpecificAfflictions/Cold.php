@@ -17,7 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * See PPH page 78, left column
+ *
  * @ORM\Entity
+ * @method ColdEffect getAfflictionEffect()
  */
 class Cold extends AfflictionByWound
 {
@@ -45,4 +47,45 @@ class Cold extends AfflictionByWound
             AfflictionName::getIt(self::COLD)
         );
     }
+
+    /**
+     * @return int
+     */
+    public function getHealMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMalusToActivities()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrengthMalus()
+    {
+        return $this->getAfflictionEffect()->getStrengthMalus($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getAgilityMalus()
+    {
+        return $this->getAfflictionEffect()->getAgilityMalus($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getKnackMalus()
+    {
+        return $this->getAfflictionEffect()->getKnackMalus($this);
+    }
+
 }

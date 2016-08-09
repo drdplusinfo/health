@@ -44,7 +44,7 @@ class SeveredArmTest extends AfflictionByWoundTest
         self::assertInstanceOf(EarthPertinence::class, $severedArm->getElementalPertinence());
         self::assertTrue($severedArm->getElementalPertinence()->isMinus());
 
-        self::assertInstanceOf(SeveredArmEffect::class, $severedArm->getEffect());
+        self::assertInstanceOf(SeveredArmEffect::class, $severedArm->getAfflictionEffect());
 
         self::assertInstanceOf(\DateInterval::class, $severedArm->getOutbreakPeriod());
         self::assertSame('0y0m0d0h0i0s', $severedArm->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));
@@ -79,7 +79,7 @@ class SeveredArmTest extends AfflictionByWoundTest
         self::assertInstanceOf(EarthPertinence::class, $severedArm->getElementalPertinence());
         self::assertTrue($severedArm->getElementalPertinence()->isMinus());
 
-        self::assertInstanceOf(SeveredArmEffect::class, $severedArm->getEffect());
+        self::assertInstanceOf(SeveredArmEffect::class, $severedArm->getAfflictionEffect());
 
         self::assertInstanceOf(\DateInterval::class, $severedArm->getOutbreakPeriod());
         self::assertSame('0y0m0d0h0i0s', $severedArm->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));

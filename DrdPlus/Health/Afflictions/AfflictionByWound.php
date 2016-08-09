@@ -37,7 +37,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     private $seriousWound;
     /**
      * @var \DrdPlus\Health\Health
-     * @ORM\ManyToOne(targetEntity="\DrdPlus\Health\Health", cascade={"persist"}, inversedBy="afflictions")
+     * @ORM\ManyToOne(targetEntity="\DrdPlus\Health\Health", cascade={"persist"}, inversedBy="afflictionsByWound")
      */
     private $health;
     /**
@@ -79,7 +79,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
      * @var AfflictionEffect
      * @ORM\Column(type="affliction_effect")
      */
-    private $effect;
+    private $afflictionEffect;
     /**
      * @var \DateInterval
      * @ORM\Column(type="date_interval")
@@ -136,7 +136,7 @@ abstract class AfflictionByWound extends StrictObject implements Entity
         $this->dangerousness = $dangerousness;
         $this->size = $size;
         $this->elementalPertinence = $elementalPertinence;
-        $this->effect = $effect;
+        $this->afflictionEffect = $effect;
         $this->outbreakPeriod = $outbreakPeriod;
         $this->afflictionName = $afflictionName;
     }
@@ -216,9 +216,9 @@ abstract class AfflictionByWound extends StrictObject implements Entity
     /**
      * @return AfflictionEffect
      */
-    public function getEffect()
+    public function getAfflictionEffect()
     {
-        return $this->effect;
+        return $this->afflictionEffect;
     }
 
     /**
@@ -237,4 +237,52 @@ abstract class AfflictionByWound extends StrictObject implements Entity
         return $this->afflictionName;
     }
 
+    /**
+     * @return int
+     */
+    abstract public function getHealMalus();
+
+    /**
+     * @return int
+     */
+    abstract public function getMalusToActivities();
+
+    /**
+     * @return int
+     */
+    abstract public function getStrengthMalus();
+
+    /**
+     * @return int
+     */
+    abstract public function getAgilityMalus();
+
+    /**
+     * @return int
+     */
+    abstract public function getKnackMalus();
+
+    /**
+     * @return int
+     */
+    public function getWillMalus()
+    {
+        return 0; // currently no affliction can affect will
+    }
+
+    /**
+     * @return int
+     */
+    public function getIntelligenceMalus()
+    {
+        return 0; // currently no affliction can affect intelligence
+    }
+
+    /**
+     * @return int
+     */
+    public function getCharismaMalus()
+    {
+        return 0; // currently no affliction can affect charisma
+    }
 }

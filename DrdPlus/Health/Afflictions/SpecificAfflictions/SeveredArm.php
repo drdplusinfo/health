@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * See PPH page 78, right column
  *
  * @ORM\Entity
+ * @method SeveredArmEffect getAfflictionEffect()
  */
 class SeveredArm extends AfflictionByWound
 {
@@ -61,5 +62,45 @@ class SeveredArm extends AfflictionByWound
                     : self::SEVERED_ARM
             )
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMalusToActivities()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrengthMalus()
+    {
+        return $this->getAfflictionEffect()->getStrengthMalus($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getAgilityMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getKnackMalus()
+    {
+        return $this->getAfflictionEffect()->getKnackMalus($this);
     }
 }

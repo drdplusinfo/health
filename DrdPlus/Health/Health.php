@@ -36,7 +36,7 @@ class Health extends StrictObject implements Entity
      * @var ArrayCollection|AfflictionByWound[]
      * @ORM\OneToMany(targetEntity="\DrdPlus\Health\Afflictions\AfflictionByWound", mappedBy="health", cascade={"all"}, orphanRemoval=true)
      */
-    private $afflictions;
+    private $afflictionsByWound;
     /**
      * Separates new and old (or serious) injuries.
      * @var TreatmentBoundary
@@ -65,7 +65,7 @@ class Health extends StrictObject implements Entity
     public function __construct()
     {
         $this->wounds = new ArrayCollection();
-        $this->afflictions = new ArrayCollection();
+        $this->afflictionsByWound = new ArrayCollection();
         $this->treatmentBoundary = TreatmentBoundary::getIt(0);
         $this->malusFromWounds = MalusFromWounds::getIt(0);
     }
@@ -189,7 +189,7 @@ class Health extends StrictObject implements Entity
                 "Given instance of affliction '{$afflictionByWound->getName()}' is already added."
             );
         }
-        $this->afflictions->add($afflictionByWound);
+        $this->afflictionsByWound->add($afflictionByWound);
     }
 
     private function doesHaveThatWound(Wound $givenWound)
@@ -208,7 +208,7 @@ class Health extends StrictObject implements Entity
 
     private function doesHaveThatAffliction(AfflictionByWound $givenAffliction)
     {
-        foreach ($this->afflictions as $registeredAffliction) {
+        foreach ($this->afflictionsByWound as $registeredAffliction) {
             if ($givenAffliction === $registeredAffliction) {
                 return true;
             }
@@ -464,9 +464,87 @@ class Health extends StrictObject implements Entity
      * Looking for a setter? Sorry but affliction can be caused only by a new wound.
      * @return Collection|AfflictionByWound[]
      */
-    public function getAfflictions()
+    public function getAfflictionsByWound()
     {
-        return clone $this->afflictions; // cloned to avoid external change of the collection
+        return clone $this->afflictionsByWound; // cloned to avoid external change of the collection
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrengthMalusFromAfflictions()
+    {
+        $strengthMalus = 0;
+        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+            $strengthMalus += $afflictionByWound->getStrengthMalus();
+        }
+
+        return $strengthMalus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAgilityMalusFromAfflictions()
+    {
+        $agilityMalus = 0;
+        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+            $agilityMalus += $afflictionByWound->getAgilityMalus();
+        }
+
+        return $agilityMalus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getKnackMalusFromAfflictions()
+    {
+        $knackMalus = 0;
+        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+            $knackMalus += $afflictionByWound->getKnackMalus();
+        }
+
+        return $knackMalus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWillMalusFromAfflictions()
+    {
+        $willMalus = 0;
+        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+            $willMalus += $afflictionByWound->getWillMalus();
+        }
+
+        return $willMalus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIntelligenceMalusFromAfflictions()
+    {
+        $intelligenceMalus = 0;
+        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+            $intelligenceMalus += $afflictionByWound->getIntelligenceMalus();
+        }
+
+        return $intelligenceMalus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCharismaMalusFromAfflictions()
+    {
+        $charismaMalus = 0;
+        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+            $charismaMalus += $afflictionByWound->getCharismaMalus();
+        }
+
+        return $charismaMalus;
     }
 
     /**
@@ -504,12 +582,12 @@ class Health extends StrictObject implements Entity
      * @return int
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function getSignificantMalus(WoundBoundary $woundBoundary)
+    public function getSignificantMalusFromPains(WoundBoundary $woundBoundary)
     {
         $maluses = [$this->getMalusFromWoundsValue($woundBoundary)];
         foreach ($this->getPains() as $pain) {
             // for Pain see PPH page 79, left column
-            $maluses[] = $pain->getMalus();
+            $maluses[] = $pain->getMalusToActivities();
         }
 
         return min($maluses); // the most significant malus, therefore the lowest value
@@ -648,7 +726,7 @@ class Health extends StrictObject implements Entity
     public function getPains()
     {
         $pains = new ArrayCollection();
-        foreach ($this->getAfflictions() as $affliction) {
+        foreach ($this->getAfflictionsByWound() as $affliction) {
             if (!($affliction instanceof Pain)) {
                 continue;
             }

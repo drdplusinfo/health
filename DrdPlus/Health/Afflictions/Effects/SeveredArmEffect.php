@@ -30,7 +30,7 @@ class SeveredArmEffect extends AfflictionEffect
      * @param SeveredArm $severedArm
      * @return int
      */
-    public function getStrengthAdjustment(SeveredArm $severedArm)
+    public function getStrengthMalus(SeveredArm $severedArm)
     {
         return -$severedArm->getSize()->getValue();
     }
@@ -39,7 +39,7 @@ class SeveredArmEffect extends AfflictionEffect
      * @param SeveredArm $severedArm
      * @return int
      */
-    public function getKnackAdjustment(SeveredArm $severedArm)
+    public function getKnackMalus(SeveredArm $severedArm)
     {
         return -2 * $severedArm->getSize()->getValue();
     }

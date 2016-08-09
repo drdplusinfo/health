@@ -99,7 +99,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
             $this->mockery(AfflictionName::class)
         );
 
-        self::assertSame([$afflictionInstance], $health->getAfflictions()->toArray());
+        self::assertSame([$afflictionInstance], $health->getAfflictionsByWound()->toArray());
     }
 
     /**

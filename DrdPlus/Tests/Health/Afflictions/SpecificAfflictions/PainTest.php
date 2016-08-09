@@ -47,9 +47,9 @@ class PainTest extends AfflictionByWoundTest
 
         self::assertSame($elementalPertinence, $someTerriblePain->getElementalPertinence());
 
-        self::assertInstanceOf(PainEffect::class, $someTerriblePain->getEffect());
+        self::assertInstanceOf(PainEffect::class, $someTerriblePain->getAfflictionEffect());
         
-        self::assertSame(-$painValue, $someTerriblePain->getMalus());
+        self::assertSame(-$painValue, $someTerriblePain->getMalusToActivities());
 
         self::assertInstanceOf(\DateInterval::class, $someTerriblePain->getOutbreakPeriod());
         self::assertSame('0y0m0d0h0i0s', $someTerriblePain->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));

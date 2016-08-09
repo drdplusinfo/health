@@ -22,8 +22,8 @@ class SeveredArmEffectTest extends AfflictionEffectTest
     public function I_can_get_strength_and_knack_malus()
     {
         $severedArmEffect = SeveredArmEffect::getIt();
-        self::assertSame(-123, $severedArmEffect->getStrengthAdjustment($this->createSeveredArm(123)));
-        self::assertSame(-246, $severedArmEffect->getKnackAdjustment($this->createSeveredArm(123)));
+        self::assertSame(-123, $severedArmEffect->getStrengthMalus($this->createSeveredArm(123)));
+        self::assertSame(-246, $severedArmEffect->getKnackMalus($this->createSeveredArm(123)));
     }
 
     /**

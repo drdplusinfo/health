@@ -47,7 +47,7 @@ class ColdTest extends AfflictionByWoundTest
         self::assertInstanceOf(WaterPertinence::class, $cold->getElementalPertinence());
         self::assertTrue($cold->getElementalPertinence()->isPlus());
 
-        self::assertInstanceOf(ColdEffect::class, $cold->getEffect());
+        self::assertInstanceOf(ColdEffect::class, $cold->getAfflictionEffect());
 
         self::assertInstanceOf(\DateInterval::class, $cold->getOutbreakPeriod());
         self::assertSame('0y0m1d0h0i0s', $cold->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));

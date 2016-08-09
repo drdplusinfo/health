@@ -17,9 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * see PPH page 79 left column
- * @method PainEffect getEffect
- * 
+ *
  * @ORM\Entity
+ * @method PainEffect getAfflictionEffect()
  */
 class Pain extends AfflictionByWound
 {
@@ -58,8 +58,42 @@ class Pain extends AfflictionByWound
     /**
      * @return int
      */
-    public function getMalus()
+    public function getHealMalus()
     {
-        return $this->getEffect()->getMalusFromPain($this);
+        return 0;
     }
+
+    /**
+     * @return int
+     */
+    public function getMalusToActivities()
+    {
+        // this malus affects activities, not passive actions like be healed
+        return $this->getAfflictionEffect()->getMalusFromPain($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrengthMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAgilityMalus()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getKnackMalus()
+    {
+        return 0;
+    }
+
 }

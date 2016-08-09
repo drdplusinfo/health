@@ -50,7 +50,7 @@ class CrackedBonesTest extends AfflictionByWoundTest
         self::assertInstanceOf(EarthPertinence::class, $crackedBones->getElementalPertinence());
         self::assertTrue($crackedBones->getElementalPertinence()->isMinus());
 
-        self::assertInstanceOf(CrackedBonesEffect::class, $crackedBones->getEffect());
+        self::assertInstanceOf(CrackedBonesEffect::class, $crackedBones->getAfflictionEffect());
 
         self::assertInstanceOf(\DateInterval::class, $crackedBones->getOutbreakPeriod());
         self::assertSame('0y0m0d0h0i0s', $crackedBones->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));

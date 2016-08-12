@@ -811,15 +811,20 @@ class HealthTest extends TestWithMockery
 
     /**
      * @param Wound $wound
+     * @param array $values
      * @return \Mockery\MockInterface|AfflictionByWound
      */
-    private function createAffliction(Wound $wound)
+    private function createAffliction(Wound $wound, array $values = [])
     {
         $affliction = $this->mockery(AfflictionByWound::class);
         $affliction->shouldReceive('getSeriousWound')
             ->andReturn($wound);
         $affliction->shouldReceive('getName')
             ->andReturn('some terrible affliction');
+        foreach ($values as $valueName => $value) {
+            $affliction->shouldReceive('get' . ucfirst($valueName))
+                ->andReturn($value);
+        }
 
         return $affliction;
     }
@@ -1372,22 +1377,24 @@ class HealthTest extends TestWithMockery
         self::assertSame(-2, $health->getSignificantMalusFromPains($woundBoundary));
         $health->addAffliction($this->createAffliction($damnSeriousWound));
         self::assertSame(-2, $health->getSignificantMalusFromPains($woundBoundary));
-        $health->addAffliction($this->createPain($damnSeriousWound, -5));
+        $health->addAffliction($this->createPain($damnSeriousWound, ['malusToActivities' => -5]));
         self::assertSame(-5, $health->getSignificantMalusFromPains($woundBoundary));
     }
 
     /**
-     * @param $malus
      * @param Wound $wound
+     * @param array $maluses
      * @return \Mockery\MockInterface|Pain
      */
-    private function createPain(Wound $wound, $malus)
+    private function createPain(Wound $wound, array $maluses = [])
     {
         $pain = $this->mockery(Pain::class);
         $pain->shouldReceive('getSeriousWound')
             ->andReturn($wound);
-        $pain->shouldReceive('getMalusToActivities')
-            ->andReturn($malus);
+        foreach ($maluses as $nameOfValue => $otherValue) {
+            $pain->shouldReceive('get' . ucfirst($nameOfValue))
+                ->andReturn($otherValue);
+        }
 
         return $pain;
     }
@@ -1402,11 +1409,113 @@ class HealthTest extends TestWithMockery
             SeriousWoundOrigin::getPsychicalWoundOrigin(),
             $woundBoundary
         );
-        $health->addAffliction($firstPain = $this->createPain($seriousWound, -10));
+        $health->addAffliction($firstPain = $this->createPain($seriousWound, ['malusToActivities' => -10]));
         $health->addAffliction($someAffliction = $this->createAffliction($seriousWound));
-        $health->addAffliction($secondPain = $this->createPain($seriousWound, -20));
-        $health->addAffliction($thirdPain = $this->createPain($seriousWound, -30));
+        $health->addAffliction($secondPain = $this->createPain($seriousWound, ['malusToActivities' => -20]));
+        $health->addAffliction($thirdPain = $this->createPain($seriousWound, ['malusToActivities' => -30]));
         self::assertSame($this->sortObjects([$firstPain, $secondPain, $thirdPain]), $this->sortObjects($health->getPains()->toArray()));
         self::assertSame($this->sortObjects([$firstPain, $secondPain, $someAffliction, $thirdPain]), $this->sortObjects($health->getAfflictionsByWound()->toArray()));
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_strength_malus_from_afflictions()
+    {
+        $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(123));
+        $seriousWound = $health->createWound($this->createWoundSize(70),
+            SeriousWoundOrigin::getPsychicalWoundOrigin(),
+            $woundBoundary
+        );
+        $health->addAffliction($this->createPain($seriousWound, ['strengthMalus' => -4]));
+        $health->addAffliction($this->createAffliction($seriousWound, ['strengthMalus' => -1]));
+        $health->addAffliction($this->createPain($seriousWound, ['strengthMalus' => 123]));
+
+        self::assertSame(118, $health->getStrengthMalusFromAfflictions());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_agility_malus_from_afflictions()
+    {
+        $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(123));
+        $seriousWound = $health->createWound($this->createWoundSize(70),
+            SeriousWoundOrigin::getPsychicalWoundOrigin(),
+            $woundBoundary
+        );
+        $health->addAffliction($this->createPain($seriousWound, ['agilityMalus' => -1]));
+        $health->addAffliction($this->createAffliction($seriousWound, ['agilityMalus' => -2]));
+        $health->addAffliction($this->createPain($seriousWound, ['agilityMalus' => -3]));
+
+        self::assertSame(-6, $health->getAgilityMalusFromAfflictions());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_knack_malus_from_afflictions()
+    {
+        $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(123));
+        $seriousWound = $health->createWound($this->createWoundSize(70),
+            SeriousWoundOrigin::getPsychicalWoundOrigin(),
+            $woundBoundary
+        );
+        $health->addAffliction($this->createPain($seriousWound, ['knackMalus' => -8]));
+        $health->addAffliction($this->createAffliction($seriousWound, ['knackMalus' => -15]));
+        $health->addAffliction($this->createPain($seriousWound, ['knackMalus' => -1]));
+
+        self::assertSame(-24, $health->getKnackMalusFromAfflictions());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_will_malus_from_afflictions()
+    {
+        $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(123));
+        $seriousWound = $health->createWound($this->createWoundSize(70),
+            SeriousWoundOrigin::getPsychicalWoundOrigin(),
+            $woundBoundary
+        );
+        $health->addAffliction($this->createPain($seriousWound, ['willMalus' => -3]));
+        $health->addAffliction($this->createAffliction($seriousWound, ['willMalus' => -2]));
+        $health->addAffliction($this->createPain($seriousWound, ['willMalus' => -5]));
+
+        self::assertSame(-10, $health->getWillMalusFromAfflictions());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_intelligence_malus_from_afflictions()
+    {
+        $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(123));
+        $seriousWound = $health->createWound($this->createWoundSize(70),
+            SeriousWoundOrigin::getPsychicalWoundOrigin(),
+            $woundBoundary
+        );
+        $health->addAffliction($this->createPain($seriousWound, ['intelligenceMalus' => 0]));
+        $health->addAffliction($this->createAffliction($seriousWound, ['intelligenceMalus' => 1]));
+        $health->addAffliction($this->createPain($seriousWound, ['intelligenceMalus' => 0]));
+        $health->addAffliction($this->createPain($seriousWound, ['intelligenceMalus' => -6]));
+
+        self::assertSame(-5, $health->getIntelligenceMalusFromAfflictions());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_charisma_malus_from_afflictions()
+    {
+        $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(123));
+        $seriousWound = $health->createWound($this->createWoundSize(70),
+            SeriousWoundOrigin::getPsychicalWoundOrigin(),
+            $woundBoundary
+        );
+        $health->addAffliction($this->createPain($seriousWound, ['charismaMalus' => -5]));
+        $health->addAffliction($this->createAffliction($seriousWound, ['charismaMalus' => -2]));
+
+        self::assertSame(-7, $health->getCharismaMalusFromAfflictions());
     }
 }

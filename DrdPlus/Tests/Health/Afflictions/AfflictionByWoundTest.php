@@ -230,4 +230,45 @@ abstract class AfflictionByWoundTest extends TestWithMockery
             ->andReturn($filledHalfOfRows);
     }
 
+    /**
+     * @test
+     */
+    public function I_get_will_intelligence_and_charisma_malus_zero_as_not_used()
+    {
+        $afflictionReflection = new \ReflectionClass($this->getSutClass());
+        $afflictionConstructor = $afflictionReflection->getConstructor();
+        $afflictionConstructor->setAccessible(true);
+
+        /** @var AfflictionByWound $afflictionInstance */
+        $afflictionInstance = $afflictionReflection->newInstanceWithoutConstructor();
+        self::assertSame(0, $afflictionInstance->getWillMalus());
+        self::assertSame(0, $afflictionInstance->getIntelligenceMalus());
+        self::assertSame(0, $afflictionInstance->getCharismaMalus());
+    }
+
+    /**
+     * @test
+     */
+    abstract public function I_can_get_heal_malus();
+
+    /**
+     * @test
+     */
+    abstract public function I_can_get_malus_to_activities();
+
+    /**
+     * @test
+     */
+    abstract public function I_can_get_strength_malus();
+
+    /**
+     * @test
+     */
+    abstract public function I_can_get_agility_malus();
+
+    /**
+     * @test
+     */
+    abstract public function I_can_get_knack_malus();
+
 }

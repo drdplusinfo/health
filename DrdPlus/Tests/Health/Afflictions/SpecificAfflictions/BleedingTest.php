@@ -70,4 +70,65 @@ class BleedingTest extends AfflictionByWoundTest
         $this->addSizeCalculation($wound, $woundBoundary, 0);
         Bleeding::createIt($wound, $woundBoundary);
     }
+
+    /**
+     * @test
+     */
+    public function I_can_get_heal_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $bleeding = Bleeding::createIt($wound, $woundBoundary);
+        self::assertSame(0, $bleeding->getHealMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_malus_to_activities()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $bleeding = Bleeding::createIt($wound, $woundBoundary);
+        self::assertSame(0, $bleeding->getMalusToActivities());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_strength_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $bleeding = Bleeding::createIt($wound, $woundBoundary);
+        self::assertSame(0, $bleeding->getStrengthMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_agility_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $bleeding = Bleeding::createIt($wound, $woundBoundary);
+        self::assertSame(0, $bleeding->getAgilityMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_knack_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $bleeding = Bleeding::createIt($wound, $woundBoundary);
+        self::assertSame(0, $bleeding->getKnackMalus());
+    }
+
 }

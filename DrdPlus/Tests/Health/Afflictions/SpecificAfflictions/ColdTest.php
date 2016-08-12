@@ -56,4 +56,63 @@ class ColdTest extends AfflictionByWoundTest
         self::assertSame('cold', $cold->getName()->getValue());
     }
 
+    /**
+     * @test
+     */
+    public function I_can_get_heal_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $cold = Cold::createIt($wound);
+        self::assertSame(0, $cold->getHealMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_malus_to_activities()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $cold = Cold::createIt($wound);
+        self::assertSame(0, $cold->getMalusToActivities());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_strength_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $cold = Cold::createIt($wound);
+        self::assertSame(-1, $cold->getStrengthMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_agility_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $cold = Cold::createIt($wound);
+        self::assertSame(-1, $cold->getAgilityMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_knack_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $cold = Cold::createIt($wound);
+        self::assertSame(-1, $cold->getKnackMalus());
+    }
 }

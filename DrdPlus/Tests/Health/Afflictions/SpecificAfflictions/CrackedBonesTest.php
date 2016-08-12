@@ -59,4 +59,64 @@ class CrackedBonesTest extends AfflictionByWoundTest
         self::assertSame('cracked_bones', $crackedBones->getName()->getValue());
     }
 
+    /**
+     * @test
+     */
+    public function I_can_get_heal_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(15);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $crackedBones = CrackedBones::createIt($wound, $woundBoundary);
+        self::assertSame(-246, $crackedBones->getHealMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_malus_to_activities()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $crackedBones = CrackedBones::createIt($wound, $woundBoundary);
+        self::assertSame(0, $crackedBones->getMalusToActivities());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_strength_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $crackedBones = CrackedBones::createIt($wound, $woundBoundary);
+        self::assertSame(0, $crackedBones->getStrengthMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_agility_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $crackedBones = CrackedBones::createIt($wound, $woundBoundary);
+        self::assertSame(0, $crackedBones->getAgilityMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_knack_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
+        $crackedBones = CrackedBones::createIt($wound, $woundBoundary);
+        self::assertSame(0, $crackedBones->getKnackMalus());
+    }
+
 }

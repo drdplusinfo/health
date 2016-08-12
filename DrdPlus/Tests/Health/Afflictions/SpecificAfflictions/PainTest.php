@@ -48,8 +48,6 @@ class PainTest extends AfflictionByWoundTest
         self::assertSame($elementalPertinence, $someTerriblePain->getElementalPertinence());
 
         self::assertInstanceOf(PainEffect::class, $someTerriblePain->getAfflictionEffect());
-        
-        self::assertSame(-$painValue, $someTerriblePain->getMalusToActivities());
 
         self::assertInstanceOf(\DateInterval::class, $someTerriblePain->getOutbreakPeriod());
         self::assertSame('0y0m0d0h0i0s', $someTerriblePain->getOutbreakPeriod()->format('%yy%mm%dd%hh%ii%ss'));
@@ -58,4 +56,78 @@ class PainTest extends AfflictionByWoundTest
         self::assertSame('pain', $someTerriblePain->getName()->getValue());
     }
 
+    /**
+     * @test
+     */
+    public function I_can_get_heal_malus()
+    {
+        $seriousWound = $this->createWound();
+        $someTerriblePain = Pain::createIt(
+            $seriousWound,
+            $virulence = $this->createAfflictionVirulence(),
+            $size = $this->createAfflictionSize($painValue = 123),
+            $elementalPertinence = $this->createElementalPertinence()
+        );
+        self::assertSame(0, $someTerriblePain->getHealMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_malus_to_activities()
+    {
+        $seriousWound = $this->createWound();
+        $someTerriblePain = Pain::createIt(
+            $seriousWound,
+            $virulence = $this->createAfflictionVirulence(),
+            $size = $this->createAfflictionSize($painValue = 123),
+            $elementalPertinence = $this->createElementalPertinence()
+        );
+        self::assertSame(-$painValue, $someTerriblePain->getMalusToActivities());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_strength_malus()
+    {
+        $seriousWound = $this->createWound();
+        $someTerriblePain = Pain::createIt(
+            $seriousWound,
+            $virulence = $this->createAfflictionVirulence(),
+            $size = $this->createAfflictionSize($painValue = 123),
+            $elementalPertinence = $this->createElementalPertinence()
+        );
+        self::assertSame(0, $someTerriblePain->getStrengthMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_agility_malus()
+    {
+        $seriousWound = $this->createWound();
+        $someTerriblePain = Pain::createIt(
+            $seriousWound,
+            $virulence = $this->createAfflictionVirulence(),
+            $size = $this->createAfflictionSize($painValue = 123),
+            $elementalPertinence = $this->createElementalPertinence()
+        );
+        self::assertSame(0, $someTerriblePain->getAgilityMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_knack_malus()
+    {
+        $seriousWound = $this->createWound();
+        $someTerriblePain = Pain::createIt(
+            $seriousWound,
+            $virulence = $this->createAfflictionVirulence(),
+            $size = $this->createAfflictionSize($painValue = 123),
+            $elementalPertinence = $this->createElementalPertinence()
+        );
+        self::assertSame(0, $someTerriblePain->getKnackMalus());
+    }
 }

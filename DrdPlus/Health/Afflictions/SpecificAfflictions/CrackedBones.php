@@ -33,8 +33,10 @@ class CrackedBones extends AfflictionByWound
     public static function createIt(SeriousWound $seriousWound, WoundBoundary $woundBoundary)
     {
         // see PPH page 78 right column, Cracked bones
-        $sizeValue = $seriousWound->getHealth()->getGridOfWounds()
-                ->calculateFilledHalfRowsFor($seriousWound->getWoundSize(), $woundBoundary) * 2;
+        $sizeValue = 2 * $seriousWound
+                ->getHealth()
+                ->getGridOfWounds()
+                ->calculateFilledHalfRowsFor($seriousWound->getWoundSize(), $woundBoundary);
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(

@@ -112,4 +112,63 @@ class SeveredArmTest extends AfflictionByWoundTest
         SeveredArm::createIt($this->createWound(), -1);
     }
 
+    /**
+     * @test
+     */
+    public function I_can_get_heal_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $severedArm = SeveredArm::createIt($wound);
+        self::assertSame(0, $severedArm->getHealMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_malus_to_activities()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $severedArm = SeveredArm::createIt($wound);
+        self::assertSame(0, $severedArm->getMalusToActivities());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_strength_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $severedArm = SeveredArm::createIt($wound, 5);
+        self::assertSame(-5, $severedArm->getStrengthMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_agility_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $severedArm = SeveredArm::createIt($wound);
+        self::assertSame(0, $severedArm->getAgilityMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_knack_malus()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+        $severedArm = SeveredArm::createIt($wound, 4);
+        self::assertSame(-8, $severedArm->getKnackMalus());
+    }
 }

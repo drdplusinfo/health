@@ -23,7 +23,7 @@ class AfflictionSizeTest extends \PHPUnit_Framework_TestCase
      */
     public function I_am_stopped_by_specific_exception_on_invalid_value()
     {
-        new AfflictionSize('Broken heart by fixed dart');
+        AfflictionSize::getIt('Broken heart by fixed dart');
     }
 
     /**
@@ -33,6 +33,6 @@ class AfflictionSizeTest extends \PHPUnit_Framework_TestCase
      */
     public function I_can_not_use_negative_value()
     {
-        new AfflictionSize(-1);
+        AfflictionSize::getEnum(-1);
     }
 }

@@ -41,7 +41,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
     {
         $health = new Health(
             $woundBoundary = new WoundBoundary(
-                new Toughness(new Strength(3), RaceCode::ORC, SubRaceCode::GOBLIN, new RacesTable()),
+                new Toughness(Strength::getIt(3), RaceCode::ORC, SubRaceCode::GOBLIN, new RacesTable()),
                 new WoundsTable()
             )
         );

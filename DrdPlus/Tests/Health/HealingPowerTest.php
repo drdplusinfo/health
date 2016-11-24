@@ -73,9 +73,9 @@ class HealingPowerTest extends TestWithMockery
     {
         foreach ([true, false] as $hasNativeRegeneration) {
             $healingPower = HealingPower::createForRegeneration(
-                $this->createRaceCode('foo'),
-                $this->createSubRaceCode('bar'),
-                $this->createRacesTable('foo', 'bar', $hasNativeRegeneration),
+                $raceCode = $this->createRaceCode('foo'),
+                $subRaceCode = $this->createSubRaceCode('bar'),
+                $this->createRacesTable($raceCode, $subRaceCode, $hasNativeRegeneration),
                 $this->createActivityCode('baz'),
                 $this->createHealingByActivityTable('baz', 123),
                 $this->createConditionCode('qux'),
@@ -117,12 +117,12 @@ class HealingPowerTest extends TestWithMockery
     }
 
     /**
-     * @param $expectedRaceCode
-     * @param $expectedSubRaceCode
+     * @param RaceCode $expectedRaceCode
+     * @param SubRaceCode $expectedSubRaceCode
      * @param $hasNativeRegeneration
      * @return RacesTable
      */
-    private function createRacesTable($expectedRaceCode, $expectedSubRaceCode, $hasNativeRegeneration)
+    private function createRacesTable(RaceCode $expectedRaceCode, SubRaceCode $expectedSubRaceCode, $hasNativeRegeneration)
     {
         $racesTable = $this->mockery(RacesTable::class);
         $racesTable->shouldReceive('hasNativeRegeneration')

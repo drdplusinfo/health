@@ -56,8 +56,9 @@ class HealingPower extends StrictObject implements IntegerInterface
     )
     {
         /** see PPH page 80 right column */
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $healingPower =
-            ($racesTable->hasNativeRegeneration($raceCode->getValue(), $subRaceCode->getValue())
+            ($racesTable->hasNativeRegeneration($raceCode, $subRaceCode)
                 ? 4
                 : 0
             )

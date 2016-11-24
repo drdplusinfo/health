@@ -33,7 +33,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
     protected function getDirsWithEntities()
     {
         return [
-            str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__)
+            str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__),
         ];
     }
 
@@ -41,7 +41,12 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
     {
         $health = new Health(
             $woundBoundary = new WoundBoundary(
-                new Toughness(Strength::getIt(3), RaceCode::ORC, SubRaceCode::GOBLIN, new RacesTable()),
+                new Toughness(
+                    Strength::getIt(3),
+                    RaceCode::getIt(RaceCode::ORC),
+                    SubRaceCode::getIt(SubRaceCode::GOBLIN),
+                    new RacesTable()
+                ),
                 new WoundsTable()
             )
         );

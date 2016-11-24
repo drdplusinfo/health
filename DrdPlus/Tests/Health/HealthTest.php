@@ -19,6 +19,7 @@ use DrdPlus\Properties\Base\Will;
 use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Properties\Derived\WoundBoundary;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
+use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use Granam\Tests\Tools\TestWithMockery;
 
@@ -153,16 +154,21 @@ class HealthTest extends TestWithMockery
     }
 
     /**
-     * @param $value
+     * @param $woundsValue
      * @return \Mockery\MockInterface|WoundsTable
      */
-    private function createWoundsTable($value)
+    private function createWoundsTable($woundsValue)
     {
         $woundsTable = $this->mockery(WoundsTable::class);
         $woundsTable->shouldReceive('toWounds')
             ->andReturn($wounds = $this->mockery(Wounds::class));
         $wounds->shouldReceive('getValue')
-            ->andReturn($value);
+            ->andReturn($woundsValue);
+        $woundsTable->shouldReceive('toBonus')
+            ->andReturn($woundsBonus = $this->mockery(WoundsBonus::class));
+        /** just for @see \DrdPlus\Properties\Partials\WithHistoryTrait::extractArgumentsDescription */
+        $woundsBonus->shouldReceive('getValue')
+            ->andReturn('foo');
 
         return $woundsTable;
     }
@@ -628,8 +634,8 @@ class HealthTest extends TestWithMockery
         self::assertSame($expectedMalus, $health->getSignificantMalusFromPains($woundBoundary));
 
         for ($currentWillValue = $willValue, $currentRollValue = $rollValue;
-            $currentRollValue > -2 && $currentWillValue > -2;
-            $currentRollValue--, $currentWillValue--
+             $currentRollValue > -2 && $currentWillValue > -2;
+             $currentRollValue--, $currentWillValue--
         ) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $seriousWound = $health->createWound($this->createWoundSize(3),
@@ -704,8 +710,8 @@ class HealthTest extends TestWithMockery
         self::assertSame($expectedMalus, $health->getSignificantMalusFromPains($woundBoundary));
 
         for ($currentWillValue = $willValue, $currentRollValue = $rollValue;
-            $currentRollValue < 16 && $currentWillValue < 10;
-            $currentRollValue++, $currentWillValue++
+             $currentRollValue < 16 && $currentWillValue < 10;
+             $currentRollValue++, $currentWillValue++
         ) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $seriousWound = $health->createWound($this->createWoundSize(3),

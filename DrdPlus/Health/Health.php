@@ -324,11 +324,7 @@ class Health extends StrictObject implements Entity
      * @return int actually regenerated amount
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function regenerate(
-        HealingPower $healingPower,
-        Toughness $toughness,
-        WoundsTable $woundsTable
-    )
+    public function regenerate(HealingPower $healingPower, Toughness $toughness, WoundsTable $woundsTable)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // every wound becomes old after this

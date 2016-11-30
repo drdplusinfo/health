@@ -1,3 +1,7 @@
+# Health for DrD+
+
+[![Build Status](https://travis-ci.org/jaroslavtyc/drd-plus-health.svg?branch=master)](https://travis-ci.org/jaroslavtyc/drd-plus-health)
+
 ### Wounds
  
  - aggregates every single not-yet healed wound

@@ -2,8 +2,8 @@
 namespace DrdPlus\Tests\Health;
 
 use Drd\DiceRoll\Templates\Rollers\SpecificRolls\Roll2d6DrdPlus;
-use DrdPlus\Codes\ActivityAffectingHealingCode;
-use DrdPlus\Codes\ConditionsAffectingHealingCode;
+use DrdPlus\Codes\Body\ActivityAffectingHealingCode;
+use DrdPlus\Codes\Body\ConditionsAffectingHealingCode;
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Health\HealingPower;
@@ -120,7 +120,7 @@ class HealingPowerTest extends TestWithMockery
      * @param RaceCode $expectedRaceCode
      * @param SubRaceCode $expectedSubRaceCode
      * @param $hasNativeRegeneration
-     * @return RacesTable
+     * @return RacesTable|\Mockery\MockInterface
      */
     private function createRacesTable(RaceCode $expectedRaceCode, SubRaceCode $expectedSubRaceCode, $hasNativeRegeneration)
     {
@@ -174,7 +174,7 @@ class HealingPowerTest extends TestWithMockery
     }
 
     /**
-     * @return HealingConditionsPercents
+     * @return HealingConditionsPercents|\Mockery\MockInterface
      */
     private function createHealingConditionsPercents()
     {

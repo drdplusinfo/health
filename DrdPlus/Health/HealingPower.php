@@ -2,8 +2,8 @@
 namespace DrdPlus\Health;
 
 use Drd\DiceRoll\Templates\Rollers\SpecificRolls\Roll2d6DrdPlus;
-use DrdPlus\Codes\ActivityAffectingHealingCode;
-use DrdPlus\Codes\ConditionsAffectingHealingCode;
+use DrdPlus\Codes\Body\ActivityAffectingHealingCode;
+use DrdPlus\Codes\Body\ConditionsAffectingHealingCode;
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Properties\Derived\Toughness;

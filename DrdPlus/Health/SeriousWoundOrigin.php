@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health;
 
-use DrdPlus\Codes\WoundsOriginCode;
+use DrdPlus\Codes\Body\WoundsOriginCode;
 use Granam\Tools\ValueDescriber;
 
 /**

@@ -2,6 +2,7 @@
 namespace DrdPlus\Tests\Health\Afflictions\Effects;
 
 use DrdPlus\Health\Afflictions\Effects\AfflictionEffect;
+use DrdPlus\Health\Afflictions\Effects\SeveredArmEffect;
 use Granam\String\StringTools;
 use Granam\Tests\Tools\TestWithMockery;
 
@@ -12,7 +13,8 @@ abstract class AfflictionEffectTest extends TestWithMockery
      */
     public function I_can_use_it()
     {
-        $sutClass = $this->getSutClass();
+        /** @var SeveredArmEffect $sutClass */
+        $sutClass = self::getSutClass();
         /** @var AfflictionEffect $effect */
         $effect = $sutClass::getIt();
         self::assertInstanceOf($sutClass, $effect);
@@ -25,14 +27,9 @@ abstract class AfflictionEffectTest extends TestWithMockery
         self::assertSame($this->getEffectCode(), $effect->getValue());
     }
 
-    private function getSutClass()
-    {
-        return preg_replace('~[\\\]Tests([\\\].+)Test$~', '$1', static::class);
-    }
-
     private function getEffectCode()
     {
-        return StringTools::camelCaseToSnakeCasedBasename($this->getSutClass());
+        return StringTools::camelCaseToSnakeCasedBasename(self::getSutClass());
     }
 
     /**

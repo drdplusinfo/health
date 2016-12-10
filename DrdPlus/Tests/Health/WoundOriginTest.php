@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health;
 
-use DrdPlus\Codes\WoundsOriginCode;
+use DrdPlus\Codes\Body\WoundsOriginCode;
 use Granam\Tests\Tools\TestWithMockery;
 
 abstract class WoundOriginTest extends TestWithMockery

@@ -2,7 +2,7 @@
 namespace DrdPlus\Health\Afflictions;
 
 use Doctrineum\String\StringEnum;
-use DrdPlus\Codes\AfflictionByWoundDomainCode;
+use DrdPlus\Codes\Body\AfflictionByWoundDomainCode;
 use Granam\Tools\ValueDescriber;
 
 /**

@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions;
 
-use DrdPlus\Codes\AfflictionByWoundDomainCode;
+use DrdPlus\Codes\Body\AfflictionByWoundDomainCode;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use Granam\String\StringTools;
 

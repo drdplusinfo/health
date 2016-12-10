@@ -25,20 +25,12 @@ abstract class AfflictionByWoundTest extends TestWithMockery
 {
 
     /**
-     * @return string|AfflictionByWound
-     */
-    private function getSutClass()
-    {
-        return preg_replace('~[\\\]Tests([\\\].+)Test$~', '$1', static::class);
-    }
-
-    /**
      * @test
      * @expectedException \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
     public function I_can_not_create_it_with_old_wound()
     {
-        $reflection = new \ReflectionClass($this->getSutClass());
+        $reflection = new \ReflectionClass(self::getSutClass());
         $constructor = $reflection->getConstructor();
         $constructor->setAccessible(true);
 
@@ -79,7 +71,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
             SeriousWoundOrigin::getMechanicalCutWoundOrigin(),
             $woundBoundary
         );
-        $afflictionReflection = new \ReflectionClass($this->getSutClass());
+        $afflictionReflection = new \ReflectionClass(self::getSutClass());
         $afflictionConstructor = $afflictionReflection->getConstructor();
         $afflictionConstructor->setAccessible(true);
 
@@ -120,7 +112,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
         $wound->shouldReceive('getHealth')
             ->andReturn($health = $this->mockery(Health::class));
         $health->shouldReceive('addAffliction')
-            ->with(\Mockery::type($this->getSutClass()));
+            ->with(\Mockery::type(self::getSutClass()));
         $wound->shouldReceive('isSerious')
             ->andReturn($isSerious);
         $wound->shouldReceive('isOld')
@@ -235,7 +227,7 @@ abstract class AfflictionByWoundTest extends TestWithMockery
      */
     public function I_get_will_intelligence_and_charisma_malus_zero_as_not_used()
     {
-        $afflictionReflection = new \ReflectionClass($this->getSutClass());
+        $afflictionReflection = new \ReflectionClass(self::getSutClass());
         $afflictionConstructor = $afflictionReflection->getConstructor();
         $afflictionConstructor->setAccessible(true);
 

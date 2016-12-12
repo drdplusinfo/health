@@ -42,7 +42,7 @@ class AfflictionDomain extends StringEnum
     protected static function convertToEnumFinalValue($enumValue)
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
-        if (!in_array($finalValue, AfflictionByWoundDomainCode::getAfflictionByWoundDomainCodes(), true)) {
+        if (!in_array($finalValue, AfflictionByWoundDomainCode::getPossibleValues(), true)) {
             throw new Exceptions\UnknownAfflictionDomain('unexpected affliction domain ' . ValueDescriber::describe($enumValue));
         }
 

@@ -11,6 +11,6 @@ abstract class WoundOriginTest extends TestWithMockery
      */
     protected function getSeriousWoundOriginCodes()
     {
-        return WoundsOriginCode::getWoundsOriginCodes(); // de facto all of them can be serious
+        return WoundsOriginCode::getPossibleValues(); // all of them can be serious in fact
     }
 }

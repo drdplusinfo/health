@@ -63,7 +63,7 @@ class SeriousWoundOrigin extends WoundOrigin
     protected static function convertToEnumFinalValue($enumValue)
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
-        if (!in_array($enumFinalValue, WoundsOriginCode::getWoundsOriginCodes(), true)) {
+        if (!in_array($enumFinalValue, WoundsOriginCode::getPossibleValues(), true)) {
             throw new Exceptions\UnknownWoundOriginCode(
                 'Got unexpected code of wound origin ' . ValueDescriber::describe($enumValue)
             );

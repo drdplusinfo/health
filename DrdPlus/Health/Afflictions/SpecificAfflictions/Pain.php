@@ -32,6 +32,8 @@ class Pain extends AfflictionByWound
      * @param ElementalPertinence $elementalPertinence
      * @return Pain
      * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
+     * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
+     * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
     public static function createIt(
         SeriousWound $seriousWound,
@@ -42,11 +44,11 @@ class Pain extends AfflictionByWound
     {
         return new static(
             $seriousWound,
-            AfflictionDomain::getPhysicalAffliction(),
-            $virulence,
-            AfflictionSource::getExternalSource(),
             AfflictionProperty::getIt(PropertyCode::WILL),
             AfflictionDangerousness::getIt(10 + $painSize->getValue()),
+            AfflictionDomain::getPhysicalDomain(),
+            $virulence,
+            AfflictionSource::getExternalSource(),
             $painSize,
             $elementalPertinence,
             PainEffect::getIt(),

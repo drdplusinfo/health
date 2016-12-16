@@ -5,6 +5,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrineum\Entity\Entity;
 use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
+use DrdPlus\Health\Afflictions\Affliction;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 use DrdPlus\Properties\Base\Will;
@@ -33,12 +34,14 @@ class Health extends StrictObject implements Entity
      */
     private $wounds;
     /**
-     * @var ArrayCollection|AfflictionByWound[]
-     * @ORM\OneToMany(targetEntity="\DrdPlus\Health\Afflictions\AfflictionByWound", mappedBy="health", cascade={"all"}, orphanRemoval=true)
+     * @var ArrayCollection|Affliction[]
+     * @ORM\OneToMany(targetEntity="\DrdPlus\Health\Afflictions\Affliction", mappedBy="health", cascade={"all"},
+     *     orphanRemoval=true)
      */
-    private $afflictionsByWound;
+    private $afflictions;
     /**
      * Separates new and old (or serious) injuries.
+     *
      * @var TreatmentBoundary
      * @ORM\Column(type="treatment_boundary")
      */
@@ -58,21 +61,23 @@ class Health extends StrictObject implements Entity
      */
     private $gridOfWounds;
     /**
-     * @var bool helper to avoid side-adding of new wounds (Those created on their own and linked by Doctrine relation instead of directly here).
+     * @var bool helper to avoid side-adding of new wounds (Those created on their own and linked by Doctrine relation
+     *     instead of directly here).
      */
     private $openForNewWound = false;
 
     public function __construct()
     {
         $this->wounds = new ArrayCollection();
-        $this->afflictionsByWound = new ArrayCollection();
+        $this->afflictions = new ArrayCollection();
         $this->treatmentBoundary = TreatmentBoundary::getIt(0);
         $this->malusFromWounds = MalusFromWounds::getIt(0);
     }
 
     /**
      * @param WoundSize $woundSize
-     * @param SeriousWoundOrigin $seriousWoundOrigin Beware if the wound size is considered as serious than OrdinaryWoundOrigin will be used instead
+     * @param SeriousWoundOrigin $seriousWoundOrigin Beware if the wound size is considered as serious than
+     *     OrdinaryWoundOrigin will be used instead
      * @param WoundBoundary $woundBoundary
      * @return OrdinaryWound|SeriousWound
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
@@ -171,25 +176,26 @@ class Health extends StrictObject implements Entity
 
     /**
      * Every serious injury SHOULD has at least one accompanying affliction (but it is PJ privilege to say it has not).
-     * @param AfflictionByWound $afflictionByWound
+     *
+     * @param Affliction $affliction
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
-    public function addAffliction(AfflictionByWound $afflictionByWound)
+    public function addAffliction(Affliction $affliction)
     {
-        if (!$this->doesHaveThatWound($afflictionByWound->getSeriousWound())) {
+        if ($affliction instanceof AfflictionByWound && !$this->doesHaveThatWound($affliction->getSeriousWound())) {
             throw new Exceptions\UnknownAfflictionOriginatingWound(
-                "Given affliction '{$afflictionByWound->getName()}' to add comes from unknown wound"
-                . " of value {$afflictionByWound->getSeriousWound()} and origin '{$afflictionByWound->getSeriousWound()->getWoundOrigin()}'."
+                "Given affliction '{$affliction->getName()}' to add comes from unknown wound"
+                . " of value {$affliction->getSeriousWound()} and origin '{$affliction->getSeriousWound()->getWoundOrigin()}'."
                 . ' Have you created that wound by current health?'
             );
         }
-        if ($this->doesHaveThatAffliction($afflictionByWound)) {
+        if ($this->doesHaveThatAffliction($affliction)) {
             throw new Exceptions\AfflictionIsAlreadyRegistered(
-                "Given instance of affliction '{$afflictionByWound->getName()}' is already added."
+                "Given instance of affliction '{$affliction->getName()}' is already added."
             );
         }
-        $this->afflictionsByWound->add($afflictionByWound);
+        $this->afflictions->add($affliction);
     }
 
     private function doesHaveThatWound(Wound $givenWound)
@@ -206,9 +212,9 @@ class Health extends StrictObject implements Entity
         return false; // the wound know this health, but this health does not know that wound
     }
 
-    private function doesHaveThatAffliction(AfflictionByWound $givenAffliction)
+    private function doesHaveThatAffliction(Affliction $givenAffliction)
     {
-        foreach ($this->afflictionsByWound as $registeredAffliction) {
+        foreach ($this->afflictions as $registeredAffliction) {
             if ($givenAffliction === $registeredAffliction) {
                 return true;
             }
@@ -219,6 +225,7 @@ class Health extends StrictObject implements Entity
 
     /**
      * Also sets treatment boundary to unhealed wounds after. Even if the heal itself heals nothing!
+     *
      * @param HealingPower $healingPower
      * @param Toughness $toughness
      * @param WoundsTable $woundsTable
@@ -318,6 +325,7 @@ class Health extends StrictObject implements Entity
 
     /**
      * Regenerate any wound, both ordinary and serious, both new and old, by natural or unnatural way.
+     *
      * @param HealingPower $healingPower
      * @param Toughness $toughness
      * @param WoundsTable $woundsTable
@@ -348,6 +356,7 @@ class Health extends StrictObject implements Entity
 
     /**
      * Usable for info about amount of wounds which can be healed by basic healing
+     *
      * @return int
      */
     public function getUnhealedNewOrdinaryWoundsSum()
@@ -432,6 +441,7 @@ class Health extends StrictObject implements Entity
 
     /**
      * Gives both new and old wounds
+     *
      * @return Collection|Wound[]
      */
     public function getUnhealedWounds()
@@ -458,11 +468,12 @@ class Health extends StrictObject implements Entity
 
     /**
      * Looking for a setter? Sorry but affliction can be caused only by a new wound.
+     *
      * @return Collection|AfflictionByWound[]
      */
-    public function getAfflictionsByWound()
+    public function getAfflictions()
     {
-        return clone $this->afflictionsByWound; // cloned to avoid external change of the collection
+        return clone $this->afflictions; // cloned to avoid external change of the collection
     }
 
     /**
@@ -471,7 +482,7 @@ class Health extends StrictObject implements Entity
     public function getStrengthMalusFromAfflictions()
     {
         $strengthMalus = 0;
-        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+        foreach ($this->getAfflictions() as $afflictionByWound) {
             $strengthMalus += $afflictionByWound->getStrengthMalus();
         }
 
@@ -484,7 +495,7 @@ class Health extends StrictObject implements Entity
     public function getAgilityMalusFromAfflictions()
     {
         $agilityMalus = 0;
-        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+        foreach ($this->getAfflictions() as $afflictionByWound) {
             $agilityMalus += $afflictionByWound->getAgilityMalus();
         }
 
@@ -497,7 +508,7 @@ class Health extends StrictObject implements Entity
     public function getKnackMalusFromAfflictions()
     {
         $knackMalus = 0;
-        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+        foreach ($this->getAfflictions() as $afflictionByWound) {
             $knackMalus += $afflictionByWound->getKnackMalus();
         }
 
@@ -510,7 +521,7 @@ class Health extends StrictObject implements Entity
     public function getWillMalusFromAfflictions()
     {
         $willMalus = 0;
-        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+        foreach ($this->getAfflictions() as $afflictionByWound) {
             $willMalus += $afflictionByWound->getWillMalus();
         }
 
@@ -523,7 +534,7 @@ class Health extends StrictObject implements Entity
     public function getIntelligenceMalusFromAfflictions()
     {
         $intelligenceMalus = 0;
-        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+        foreach ($this->getAfflictions() as $afflictionByWound) {
             $intelligenceMalus += $afflictionByWound->getIntelligenceMalus();
         }
 
@@ -536,7 +547,7 @@ class Health extends StrictObject implements Entity
     public function getCharismaMalusFromAfflictions()
     {
         $charismaMalus = 0;
-        foreach ($this->getAfflictionsByWound() as $afflictionByWound) {
+        foreach ($this->getAfflictions() as $afflictionByWound) {
             $charismaMalus += $afflictionByWound->getCharismaMalus();
         }
 
@@ -545,6 +556,7 @@ class Health extends StrictObject implements Entity
 
     /**
      * Treatment boundary is set automatically on any heal (lowering wounds) or new serious injury
+     *
      * @return TreatmentBoundary
      */
     public function getTreatmentBoundary()
@@ -722,7 +734,7 @@ class Health extends StrictObject implements Entity
     public function getPains()
     {
         $pains = new ArrayCollection();
-        foreach ($this->getAfflictionsByWound() as $affliction) {
+        foreach ($this->getAfflictions() as $affliction) {
             if (!($affliction instanceof Pain)) {
                 continue;
             }

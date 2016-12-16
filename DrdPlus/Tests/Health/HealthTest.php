@@ -71,7 +71,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
         self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(0, $health->getNumberOfSeriousInjuries());
-        self::assertCount(0, $health->getAfflictionsByWound());
+        self::assertCount(0, $health->getAfflictions());
         self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary));
         self::assertCount(0, $health->getPains());
         self::assertTrue($health->isAlive($woundBoundary));
@@ -811,8 +811,8 @@ class HealthTest extends TestWithMockery
         $affliction = $this->createAffliction($wound);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->addAffliction($affliction);
-        self::assertCount(1, $health->getAfflictionsByWound());
-        self::assertSame($affliction, $health->getAfflictionsByWound()->current());
+        self::assertCount(1, $health->getAfflictions());
+        self::assertSame($affliction, $health->getAfflictions()->current());
     }
 
     /**
@@ -1420,7 +1420,7 @@ class HealthTest extends TestWithMockery
         $health->addAffliction($secondPain = $this->createPain($seriousWound, ['malusToActivities' => -20]));
         $health->addAffliction($thirdPain = $this->createPain($seriousWound, ['malusToActivities' => -30]));
         self::assertSame($this->sortObjects([$firstPain, $secondPain, $thirdPain]), $this->sortObjects($health->getPains()->toArray()));
-        self::assertSame($this->sortObjects([$firstPain, $secondPain, $someAffliction, $thirdPain]), $this->sortObjects($health->getAfflictionsByWound()->toArray()));
+        self::assertSame($this->sortObjects([$firstPain, $secondPain, $someAffliction, $thirdPain]), $this->sortObjects($health->getAfflictions()->toArray()));
     }
 
     /**

@@ -10,6 +10,7 @@ use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Bleeding;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Cold;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\CrackedBones;
+use DrdPlus\Health\Afflictions\SpecificAfflictions\Hunger;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\SeveredArm;
 use DrdPlus\Health\EnumTypes\HealthEnumsRegistrar;
@@ -32,9 +33,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
 
     protected function getDirsWithEntities()
     {
-        return [
-            str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__),
-        ];
+        return [str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__)];
     }
 
     protected function createEntitiesToPersist()
@@ -70,6 +69,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             WaterPertinence::getPlus()
         );
         $severedArm = SeveredArm::createIt($seriousWound);
+        $hunger = Hunger::createIt($health, AfflictionSize::getIt(123));
 
         return [
             $health,
@@ -81,6 +81,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             $crackedBones,
             $pain,
             $severedArm,
+            $hunger,
         ];
     }
 

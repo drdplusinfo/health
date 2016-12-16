@@ -35,11 +35,11 @@ class Cold extends AfflictionByWound
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $seriousWound,
-            AfflictionDomain::getPhysicalAffliction(),
-            AfflictionVirulence::getDayVirulence(),
-            AfflictionSource::getActiveSource(),
             AfflictionProperty::getIt(PropertyCode::TOUGHNESS),
             AfflictionDangerousness::getIt(7),
+            AfflictionDomain::getPhysicalDomain(),
+            AfflictionVirulence::getDayVirulence(),
+            AfflictionSource::getActiveSource(),
             AfflictionSize::getIt(4),
             WaterPertinence::getPlus(),
             ColdEffect::getIt(),

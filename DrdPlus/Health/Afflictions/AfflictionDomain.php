@@ -24,7 +24,7 @@ class AfflictionDomain extends StringEnum
     /**
      * @return AfflictionDomain
      */
-    public static function getPhysicalAffliction()
+    public static function getPhysicalDomain()
     {
         return static::getEnum(self::PHYSICAL);
     }
@@ -34,7 +34,7 @@ class AfflictionDomain extends StringEnum
     /**
      * @return AfflictionDomain
      */
-    public static function getPsychicalAffliction()
+    public static function getPsychicalDomain()
     {
         return static::getEnum(self::PSYCHICAL);
     }

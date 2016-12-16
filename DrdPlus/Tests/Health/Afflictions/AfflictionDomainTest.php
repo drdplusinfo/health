@@ -16,7 +16,7 @@ class AfflictionDomainTest extends \PHPUnit_Framework_TestCase
     {
         $afflictionDomain = AfflictionDomain::getIt($domainCode);
         self::assertInstanceOf(AfflictionDomain::class, $afflictionDomain);
-        $getAfflictionDomain = StringTools::assembleGetterForName($domainCode) . 'Affliction';
+        $getAfflictionDomain = StringTools::assembleGetterForName($domainCode) . 'Domain';
         self::assertSame($afflictionDomain, AfflictionDomain::$getAfflictionDomain());
         self::assertSame($domainCode, $afflictionDomain->getValue());
     }

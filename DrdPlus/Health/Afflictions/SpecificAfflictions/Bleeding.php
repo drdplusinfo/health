@@ -33,6 +33,8 @@ class Bleeding extends AfflictionByWound
      * @return Bleeding
      * @throws \DrdPlus\Health\Afflictions\SpecificAfflictions\Exceptions\BleedingCanNotExistsDueToTooLowWound
      * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
+     * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
+     * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      */
     public static function createIt(SeriousWound $seriousWound, WoundBoundary $woundBoundary)
     {
@@ -48,13 +50,14 @@ class Bleeding extends AfflictionByWound
             );
         }
 
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $seriousWound,
-            AfflictionDomain::getPhysicalAffliction(),
-            AfflictionVirulence::getRoundVirulence(),
-            AfflictionSource::getActiveSource(),
             AfflictionProperty::getIt(PropertyCode::TOUGHNESS),
             AfflictionDangerousness::getIt(15),
+            AfflictionDomain::getPhysicalDomain(),
+            AfflictionVirulence::getRoundVirulence(),
+            AfflictionSource::getActiveSource(),
             $size,
             WaterPertinence::getMinus(),
             BleedingEffect::getIt(),

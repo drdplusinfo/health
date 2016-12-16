@@ -3,6 +3,7 @@ namespace DrdPlus\Health\Afflictions;
 
 use Doctrineum\String\StringEnum;
 use DrdPlus\Codes\PropertyCode;
+use Granam\String\StringInterface;
 use Granam\Tools\ValueDescriber;
 
 /**
@@ -11,26 +12,41 @@ use Granam\Tools\ValueDescriber;
 class AfflictionProperty extends StringEnum
 {
     /**
-     * @param string $propertyCode
+     * @param string|StringInterface $propertyCode
      * @return AfflictionProperty
+     * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionPropertyCode
      */
     public static function getIt($propertyCode)
     {
         return self::getEnum($propertyCode);
     }
 
+    /**
+     * @param string|StringInterface $enumValue
+     * @return string
+     * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionPropertyCode
+     */
     protected static function convertToEnumFinalValue($enumValue)
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
         if (!in_array($enumFinalValue, self::getProperties(), true)) {
             throw new Exceptions\UnknownAfflictionPropertyCode(
-                'Got unknown code of property keeping affliction on short: ' . ValueDescriber::describe($enumValue)
+                'Got unknown code of property keeping affliction on short: '
+                . ValueDescriber::describe($enumValue)
             );
         }
 
         return $enumFinalValue;
     }
 
+    const STRENGTH = PropertyCode::STRENGTH;
+    const AGILITY = PropertyCode::AGILITY;
+    const KNACK = PropertyCode::KNACK;
+    const WILL = PropertyCode::WILL;
+    const INTELLIGENCE = PropertyCode::INTELLIGENCE;
+    const CHARISMA = PropertyCode::CHARISMA;
+    const ENDURANCE = PropertyCode::ENDURANCE;
+    const TOUGHNESS = PropertyCode::TOUGHNESS;
     const LEVEL = 'level';
 
     /**
@@ -39,14 +55,14 @@ class AfflictionProperty extends StringEnum
     public static function getProperties()
     {
         return [
-            PropertyCode::STRENGTH,
-            PropertyCode::AGILITY,
-            PropertyCode::KNACK,
-            PropertyCode::WILL,
-            PropertyCode::INTELLIGENCE,
-            PropertyCode::CHARISMA,
-            PropertyCode::ENDURANCE,
-            PropertyCode::TOUGHNESS,
+            self::STRENGTH,
+            self::AGILITY,
+            self::KNACK,
+            self::WILL,
+            self::INTELLIGENCE,
+            self::CHARISMA,
+            self::ENDURANCE,
+            self::TOUGHNESS,
             self::LEVEL,
         ];
     }

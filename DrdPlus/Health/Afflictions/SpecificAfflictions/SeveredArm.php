@@ -1,7 +1,6 @@
 <?php
 namespace DrdPlus\Health\Afflictions\SpecificAfflictions;
 
-use DrdPlus\Codes\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
@@ -35,6 +34,8 @@ class SeveredArm extends AfflictionByWound
      * @throws \DrdPlus\Health\Afflictions\SpecificAfflictions\Exceptions\SeveredArmAfflictionSizeExceeded
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
+     * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
+     * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
     public static function createIt(SeriousWound $seriousWound, $sizeValue = self::COMPLETELY_SEVERED_ARM_SIZE)
     {
@@ -47,11 +48,11 @@ class SeveredArm extends AfflictionByWound
 
         return new static(
             $seriousWound,
-            AfflictionDomain::getPhysicalAffliction(),
+            AfflictionProperty::getIt(AfflictionProperty::TOUGHNESS), // irrelevant, full deformation can not be avoided
+            AfflictionDangerousness::getIt(9999), // irrelevant, full deformation can not be avoided
+            AfflictionDomain::getPhysicalDomain(),
             AfflictionVirulence::getDayVirulence(),
             AfflictionSource::getFullDeformationSource(),
-            AfflictionProperty::getIt(PropertyCode::TOUGHNESS), // irrelevant, full deformation can not be avoided
-            AfflictionDangerousness::getIt(0), // irrelevant, full deformation can not be avoided
             $size,
             EarthPertinence::getMinus(),
             SeveredArmEffect::getIt(),

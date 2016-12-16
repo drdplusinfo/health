@@ -19,7 +19,7 @@ class PainEffect extends AfflictionEffect
     }
 
     /**
-     * {@inheritdoc}
+     * @return bool
      */
     public function isEffectiveEvenOnSuccessAgainstTrap()
     {

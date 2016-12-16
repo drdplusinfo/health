@@ -41,11 +41,11 @@ class CrackedBones extends AfflictionByWound
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $seriousWound,
-            AfflictionDomain::getPhysicalAffliction(),
-            AfflictionVirulence::getDayVirulence(),
-            AfflictionSource::getPassiveSource(),
             AfflictionProperty::getIt(PropertyCode::TOUGHNESS),
             AfflictionDangerousness::getIt(15),
+            AfflictionDomain::getPhysicalDomain(),
+            AfflictionVirulence::getDayVirulence(),
+            AfflictionSource::getPassiveSource(),
             AfflictionSize::getIt($sizeValue),
             EarthPertinence::getMinus(),
             CrackedBonesEffect::getIt(),

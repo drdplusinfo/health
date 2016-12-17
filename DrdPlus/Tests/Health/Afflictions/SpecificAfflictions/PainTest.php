@@ -14,6 +14,19 @@ use DrdPlus\Health\Afflictions\AfflictionSource;
 class PainTest extends AfflictionByWoundTest
 {
     /**
+     * @return Pain
+     */
+    protected function getSut()
+    {
+        return Pain::createIt(
+            $this->createWound(),
+            $this->createAfflictionVirulence(),
+            $this->createAfflictionSize(123),
+            $this->createElementalPertinence()
+        );
+    }
+
+    /**
      * @test
      */
     public function I_can_use_it()

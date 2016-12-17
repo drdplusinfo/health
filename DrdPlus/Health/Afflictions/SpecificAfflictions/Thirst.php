@@ -10,39 +10,38 @@ use DrdPlus\Health\Afflictions\AfflictionProperty;
 use DrdPlus\Health\Afflictions\AfflictionSize;
 use DrdPlus\Health\Afflictions\AfflictionSource;
 use DrdPlus\Health\Afflictions\AfflictionVirulence;
-use DrdPlus\Health\Afflictions\Effects\HungerEffect;
-use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
+use DrdPlus\Health\Afflictions\Effects\ThirstEffect;
+use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Health\Health;
-use DrdPlus\Tools\Calculations\SumAndRound;
 
 /**
  * @ORM\Entity
  */
-class Hunger extends Affliction
+class Thirst extends Affliction
 {
 
     /**
      * @param Health $health
-     * @param AfflictionSize $daysOfHunger
-     * @return Hunger
+     * @param AfflictionSize $daysOfThirst
+     * @return Thirst
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
-    public static function createIt(Health $health, AfflictionSize $daysOfHunger)
+    public static function createIt(Health $health, AfflictionSize $daysOfThirst)
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $health,
-            AfflictionProperty::getIt(AfflictionProperty::ENDURANCE), // irrelevant, hunger can not be avoided
-            AfflictionDangerousness::getIt(9999), // irrelevant, hunger can not be avoided
+            AfflictionProperty::getIt(AfflictionProperty::ENDURANCE), // irrelevant, thirst can not be avoided
+            AfflictionDangerousness::getIt(9999), // irrelevant, thirst can not be avoided
             AfflictionDomain::getPhysicalDomain(),
             AfflictionVirulence::getDayVirulence(),
             AfflictionSource::getPassiveSource(),
-            $daysOfHunger,
-            EarthPertinence::getMinus(),
-            HungerEffect::getIt(),
+            $daysOfThirst,
+            WaterPertinence::getMinus(),
+            ThirstEffect::getIt(),
             new \DateInterval('P1D'),
-            AfflictionName::getIt('hunger')
+            AfflictionName::getIt('thirst')
         );
     }
 
@@ -67,7 +66,7 @@ class Hunger extends Affliction
      */
     public function getStrengthMalus()
     {
-        return -SumAndRound::half($this->getSize()->getValue());
+        return -$this->getSize()->getValue();
     }
 
     /**
@@ -75,7 +74,7 @@ class Hunger extends Affliction
      */
     public function getAgilityMalus()
     {
-        return -SumAndRound::half($this->getSize()->getValue());
+        return -$this->getSize()->getValue();
     }
 
     /**
@@ -83,7 +82,7 @@ class Hunger extends Affliction
      */
     public function getKnackMalus()
     {
-        return -SumAndRound::half($this->getSize()->getValue());
+        return -$this->getSize()->getValue();
     }
 
     /**
@@ -91,7 +90,7 @@ class Hunger extends Affliction
      */
     public function getWillMalus()
     {
-        return 0;
+        return -$this->getSize()->getValue();
     }
 
     /**
@@ -99,7 +98,7 @@ class Hunger extends Affliction
      */
     public function getIntelligenceMalus()
     {
-        return 0;
+        return -$this->getSize()->getValue();
     }
 
     /**
@@ -107,6 +106,7 @@ class Hunger extends Affliction
      */
     public function getCharismaMalus()
     {
-        return 0;
+        return -$this->getSize()->getValue();
     }
+
 }

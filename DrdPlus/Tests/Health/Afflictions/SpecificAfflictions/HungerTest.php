@@ -17,6 +17,14 @@ use DrdPlus\Tests\Health\Afflictions\AfflictionTest;
 class HungerTest extends AfflictionTest
 {
     /**
+     * @return Hunger
+     */
+    protected function getSut()
+    {
+        return Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(4));
+    }
+
+    /**
      * @test
      */
     public function It_is_linked_with_health_immediately()
@@ -86,7 +94,7 @@ class HungerTest extends AfflictionTest
     {
         $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(3));
         self::assertInstanceOf(Hunger::class, $hunger);
-        self::assertSame(2, $hunger->getStrengthMalus());
+        self::assertSame(-2, $hunger->getStrengthMalus());
     }
 
     /**
@@ -96,7 +104,7 @@ class HungerTest extends AfflictionTest
     {
         $health = new Health($this->createWoundBoundary());
         $hunger = Hunger::createIt($health, $this->createAfflictionSize(6));
-        self::assertSame(3, $hunger->getAgilityMalus());
+        self::assertSame(-3, $hunger->getAgilityMalus());
     }
 
     /**
@@ -105,7 +113,25 @@ class HungerTest extends AfflictionTest
     public function I_can_get_knack_malus()
     {
         $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(21));
-        self::assertSame(11, $hunger->getKnackMalus());
+        self::assertSame(-11, $hunger->getKnackMalus());
+    }
+
+    public function I_can_get_will_malus()
+    {
+        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(123541));
+        self::assertSame(0, $hunger->getKnackMalus());
+    }
+
+    public function I_can_get_intelligence_malus()
+    {
+        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(65178));
+        self::assertSame(0, $hunger->getKnackMalus());
+    }
+
+    public function I_can_get_charisma_malus()
+    {
+        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(782));
+        self::assertSame(0, $hunger->getKnackMalus());
     }
 
 }

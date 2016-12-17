@@ -17,6 +17,18 @@ use DrdPlus\Health\Afflictions\AfflictionVirulence;
 class CrackedBonesTest extends AfflictionByWoundTest
 {
     /**
+     * @return CrackedBones
+     */
+    protected function getSut()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(15);
+        $this->addSizeCalculation($wound, $woundBoundary, 3);
+
+        return CrackedBones::createIt($wound, $woundBoundary);
+    }
+
+    /**
      * @test
      */
     public function I_can_use_it()

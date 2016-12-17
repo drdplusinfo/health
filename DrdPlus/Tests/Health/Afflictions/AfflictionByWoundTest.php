@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions;
 
+use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use DrdPlus\Health\Afflictions\AfflictionName;
@@ -10,6 +11,7 @@ use DrdPlus\Health\Afflictions\AfflictionSource;
 use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
+use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\OrdinaryWound;
 use DrdPlus\Health\SeriousWound;
@@ -20,6 +22,45 @@ use DrdPlus\Properties\Derived\WoundBoundary;
 
 abstract class AfflictionByWoundTest extends AfflictionTest
 {
+
+    /**
+     * @test
+     */
+    public function I_can_get_will_malus()
+    {
+        $afflictionReflection = new \ReflectionClass(self::getSutClass());
+        $afflictionConstructor = $afflictionReflection->getConstructor();
+        $afflictionConstructor->setAccessible(true);
+        /** @var AfflictionByWound $afflictionInstance */
+        $afflictionInstance = $afflictionReflection->newInstanceWithoutConstructor();
+        self::assertSame(0, $afflictionInstance->getWillMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_intelligence_malus()
+    {
+        $afflictionReflection = new \ReflectionClass(self::getSutClass());
+        $afflictionConstructor = $afflictionReflection->getConstructor();
+        $afflictionConstructor->setAccessible(true);
+        /** @var AfflictionByWound $afflictionInstance */
+        $afflictionInstance = $afflictionReflection->newInstanceWithoutConstructor();
+        self::assertSame(0, $afflictionInstance->getIntelligenceMalus());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_charisma_malus()
+    {
+        $afflictionReflection = new \ReflectionClass(self::getSutClass());
+        $afflictionConstructor = $afflictionReflection->getConstructor();
+        $afflictionConstructor->setAccessible(true);
+        /** @var AfflictionByWound $afflictionInstance */
+        $afflictionInstance = $afflictionReflection->newInstanceWithoutConstructor();
+        self::assertSame(0, $afflictionInstance->getCharismaMalus());
+    }
 
     /**
      * @test
@@ -119,6 +160,23 @@ abstract class AfflictionByWoundTest extends AfflictionTest
             ->andReturn($woundOrigin ?: SeriousWoundOrigin::getElementalWoundOrigin());
 
         return $wound;
+    }
+
+    /**
+     * @param SeriousWound $wound
+     * @param WoundBoundary $woundBoundary
+     * @param int $filledHalfOfRows
+     */
+    protected function addSizeCalculation(SeriousWound $wound, WoundBoundary $woundBoundary, $filledHalfOfRows)
+    {
+        /** @var SeriousWound $wound */
+        $health = $wound->getHealth();
+        /** @var \Mockery\MockInterface $health */
+        $health->shouldReceive('getGridOfWounds')
+            ->andReturn($gridOfWounds = $this->mockery(GridOfWounds::class));
+        $gridOfWounds->shouldReceive('calculateFilledHalfRowsFor')
+            ->with($wound->getWoundSize(), $woundBoundary)
+            ->andReturn($filledHalfOfRows);
     }
 
     /**

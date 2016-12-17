@@ -1,16 +1,13 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions;
 
-use DrdPlus\Health\Afflictions\AfflictionByWound;
+use DrdPlus\Health\Afflictions\Affliction;
 use DrdPlus\Health\Afflictions\AfflictionName;
 use DrdPlus\Health\Afflictions\AfflictionProperty;
 use DrdPlus\Health\Afflictions\AfflictionSize;
 use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
-use DrdPlus\Health\GridOfWounds;
-use DrdPlus\Health\SeriousWound;
-use DrdPlus\Properties\Derived\WoundBoundary;
 use Granam\Tests\Tools\TestWithMockery;
 
 abstract class AfflictionTest extends TestWithMockery
@@ -90,37 +87,23 @@ abstract class AfflictionTest extends TestWithMockery
     }
 
     /**
-     * @param SeriousWound $wound
-     * @param WoundBoundary $woundBoundary
-     * @param int $filledHalfOfRows
+     * @test
      */
-    protected function addSizeCalculation(SeriousWound $wound, WoundBoundary $woundBoundary, $filledHalfOfRows)
+    public function I_get_all_maluses_zero_or_lesser()
     {
-        /** @var SeriousWound $wound */
-        $health = $wound->getHealth();
-        /** @var \Mockery\MockInterface $health */
-        $health->shouldReceive('getGridOfWounds')
-            ->andReturn($gridOfWounds = $this->mockery(GridOfWounds::class));
-        $gridOfWounds->shouldReceive('calculateFilledHalfRowsFor')
-            ->with($wound->getWoundSize(), $woundBoundary)
-            ->andReturn($filledHalfOfRows);
+        $affliction = $this->getSut();
+        self::assertLessThanOrEqual(0, $affliction->getStrengthMalus());
+        self::assertLessThanOrEqual(0, $affliction->getAgilityMalus());
+        self::assertLessThanOrEqual(0, $affliction->getKnackMalus());
+        self::assertLessThanOrEqual(0, $affliction->getWillMalus());
+        self::assertLessThanOrEqual(0, $affliction->getIntelligenceMalus());
+        self::assertLessThanOrEqual(0, $affliction->getCharismaMalus());
     }
 
     /**
-     * @test
+     * @return Affliction
      */
-    public function I_get_will_intelligence_and_charisma_malus_zero_as_not_used()
-    {
-        $afflictionReflection = new \ReflectionClass(self::getSutClass());
-        $afflictionConstructor = $afflictionReflection->getConstructor();
-        $afflictionConstructor->setAccessible(true);
-
-        /** @var AfflictionByWound $afflictionInstance */
-        $afflictionInstance = $afflictionReflection->newInstanceWithoutConstructor();
-        self::assertSame(0, $afflictionInstance->getWillMalus());
-        self::assertSame(0, $afflictionInstance->getIntelligenceMalus());
-        self::assertSame(0, $afflictionInstance->getCharismaMalus());
-    }
+    abstract protected function getSut();
 
     /**
      * @test
@@ -146,5 +129,20 @@ abstract class AfflictionTest extends TestWithMockery
      * @test
      */
     abstract public function I_can_get_knack_malus();
+
+    /**
+     * @test
+     */
+    abstract public function I_can_get_will_malus();
+
+    /**
+     * @test
+     */
+    abstract public function I_can_get_intelligence_malus();
+
+    /**
+     * @test
+     */
+    abstract public function I_can_get_charisma_malus();
 
 }

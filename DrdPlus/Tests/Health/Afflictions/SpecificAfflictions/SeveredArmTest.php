@@ -16,6 +16,14 @@ use DrdPlus\Tests\Health\Afflictions\AfflictionByWoundTest;
 class SeveredArmTest extends AfflictionByWoundTest
 {
     /**
+     * @return SeveredArm
+     */
+    protected function getSut()
+    {
+        return SeveredArm::createIt($this->createWound());
+    }
+
+    /**
      * @test
      */
     public function I_can_use_it()

@@ -19,6 +19,7 @@ use Granam\Strict\Object\StrictObject;
  *     "cracked_bones" = "\DrdPlus\Health\Afflictions\SpecificAfflictions\CrackedBones",
  *     "pain" = "\DrdPlus\Health\Afflictions\SpecificAfflictions\Pain",
  *     "hunger" = "\DrdPlus\Health\Afflictions\SpecificAfflictions\Hunger",
+ *     "thirst" = "\DrdPlus\Health\Afflictions\SpecificAfflictions\Thirst",
  * })
  */
 abstract class Affliction extends StrictObject implements Entity
@@ -246,24 +247,15 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return int
      */
-    public function getWillMalus()
-    {
-        return 0; // currently no affliction can affect will
-    }
+    abstract public function getWillMalus();
 
     /**
      * @return int
      */
-    public function getIntelligenceMalus()
-    {
-        return 0; // currently no affliction can affect intelligence
-    }
+    abstract public function getIntelligenceMalus();
 
     /**
      * @return int
      */
-    public function getCharismaMalus()
-    {
-        return 0; // currently no affliction can affect charisma
-    }
+    abstract public function getCharismaMalus();
 }

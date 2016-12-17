@@ -17,6 +17,14 @@ use DrdPlus\Tests\Health\Afflictions\AfflictionByWoundTest;
 class ColdTest extends AfflictionByWoundTest
 {
     /**
+     * @return Cold
+     */
+    protected function getSut()
+    {
+        return Cold::createIt($this->createWound());
+    }
+
+    /**
      * @test
      */
     public function I_can_use_it()

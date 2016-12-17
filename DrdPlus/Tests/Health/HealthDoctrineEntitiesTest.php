@@ -13,6 +13,7 @@ use DrdPlus\Health\Afflictions\SpecificAfflictions\CrackedBones;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Hunger;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\SeveredArm;
+use DrdPlus\Health\Afflictions\SpecificAfflictions\Thirst;
 use DrdPlus\Health\EnumTypes\HealthEnumsRegistrar;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\SeriousWoundOrigin;
@@ -70,6 +71,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
         );
         $severedArm = SeveredArm::createIt($seriousWound);
         $hunger = Hunger::createIt($health, AfflictionSize::getIt(123));
+        $thirst = Thirst::createIt($health, AfflictionSize::getIt(631));
 
         return [
             $health,
@@ -82,6 +84,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             $pain,
             $severedArm,
             $hunger,
+            $thirst
         ];
     }
 

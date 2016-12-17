@@ -76,4 +76,27 @@ abstract class AfflictionByWound extends Affliction
         return $this->seriousWound;
     }
 
+    /**
+     * @return int
+     */
+    public function getWillMalus()
+    {
+        return 0; // currently no wound affliction can affect will
+    }
+
+    /**
+     * @return int
+     */
+    public function getIntelligenceMalus()
+    {
+        return 0; // currently no wound affliction can affect will
+    }
+
+    /**
+     * @return int
+     */
+    public function getCharismaMalus()
+    {
+        return 0; // currently no wound affliction can affect will
+    }
 }

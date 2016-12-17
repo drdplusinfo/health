@@ -17,6 +17,18 @@ use DrdPlus\Tests\Health\Afflictions\AfflictionByWoundTest;
 class BleedingTest extends AfflictionByWoundTest
 {
     /**
+     * @return Bleeding
+     */
+    protected function getSut()
+    {
+        $wound = $this->createWound();
+        $woundBoundary = $this->createWoundBoundary(20);
+        $this->addSizeCalculation($wound, $woundBoundary, 123);
+
+        return Bleeding::createIt($wound, $woundBoundary);
+    }
+
+    /**
      * @test
      */
     public function I_can_use_it()

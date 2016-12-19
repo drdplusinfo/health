@@ -19,9 +19,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
 {
     /**
      * @var int
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
+     * @ORM\Id @ORM\GeneratedValue(strategy="AUTO") @ORM\Column(type="integer")
      */
     private $id;
 

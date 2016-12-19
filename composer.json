@@ -10,6 +10,7 @@
   },
   "require": {
     "php": ">=5.5.0",
+    "roave/security-advisories": "dev-master",
     "doctrineum/integer": "dev-master",
     "doctrineum/string": "dev-master",
     "doctrineum/date-interval": "dev-master",
@@ -17,7 +18,8 @@
     "drd-plus/tables": "dev-master",
     "drd-plus/rolls-on": "dev-master",
     "doctrine/orm": "2.*",
-    "doctrineum/entity": "dev-master"
+    "doctrineum/entity": "dev-master",
+    "drd-plus/tools": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": ">=4.4",

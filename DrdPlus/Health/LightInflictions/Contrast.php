@@ -17,12 +17,15 @@ class Contrast extends StrictObject implements PositiveInteger
     private $fromLightToDark;
 
     /**
-     * @param LightingQuality $previousLightQuality
-     * @param LightingQuality $currentLightQuality
+     * @param LightingQuality $previousLightingQuality
+     * @param LightingQuality $currentLightingQuality
      */
-    public function __construct(LightingQuality $previousLightQuality, LightingQuality $currentLightQuality)
+    public function __construct(
+        LightingQuality $previousLightingQuality,
+        LightingQuality $currentLightingQuality
+    )
     {
-        $difference = $previousLightQuality->getValue() - $currentLightQuality->getValue();
+        $difference = $previousLightingQuality->getValue() - $currentLightingQuality->getValue();
         $this->fromLightToDark = $difference > 0; // if previous light was more intensive than current, then it comes darker
         // see PPH page 128 left column
         if ($difference > 0) {

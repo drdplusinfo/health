@@ -1,8 +1,8 @@
 <?php
-namespace DrdPlus\Tests\Health;
+namespace DrdPlus\Tests\Health\LightInflictions;
 
-use DrdPlus\Health\Contrast;
-use DrdPlus\Health\Glare;
+use DrdPlus\Health\LightInflictions\Contrast;
+use DrdPlus\Health\LightInflictions\Glare;
 use DrdPlus\RollsOn\Traps\RollOnSenses;
 use Granam\Tests\Tools\TestWithMockery;
 

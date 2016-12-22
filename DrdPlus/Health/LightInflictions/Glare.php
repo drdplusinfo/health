@@ -1,5 +1,5 @@
 <?php
-namespace DrdPlus\Health;
+namespace DrdPlus\Health\LightInflictions;
 
 use Doctrineum\Entity\Entity;
 use DrdPlus\RollsOn\Traps\RollOnSenses;

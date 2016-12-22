@@ -1,8 +1,7 @@
 <?php
-namespace DrdPlus\Health;
+namespace DrdPlus\Health\LightInflictions;
 
 use DrdPlus\Tools\Calculations\SumAndRound;
-use Granam\Integer\IntegerInterface;
 use Granam\Integer\PositiveInteger;
 use Granam\Strict\Object\StrictObject;
 
@@ -18,12 +17,12 @@ class Contrast extends StrictObject implements PositiveInteger
     private $fromLightToDark;
 
     /**
-     * @param IntegerInterface $previousLightIntensity
-     * @param IntegerInterface $currentLightIntensity
+     * @param LightingQuality $previousLightQuality
+     * @param LightingQuality $currentLightQuality
      */
-    public function __construct(IntegerInterface $previousLightIntensity, IntegerInterface $currentLightIntensity)
+    public function __construct(LightingQuality $previousLightQuality, LightingQuality $currentLightQuality)
     {
-        $difference = $previousLightIntensity->getValue() - $currentLightIntensity->getValue();
+        $difference = $previousLightQuality->getValue() - $currentLightQuality->getValue();
         $this->fromLightToDark = $difference > 0; // if previous light was more intensive than current, then it comes darker
         // see PPH page 128 left column
         if ($difference > 0) {

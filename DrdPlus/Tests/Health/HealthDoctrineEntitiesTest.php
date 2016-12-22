@@ -15,10 +15,11 @@ use DrdPlus\Health\Afflictions\SpecificAfflictions\Hunger;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\SeveredArm;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Thirst;
-use DrdPlus\Health\Contrast;
 use DrdPlus\Health\EnumTypes\HealthEnumsRegistrar;
-use DrdPlus\Health\Glare;
 use DrdPlus\Health\Health;
+use DrdPlus\Health\LightInflictions\Contrast;
+use DrdPlus\Health\LightInflictions\Glare;
+use DrdPlus\Health\LightInflictions\LightingQuality;
 use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Properties\Base\Knack;
@@ -29,7 +30,6 @@ use DrdPlus\Properties\Derived\WoundBoundary;
 use DrdPlus\RollsOn\Traps\RollOnSenses;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Races\RacesTable;
-use Granam\Integer\IntegerObject;
 
 class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
 {
@@ -80,7 +80,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
         $hunger = Hunger::createIt($health, AfflictionSize::getIt(123));
         $thirst = Thirst::createIt($health, AfflictionSize::getIt(631));
         $glare = new Glare(
-            new Contrast(new IntegerObject(123), new IntegerObject(-457)),
+            new Contrast(new LightingQuality(123), new LightingQuality(-457)),
             new RollOnSenses(
                 new Senses(
                     Knack::getIt(12),

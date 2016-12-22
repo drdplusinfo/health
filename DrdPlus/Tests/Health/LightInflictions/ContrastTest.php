@@ -1,8 +1,8 @@
 <?php
-namespace DrdPlus\Tests\Health;
+namespace DrdPlus\Tests\Health\LightInflictions;
 
-use DrdPlus\Health\Contrast;
-use Granam\Integer\IntegerObject;
+use DrdPlus\Health\LightInflictions\Contrast;
+use DrdPlus\Health\LightInflictions\LightingQuality;
 use Granam\Tests\Tools\TestWithMockery;
 
 class ContrastTest extends TestWithMockery
@@ -17,8 +17,8 @@ class ContrastTest extends TestWithMockery
     public function I_can_use_it($previousLightIntensityValue, $currentLightIntensityValue, $expectedContrast)
     {
         $contrast = new Contrast(
-            new IntegerObject($previousLightIntensityValue),
-            new IntegerObject($currentLightIntensityValue)
+            new LightingQuality($previousLightIntensityValue),
+            new LightingQuality($currentLightIntensityValue)
         );
         self::assertSame($expectedContrast, $contrast->getValue());
         self::assertSame(

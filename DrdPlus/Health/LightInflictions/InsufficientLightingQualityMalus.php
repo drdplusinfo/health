@@ -20,7 +20,12 @@ class InsufficientLightingQualityMalus extends StrictObject implements NegativeI
         if ($currentLightingQuality->getValue() < -10) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $contrast = new Contrast(new LightingQuality(0), $currentLightingQuality);
-            $this->malus = -$contrast->getValue();
+            $possibleMalus = -$contrast->getValue();
+            if ($possibleMalus >= -20) {
+                $this->malus = $possibleMalus;
+            } else {
+                $this->malus = -20;
+            }
         }
     }
 

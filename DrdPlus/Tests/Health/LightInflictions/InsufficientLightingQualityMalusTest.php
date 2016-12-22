@@ -27,6 +27,9 @@ class InsufficientLightingQualityMalusTest extends TestWithMockery
             [-11, -1],
             [-19, -1],
             [-20, -2],
+            [-100, -10],
+            [-200, -20],
+            [-999, -20], // maximum is -20
         ];
     }
 }

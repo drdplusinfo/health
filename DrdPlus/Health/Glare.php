@@ -6,6 +6,9 @@ use DrdPlus\RollsOn\Traps\RollOnSenses;
 use Granam\Strict\Object\StrictObject;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity()
+ */
 class Glare extends StrictObject implements Entity
 {
     /**

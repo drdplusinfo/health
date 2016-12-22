@@ -19,6 +19,7 @@ class GlareTest extends TestWithMockery
     public function I_can_get_malus_from_glare($contrastValue, $fromDarkToLight ,$rollOnSensesValue, $expectedMalus)
     {
         $glare = new Glare($this->createContrast($contrastValue, $fromDarkToLight), $this->createRollOnSenses($rollOnSensesValue));
+        self::assertNull($glare->getId());
         self::assertSame($expectedMalus, $glare->getMalus());
         self::assertSame($fromDarkToLight, $glare->isShined());
         self::assertSame(!$fromDarkToLight, $glare->isBlinded());

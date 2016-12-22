@@ -17,6 +17,7 @@ class InsufficientLightingQualityMalusTest extends TestWithMockery
             new LightingQuality($lightingQualityValue)
         );
         self::assertSame($expectedMalus, $insufficientLightingQualityMalus->getValue());
+        self::assertSame((string)$expectedMalus, (string)$insufficientLightingQualityMalus);
     }
 
     public function provideLightingQualityAndExpectedMalus()

@@ -14,11 +14,12 @@ class GlareTest extends TestWithMockery
      * @param int $contrastValue
      * @param bool $fromDarkToLight
      * @param int $rollOnSensesValue
+     * @param bool $wasPrepared
      * @param int $expectedMalus
      */
-    public function I_can_get_malus_from_glare($contrastValue, $fromDarkToLight ,$rollOnSensesValue, $expectedMalus)
+    public function I_can_get_malus_from_glare($contrastValue, $fromDarkToLight, $rollOnSensesValue, $wasPrepared, $expectedMalus)
     {
-        $glare = new Glare($this->createContrast($contrastValue, $fromDarkToLight), $this->createRollOnSenses($rollOnSensesValue));
+        $glare = new Glare($this->createContrast($contrastValue, $fromDarkToLight), $this->createRollOnSenses($rollOnSensesValue), $wasPrepared);
         self::assertNull($glare->getId());
         self::assertSame($expectedMalus, $glare->getMalus());
         self::assertSame($fromDarkToLight, $glare->isShined());
@@ -28,12 +29,15 @@ class GlareTest extends TestWithMockery
     public function provideContrastRollOnSensesAndMalus()
     {
         return [
-            [123, true, 21, -116], // - (123 - 7)
-            [123, false, 985, -122], // - (123 - 1)
-            [-456, true, 654, 0],
-            [0, true, 1, 0],
-            [1, false, 35, 0],
-            [2, false, 35, -1], // - (2 - 1)
+            [123, true, 21, true, -110], // - (123 - 7) + 6
+            [123, true, 21, false, -116], // - (123 - 7)
+            [123, false, 985, true, -116], // - (123 - 1) + 6
+            [123, false, 985, false, -122], // - (123 - 1)
+            [-456, true, 654, true, 0],
+            [0, true, 1, false, 0],
+            [1, false, 35, true, 0],
+            [2, false, 35, false, -1], // - (2 - 1)
+            [2, false, 35, true, 0], // - (2 - 1) + 6
         ];
     }
 

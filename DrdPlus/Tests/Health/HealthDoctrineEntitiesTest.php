@@ -82,9 +82,15 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
         $glare = new Glare(
             new Contrast(new IntegerObject(123), new IntegerObject(-457)),
             new RollOnSenses(
-                new Senses(Knack::getIt(12), RaceCode::getIt(RaceCode::ELF), SubRaceCode::getIt(SubRaceCode::DARK), new RacesTable()),
+                new Senses(
+                    Knack::getIt(12),
+                    RaceCode::getIt(RaceCode::ELF),
+                    SubRaceCode::getIt(SubRaceCode::DARK),
+                    new RacesTable()
+                ),
                 Roller2d6DrdPlus::getIt()->roll()
-            )
+            ),
+            true
         );
 
         return [
@@ -99,7 +105,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             $severedArm,
             $hunger,
             $thirst,
-            $glare
+            $glare,
         ];
     }
 

@@ -30,13 +30,18 @@ class Glare extends StrictObject implements Entity
     /**
      * @param Contrast $contrast
      * @param RollOnSenses $rollOnSenses
+     * @param bool $wasPrepared Note: to be prepared for contrast from light-to-dark, you need ten more time for preparation
      */
-    public function __construct(Contrast $contrast, RollOnSenses $rollOnSenses)
+    public function __construct(Contrast $contrast, RollOnSenses $rollOnSenses, $wasPrepared)
     {
         if ($contrast->getValue() <= $rollOnSenses->getValue()) {
             $possibleMalus = -($contrast->getValue() - 1);
         } else {
             $possibleMalus = -($contrast->getValue() - 7);
+        }
+        // if you are expecting the shine, you have twice a chance to avoid it
+        if ($wasPrepared) {
+            $possibleMalus += 6;
         }
         $this->malus = 0;
         if ($possibleMalus < 0) {

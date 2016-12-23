@@ -5,6 +5,9 @@ use DrdPlus\Codes\RaceCode;
 use Granam\Integer\NegativeInteger;
 use Granam\Strict\Object\StrictObject;
 
+/**
+ * See PPH page 128
+ */
 class InsufficientLightingQualityMalus extends StrictObject implements NegativeInteger
 {
     /**
@@ -33,6 +36,9 @@ class InsufficientLightingQualityMalus extends StrictObject implements NegativeI
             } else {
                 $this->malus = -20;
             }
+        } else if ($currentLightingQuality->getValue() >= 60 /* strong daylight */ && $raceCode->getValue() === RaceCode::ORC) {
+            // see PPH page 128 right column bottom
+            $this->malus = -2;
         }
     }
 

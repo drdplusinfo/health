@@ -10,7 +10,7 @@ use Granam\Strict\Object\StrictObject;
  * See PPH page 128
  * Note about Orcs: they can have malus even from too strong lighting, despite the class name "insufficient".
  */
-class InsufficientLightingQualityMalus extends StrictObject implements NegativeInteger
+class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInteger
 {
     /**
      * @var int

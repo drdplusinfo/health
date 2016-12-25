@@ -5,7 +5,7 @@ use DrdPlus\Codes\RaceCode;
 use DrdPlus\Skills\Combined\DuskSight;
 use Granam\Tests\Tools\TestWithMockery;
 
-class InsufficientLightingQualityMalusTest extends TestWithMockery
+class UnsuitableLightingQualityMalusTest extends TestWithMockery
 {
     /**
      * @test
@@ -22,7 +22,7 @@ class InsufficientLightingQualityMalusTest extends TestWithMockery
         $expectedMalus
     )
     {
-        $insufficientLightingQualityMalus = new InsufficientLightingQualityMalus(
+        $insufficientLightingQualityMalus = new UnsuitableLightingQualityMalus(
             new LightingQuality($lightingQualityValue),
             RaceCode::getIt($raceValue),
             $this->createDuskSight($fromDuskSightBonus)

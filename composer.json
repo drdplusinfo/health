@@ -19,7 +19,8 @@
     "drd-plus/rolls-on": "dev-master",
     "doctrine/orm": "2.*",
     "doctrineum/entity": "dev-master",
-    "drd-plus/tools": "dev-master"
+    "drd-plus/tools": "dev-master",
+    "drd-plus/skills": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": ">=4.4",

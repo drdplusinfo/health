@@ -8,7 +8,6 @@ use Granam\Strict\Object\StrictObject;
 
 /**
  * See PPH page 128
- * Note about Orcs: they can have malus even from too strong lighting, despite the class name "insufficient".
  */
 class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInteger
 {
@@ -19,16 +18,22 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
 
     /**
      * @param LightingQuality $currentLightingQuality
+     * @param Opacity $barrierOpacity
      * @param RaceCode $raceCode
      * @param DuskSight $duskSight
      */
     public function __construct(
         LightingQuality $currentLightingQuality,
+        Opacity $barrierOpacity,
         RaceCode $raceCode,
         DuskSight $duskSight
     )
     {
         $this->malus = 0;
+        if ($barrierOpacity->getValue() > 0) {
+            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+            $currentLightingQuality = new LightingQuality($currentLightingQuality->getValue() - $barrierOpacity->getValue());
+        }
         if ($currentLightingQuality->getValue() < -10) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $contrast = new Contrast(new LightingQuality(0), $currentLightingQuality);

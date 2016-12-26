@@ -2,7 +2,6 @@
 namespace DrdPlus\Tests\Health;
 
 use Doctrineum\Tests\Entity\AbstractDoctrineEntitiesTest;
-use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Health\Afflictions\AfflictionSize;
@@ -17,17 +16,11 @@ use DrdPlus\Health\Afflictions\SpecificAfflictions\SeveredArm;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Thirst;
 use DrdPlus\Health\EnumTypes\HealthEnumsRegistrar;
 use DrdPlus\Health\Health;
-use DrdPlus\Health\LightInflictions\Contrast;
-use DrdPlus\Health\LightInflictions\Glare;
-use DrdPlus\Health\LightInflictions\LightingQuality;
 use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\WoundSize;
-use DrdPlus\Properties\Base\Knack;
 use DrdPlus\Properties\Base\Strength;
-use DrdPlus\Properties\Derived\Senses;
 use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Properties\Derived\WoundBoundary;
-use DrdPlus\RollsOn\Traps\RollOnSenses;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Races\RacesTable;
 
@@ -79,19 +72,6 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
         $severedArm = SeveredArm::createIt($seriousWound);
         $hunger = Hunger::createIt($health, AfflictionSize::getIt(123));
         $thirst = Thirst::createIt($health, AfflictionSize::getIt(631));
-        $glare = new Glare(
-            new Contrast(new LightingQuality(123), new LightingQuality(-457)),
-            new RollOnSenses(
-                new Senses(
-                    Knack::getIt(12),
-                    RaceCode::getIt(RaceCode::ELF),
-                    SubRaceCode::getIt(SubRaceCode::DARK),
-                    new RacesTable()
-                ),
-                Roller2d6DrdPlus::getIt()->roll()
-            ),
-            true
-        );
 
         return [
             $health,
@@ -105,7 +85,6 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             $severedArm,
             $hunger,
             $thirst,
-            $glare,
         ];
     }
 

@@ -1,6 +1,8 @@
 <?php
 namespace DrdPlus\Health\LightInflictions;
 
+use DrdPlus\Tables\Measurements\Amount\Amount;
+use DrdPlus\Tables\Measurements\Amount\AmountBonus;
 use DrdPlus\Tables\Measurements\Amount\AmountTable;
 use DrdPlus\Tables\Measurements\Distance\Distance;
 use DrdPlus\Tables\Measurements\Distance\DistanceTable;
@@ -43,5 +45,36 @@ class OpacityTest extends TestWithMockery
     {
         $transparentOpacity = Opacity::createTransparent();
         self::assertSame(0, $transparentOpacity->getValue());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_malus_to_an_item_visibility()
+    {
+        $transparentOpacity = Opacity::createTransparent();
+        self::assertSame(0, $transparentOpacity->getVisibilityMalus());
+
+        /** @var \Mockery\MockInterface|AmountTable $cheatingAmountTable */
+        $cheatingAmountTable = $this->mockery(AmountTable::class);
+        $cheatingAmountTable->shouldReceive('toAmount')
+            ->with($this->type(AmountBonus::class))
+            ->andReturn(new Amount(-1, Amount::AMOUNT, new AmountTable()));
+
+        $negativeOpacity = Opacity::createFromBarrierDensity(
+            new IntegerObject(123),
+            new Distance(1, Distance::M, new DistanceTable()),
+            $cheatingAmountTable
+        );
+        self::assertLessThan(0, $negativeOpacity->getValue());
+        self::assertSame(0, $negativeOpacity->getVisibilityMalus(), 'Zero malus expected for negative opacity');
+
+        $positiveOpacity = Opacity::createFromBarrierDensity(
+            new IntegerObject(10),
+            new Distance(5, Distance::M, new DistanceTable()),
+            new AmountTable()
+        );
+        self::assertGreaterThan(0, $positiveOpacity->getValue());
+        self::assertSame(-16, $positiveOpacity->getVisibilityMalus());
     }
 }

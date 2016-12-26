@@ -18,19 +18,21 @@ class Opacity extends StrictObject implements PositiveInteger
 
     /**
      * @param IntegerInterface $barrierDensity
-     * @param Distance $barrierDistance
+     * @param Distance $barrierLength
      * @param AmountTable $amountTable
      * @return Opacity
      */
     public static function createFromBarrierDensity(
         IntegerInterface $barrierDensity,
-        Distance $barrierDistance,
+        Distance $barrierLength,
         AmountTable $amountTable
     )
     {
         return new self(
-            (new AmountBonus($barrierDensity->getValue() + $barrierDistance->getBonus()->getValue(), $amountTable))
-                ->getAmount()->getValue()
+            (new AmountBonus(
+                $barrierDensity->getValue() + $barrierLength->getBonus()->getValue(),
+                $amountTable
+            ))->getAmount()->getValue()
         );
     }
 
@@ -52,7 +54,7 @@ class Opacity extends StrictObject implements PositiveInteger
     }
 
     /**
-     * @return float|int
+     * @return int
      */
     public function getValue()
     {
@@ -65,6 +67,18 @@ class Opacity extends StrictObject implements PositiveInteger
     public function __toString()
     {
         return (string)$this->getValue();
+    }
+
+    /**
+     * @return int
+     */
+    public function getVisibilityMalus()
+    {
+        if ($this->getValue() > 0) {
+            return -$this->getValue();
+        }
+
+        return 0;
     }
 
 }

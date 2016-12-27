@@ -8,6 +8,8 @@ use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Health\Afflictions\Affliction;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
+use DrdPlus\Health\Inflictions\Glared;
+use DrdPlus\Lighting\Glare;
 use DrdPlus\Properties\Base\Will;
 use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Properties\Derived\WoundBoundary;
@@ -65,6 +67,11 @@ class Health extends StrictObject implements Entity
      *     instead of directly here).
      */
     private $openForNewWound = false;
+    /**
+     * @var Glared
+     * @ORM\OneToOne(targetEntity="\DrdPlus\Health\Inflictions\Glared", inversedBy="health", cascade={"all"}, fetch="EAGER")
+     */
+    private $glared;
 
     public function __construct()
     {
@@ -72,6 +79,7 @@ class Health extends StrictObject implements Entity
         $this->afflictions = new ArrayCollection();
         $this->treatmentBoundary = TreatmentBoundary::getIt(0);
         $this->malusFromWounds = MalusFromWounds::getIt(0);
+        $this->glared = Glared::createWithoutGlare($this);
     }
 
     /**
@@ -742,6 +750,22 @@ class Health extends StrictObject implements Entity
         }
 
         return $pains;
+    }
+
+    /**
+     * @param Glare $glare
+     */
+    public function inflictByGlare(Glare $glare)
+    {
+        $this->glared = Glared::createFromGlare($glare, $this);
+    }
+
+    /**
+     * @return Glared
+     */
+    public function getGlared()
+    {
+        return $this->glared;
     }
 
 }

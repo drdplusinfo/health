@@ -17,6 +17,9 @@ class GridOfWounds extends StrictObject
      */
     private $health;
 
+    /**
+     * @param Health $health
+     */
     public function __construct(Health $health)
     {
         $this->health = $health;

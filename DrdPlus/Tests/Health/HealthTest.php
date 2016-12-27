@@ -8,6 +8,7 @@ use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\HealingPower;
 use DrdPlus\Health\Health;
+use DrdPlus\Health\Inflictions\Glared;
 use DrdPlus\Health\OrdinaryWoundOrigin;
 use DrdPlus\Health\ReasonToRollAgainstWoundMalus;
 use DrdPlus\Health\SeriousWound;
@@ -15,6 +16,7 @@ use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\TreatmentBoundary;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
+use DrdPlus\Lighting\Glare;
 use DrdPlus\Properties\Base\Will;
 use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Properties\Derived\WoundBoundary;
@@ -1523,5 +1525,35 @@ class HealthTest extends TestWithMockery
         $health->addAffliction($this->createAffliction($seriousWound, ['charismaMalus' => -2]));
 
         self::assertSame(-7, $health->getCharismaMalusFromAfflictions());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_be_glared()
+    {
+        $health = new Health();
+        self::assertEquals(Glared::createWithoutGlare($health), $health->getGlared());
+        $health->inflictByGlare($glare = $this->createGlare());
+        self::assertEquals(Glared::createFromGlare($glare, $health), $health->getGlared());
+        $previousGlared = $health->getGlared();
+        $health->inflictByGlare($this->createGlare());
+        self::assertNotSame($previousGlared, $health->getGlared());
+    }
+
+    /**
+     * @param int $malus
+     * @param bool $isShined
+     * @return \Mockery\MockInterface|Glare
+     */
+    private function createGlare($malus = -123, $isShined = true)
+    {
+        $glare = $this->mockery(Glare::class);
+        $glare->shouldReceive('getMalus')
+            ->andReturn($malus);
+        $glare->shouldReceive('isShined')
+            ->andReturn($isShined);
+
+        return $glare;
     }
 }

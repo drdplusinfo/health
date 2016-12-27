@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Afflictions\SpecificAfflictions\Exceptions;
 
-interface Exception
+interface Exception extends \DrdPlus\Health\Afflictions\Exceptions\Exception
 {
 
 }

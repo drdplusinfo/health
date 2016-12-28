@@ -1,6 +1,8 @@
 # Health for DrD+
 
 [![Build Status](https://travis-ci.org/jaroslavtyc/drd-plus-health.svg?branch=master)](https://travis-ci.org/jaroslavtyc/drd-plus-health)
+[![Test Coverage](https://codeclimate.com/github/jaroslavtyc/drd-plus-health/badges/coverage.svg)](https://codeclimate.com/github/jaroslavtyc/drd-plus-health/coverage)
+[![License](https://poser.pugx.org/drd-plus/health/license)](https://packagist.org/packages/drd-plus/health)
 
 ### Wounds
  

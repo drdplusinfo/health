@@ -19,7 +19,7 @@
     "drd-plus/rolls-on": "dev-master",
     "doctrine/orm": "2.*",
     "doctrineum/entity": "dev-master",
-    "drd-plus/tools": "dev-master",
+    "drd-plus/calculations": "dev-master",
     "drd-plus/skills": "dev-master",
     "drd-plus/lighting": "dev-master"
   },

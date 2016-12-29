@@ -2,7 +2,7 @@
 namespace DrdPlus\Health\Afflictions\Effects;
 
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Cold;
-use DrdPlus\Tools\Calculations\SumAndRound;
+use DrdPlus\Calculations\SumAndRound;
 
 /**
  * @method static ColdEffect getEnum($enumValue)

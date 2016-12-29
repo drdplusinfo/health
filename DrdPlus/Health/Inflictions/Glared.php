@@ -5,7 +5,7 @@ use Doctrineum\Entity\Entity;
 use DrdPlus\Health\Health;
 use DrdPlus\Lighting\Glare;
 use DrdPlus\Tables\Measurements\Time\Time;
-use DrdPlus\Tools\Calculations\SumAndRound;
+use DrdPlus\Calculations\SumAndRound;
 use Granam\Strict\Object\StrictObject;
 use Doctrine\ORM\Mapping as ORM;
 

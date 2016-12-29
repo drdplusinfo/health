@@ -13,7 +13,7 @@ use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\HungerEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Health\Health;
-use DrdPlus\Tools\Calculations\SumAndRound;
+use DrdPlus\Calculations\SumAndRound;
 
 /**
  * @ORM\Entity

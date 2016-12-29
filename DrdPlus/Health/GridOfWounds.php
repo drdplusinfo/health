@@ -2,7 +2,7 @@
 namespace DrdPlus\Health;
 
 use DrdPlus\Properties\Derived\WoundBoundary;
-use DrdPlus\Tools\Calculations\SumAndRound;
+use DrdPlus\Calculations\SumAndRound;
 use Granam\Strict\Object\StrictObject;
 
 class GridOfWounds extends StrictObject

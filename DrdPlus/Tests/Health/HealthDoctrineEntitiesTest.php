@@ -81,7 +81,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
         $thirst = Thirst::createIt($health, AfflictionSize::getIt(631));
         $health->inflictByGlare(
             new Glare(
-                new Contrast(new LightingQuality(213), new LightingQuality(569)),
+                Contrast::createBySimplifiedRules(new LightingQuality(213), new LightingQuality(569)),
                 new RollOnSenses(
                     new Senses(Knack::getIt(1), RaceCode::getIt(RaceCode::ELF), SubRaceCode::getIt(SubRaceCode::DARK), new RacesTable()),
                     Roller2d6DrdPlus::getIt()->roll()

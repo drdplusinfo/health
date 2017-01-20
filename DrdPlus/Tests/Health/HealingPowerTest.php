@@ -15,6 +15,7 @@ use DrdPlus\Tables\Measurements\Wounds\Wounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Races\RacesTable;
+use DrdPlus\Tables\Tables;
 use Granam\Tests\Tools\TestWithMockery;
 
 class HealingPowerTest extends TestWithMockery
@@ -24,7 +25,7 @@ class HealingPowerTest extends TestWithMockery
      */
     public function I_can_use_it_for_treatment()
     {
-        $healingPower = HealingPower::createForTreatment(123, $this->createWoundsTable(123, 987));
+        $healingPower = HealingPower::createForTreatment(123, $this->createTablesWithWoundsTable(123, 987));
         self::assertSame(123, $healingPower->getValue());
         self::assertSame('123', (string)$healingPower);
         self::assertSame(990, $healingPower->getHealUpTo($this->createToughness(3)));
@@ -33,11 +34,14 @@ class HealingPowerTest extends TestWithMockery
     /**
      * @param $expectedWoundsBonus
      * @param $returnWoundsValue
-     * @return \Mockery\MockInterface|WoundsTable
+     * @param \Closure $toBonus
+     * @return \Mockery\MockInterface|Tables
      */
-    private function createWoundsTable($expectedWoundsBonus, $returnWoundsValue)
+    private function createTablesWithWoundsTable($expectedWoundsBonus, $returnWoundsValue, \Closure $toBonus = null)
     {
-        $woundsTable = $this->mockery(WoundsTable::class);
+        $tables = $this->mockery(Tables::class);
+        $tables->shouldReceive('getWoundsTable')
+            ->andReturn($woundsTable = $this->mockery(WoundsTable::class));
         $woundsTable->shouldReceive('toWounds')
             ->andReturnUsing(function (WoundsBonus $woundBonus) use ($expectedWoundsBonus, $returnWoundsValue) {
                 self::assertSame($expectedWoundsBonus, $woundBonus->getValue());
@@ -49,8 +53,12 @@ class HealingPowerTest extends TestWithMockery
 
                 return $wounds;
             });
+        if ($toBonus) {
+            $woundsTable->shouldReceive('toBonus')
+                ->andReturnUsing($toBonus);
+        }
 
-        return $woundsTable;
+        return $tables;
     }
 
     /**
@@ -82,7 +90,7 @@ class HealingPowerTest extends TestWithMockery
                 $healingConditionsPercents = $this->createHealingConditionsPercents(),
                 $this->createHealingByConditionsTable('qux', $healingConditionsPercents, 456),
                 $this->createRoll2d6(789),
-                $this->createWoundsTable($expectedValue = -7 + 123 + 456 + 789 + ($hasNativeRegeneration ? +4 : 0), 112233)
+                $this->createTablesWithWoundsTable($expectedValue = -7 + 123 + 456 + 789 + ($hasNativeRegeneration ? +4 : 0), 112233)
             );
             self::assertSame($expectedValue, $healingPower->getValue());
             self::assertSame((string)$expectedValue, (string)$healingPower);
@@ -215,14 +223,29 @@ class HealingPowerTest extends TestWithMockery
      */
     public function I_can_decrease_power_by_already_healed_amount()
     {
-        $healingPower = HealingPower::createForTreatment(123, $woundsTable = $this->createWoundsTable(123, 987));
+        $healingPower = HealingPower::createForTreatment(
+            123,
+            $tables = $this->createTablesWithWoundsTable(
+                123,
+                987,
+                function (Wounds $wounds) {
+                    self::assertSame(900 /* 987 - 87 */, $wounds->getValue(), 'Expected original heal-up-to decreased by healed amount');
+
+                    $woundBonus = $this->mockery(WoundsBonus::class);
+                    $woundBonus->shouldReceive('getValue')
+                        ->andReturn(333);
+
+                    return $woundBonus;
+                }
+            )
+        );
         self::assertSame(123, $healingPower->getValue());
 
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $notDecreased = $healingPower->decreaseByHealedAmount(0, $this->createToughness(456), $woundsTable);
+        $notDecreased = $healingPower->decreaseByHealedAmount(0, $this->createToughness(456), $tables);
         self::assertSame($healingPower, $notDecreased, 'It should be the very same instance if no change happened at all');
 
-        $woundsTable->shouldReceive('toBonus')
+        $tables->shouldReceive('toBonus')
             ->andReturnUsing(function (Wounds $wounds) {
                 self::assertSame(900 /* 987 - 87 */, $wounds->getValue(), 'Expected original heal-up-to decreased by healed amount');
 
@@ -233,7 +256,7 @@ class HealingPowerTest extends TestWithMockery
                 return $woundBonus;
             });
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $decreased = $healingPower->decreaseByHealedAmount(87, $this->createToughness(11), $woundsTable);
+        $decreased = $healingPower->decreaseByHealedAmount(87, $this->createToughness(11), $tables);
         self::assertNotEquals($healingPower, $decreased, 'It should not has same value nor be the same instance');
         self::assertSame(333, $decreased->getValue());
     }
@@ -244,7 +267,7 @@ class HealingPowerTest extends TestWithMockery
      */
     public function I_can_not_get_new_instance_by_strangely_high_healed_amount()
     {
-        $healingPower = HealingPower::createForTreatment(123, $woundsTable = $this->createWoundsTable(123, 10));
+        $healingPower = HealingPower::createForTreatment(123, $woundsTable = $this->createTablesWithWoundsTable(123, 10));
         $healingPower->decreaseByHealedAmount(12, $this->createToughness(1), $woundsTable);
     }
 
@@ -253,12 +276,12 @@ class HealingPowerTest extends TestWithMockery
      */
     public function I_can_continually_spent_all_the_healing_power()
     {
-        $healingPower = HealingPower::createForTreatment(26, $woundsTable = new WoundsTable());
+        $healingPower = HealingPower::createForTreatment(26, Tables::getIt());
         self::assertSame(26, $healingPower->getValue());
         self::assertSame(66, $healingPower->getHealUpTo($toughness = $this->createToughness(3)));
         while ($healingPower->getHealUpTo($toughness = $this->createToughness(3)) > 0) {
             $previousHealUpTo = $healingPower->getHealUpTo($toughness);
-            $healingPower = $healingPower->decreaseByHealedAmount(1, $toughness, $woundsTable);
+            $healingPower = $healingPower->decreaseByHealedAmount(1, $toughness, Tables::getIt());
             self::assertSame(
                 $previousHealUpTo - 1,
                 $healingPower->getHealUpTo($toughness),

@@ -12,6 +12,7 @@ use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
+use DrdPlus\Tables\Tables;
 use Granam\Tests\Tools\TestWithMockery;
 
 abstract class WoundTest extends TestWithMockery
@@ -96,7 +97,7 @@ abstract class WoundTest extends TestWithMockery
 
         self::assertSame(
             1,
-            $wound->heal(HealingPower::createForTreatment(123, $this->createWoundsTable(3, 123)), $this->createToughness(-2)),
+            $wound->heal(HealingPower::createForTreatment(123, $this->createTablesWithWoundsTable(3, 123)), $this->createToughness(-2)),
             'Expected reported healed value to be 1'
         );
         self::assertSame(2, $wound->getValue(), 'Expected one point of wound to be already healed');
@@ -106,7 +107,7 @@ abstract class WoundTest extends TestWithMockery
 
         self::assertSame(
             2,
-            $wound->heal(HealingPower::createForTreatment(123, $this->createWoundsTable(999, 123)), $this->createToughness(456)),
+            $wound->heal(HealingPower::createForTreatment(123, $this->createTablesWithWoundsTable(999, 123)), $this->createToughness(456)),
             'Expected reported healed value to be the remaining value, 2'
         );
         self::assertEmpty($wound->getPointsOfWound());
@@ -130,11 +131,13 @@ abstract class WoundTest extends TestWithMockery
     /**
      * @param $woundsValue
      * @param $expectedWoundsBonus
-     * @return \Mockery\MockInterface|WoundsTable
+     * @return \Mockery\MockInterface|Tables
      */
-    private function createWoundsTable($woundsValue, $expectedWoundsBonus)
+    private function createTablesWithWoundsTable($woundsValue, $expectedWoundsBonus)
     {
-        $woundsTable = $this->mockery(WoundsTable::class);
+        $tables = $this->mockery(Tables::class);
+        $tables->shouldReceive('getWoundsTable')
+            ->andReturn($woundsTable = $this->mockery(WoundsTable::class));
         $woundsTable->shouldReceive('toWounds')
             ->andReturnUsing(function (WoundsBonus $woundBonus) use ($expectedWoundsBonus, $woundsValue) {
                 self::assertSame($expectedWoundsBonus, $woundBonus->getValue());
@@ -145,7 +148,7 @@ abstract class WoundTest extends TestWithMockery
                 return $wounds;
             });
 
-        return $woundsTable;
+        return $tables;
     }
 
     /**

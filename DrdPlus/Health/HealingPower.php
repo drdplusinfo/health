@@ -13,8 +13,8 @@ use DrdPlus\Tables\Body\Healing\HealingConditionsPercents;
 use DrdPlus\Tables\Measurements\Wounds\Wounds as TableWounds;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
-use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Races\RacesTable;
+use DrdPlus\Tables\Tables;
 use Granam\Integer\IntegerInterface;
 use Granam\Integer\Tools\ToInteger;
 use Granam\Strict\Object\StrictObject;
@@ -36,7 +36,7 @@ class HealingPower extends StrictObject implements IntegerInterface
      * @param HealingConditionsPercents $healingConditionsPercents
      * @param HealingByConditionsTable $healingByConditionsTable
      * @param Roll2d6DrdPlus $roll2d6DrdPlus
-     * @param WoundsTable $woundsTable
+     * @param Tables $tables
      * @return HealingPower
      * @throws \DrdPlus\Tables\Body\Healing\Exceptions\UnknownCodeOfHealingInfluence
      * @throws \DrdPlus\Tables\Body\Healing\Exceptions\UnknownCodeOfHealingInfluence
@@ -52,7 +52,7 @@ class HealingPower extends StrictObject implements IntegerInterface
         HealingConditionsPercents $healingConditionsPercents,
         HealingByConditionsTable $healingByConditionsTable,
         Roll2d6DrdPlus $roll2d6DrdPlus,
-        WoundsTable $woundsTable
+        Tables $tables
     )
     {
         /** see PPH page 80 right column */
@@ -67,26 +67,26 @@ class HealingPower extends StrictObject implements IntegerInterface
             - 7
             + $roll2d6DrdPlus->getValue();
 
-        return new static($healingPower, $woundsTable);
+        return new static($healingPower, $tables);
     }
 
     /**
      * @param int $healingPowerValue
-     * @param WoundsTable $woundsTable
+     * @param Tables $tables
      * @return HealingPower
      */
-    public static function createForTreatment($healingPowerValue, WoundsTable $woundsTable)
+    public static function createForTreatment($healingPowerValue, Tables $tables)
     {
-        return new static($healingPowerValue, $woundsTable);
+        return new static($healingPowerValue, $tables);
     }
 
     /**
      * @param int $healingPowerValue
-     * @param WoundsTable $woundsTable
+     * @param Tables $tables
      */
-    private function __construct($healingPowerValue, WoundsTable $woundsTable)
+    private function __construct($healingPowerValue, Tables $tables)
     {
-        $this->healUpToWounds = (new WoundsBonus($healingPowerValue, $woundsTable))->getWounds();
+        $this->healUpToWounds = (new WoundsBonus($healingPowerValue, $tables->getWoundsTable()))->getWounds();
     }
 
     /**
@@ -109,13 +109,13 @@ class HealingPower extends StrictObject implements IntegerInterface
     /**
      * @param int $healedAmount not a healing power, but real amount of healed wound points
      * @param Toughness $toughness
-     * @param WoundsTable $woundsTable
+     * @param Tables $tables
      * @return static|healingPower
      * @throws \DrdPlus\Health\Exceptions\HealedAmountIsTooBig
      * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
      * @throws \Granam\Integer\Tools\Exceptions\ValueLostOnCast
      */
-    public function decreaseByHealedAmount($healedAmount, Toughness $toughness, WoundsTable $woundsTable)
+    public function decreaseByHealedAmount($healedAmount, Toughness $toughness, Tables $tables)
     {
         $healedAmount = ToInteger::toInteger($healedAmount);
         $healUpTo = $this->getHealUpTo($toughness);
@@ -130,7 +130,7 @@ class HealingPower extends StrictObject implements IntegerInterface
         }
         $decreasedHealingPower = clone $this;
         $remainingHealUpTo = $healUpTo - $healedAmount - $toughness->getValue();
-        $decreasedHealingPower->healUpToWounds = new TableWounds($remainingHealUpTo, $woundsTable);
+        $decreasedHealingPower->healUpToWounds = new TableWounds($remainingHealUpTo, $tables->getWoundsTable());
 
         return $decreasedHealingPower;
     }

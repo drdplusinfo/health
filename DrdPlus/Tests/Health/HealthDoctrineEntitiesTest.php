@@ -28,8 +28,7 @@ use DrdPlus\Properties\Derived\Senses;
 use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Properties\Derived\WoundBoundary;
 use DrdPlus\RollsOn\Traps\RollOnSenses;
-use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
-use DrdPlus\Tables\Races\RacesTable;
+use DrdPlus\Tables\Tables;
 
 class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
 {
@@ -52,9 +51,9 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
                     Strength::getIt(3),
                     RaceCode::getIt(RaceCode::ORC),
                     SubRaceCode::getIt(SubRaceCode::GOBLIN),
-                    new RacesTable()
+                    Tables::getIt()
                 ),
-                new WoundsTable()
+                Tables::getIt()
             )
         );
         $ordinaryWound = $health->createWound(
@@ -83,7 +82,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             new Glare(
                 Contrast::createBySimplifiedRules(new LightingQuality(213), new LightingQuality(569)),
                 new RollOnSenses(
-                    new Senses(Knack::getIt(1), RaceCode::getIt(RaceCode::ELF), SubRaceCode::getIt(SubRaceCode::DARK), new RacesTable()),
+                    new Senses(Knack::getIt(1), RaceCode::getIt(RaceCode::ELF), SubRaceCode::getIt(SubRaceCode::DARK), Tables::getIt()),
                     Roller2d6DrdPlus::getIt()->roll()
                 ),
                 false

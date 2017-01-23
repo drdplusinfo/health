@@ -5,7 +5,7 @@ use DrdPlus\Health\Afflictions\Effects\CrackedBonesEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\CrackedBones;
 use DrdPlus\Tests\Health\Afflictions\AfflictionByWoundTest;
-use DrdPlus\Codes\PropertyCode;
+use DrdPlus\Codes\Properties\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use DrdPlus\Health\Afflictions\AfflictionName;

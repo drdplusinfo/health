@@ -2,7 +2,7 @@
 namespace DrdPlus\Health\Afflictions;
 
 use Doctrineum\String\StringEnum;
-use DrdPlus\Codes\PropertyCode;
+use DrdPlus\Codes\Properties\PropertyCode;
 use Granam\String\StringInterface;
 use Granam\Tools\ValueDescriber;
 

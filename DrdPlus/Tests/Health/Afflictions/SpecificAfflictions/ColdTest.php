@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions\SpecificAfflictions;
 
-use DrdPlus\Codes\PropertyCode;
+use DrdPlus\Codes\Properties\PropertyCode;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use DrdPlus\Health\Afflictions\AfflictionName;

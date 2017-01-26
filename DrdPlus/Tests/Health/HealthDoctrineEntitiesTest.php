@@ -46,8 +46,8 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
     protected function createEntitiesToPersist()
     {
         $health = new Health(
-            $woundBoundary = new WoundBoundary(
-                new Toughness(
+            $woundBoundary = WoundBoundary::getIt(
+                Toughness::getIt(
                     Strength::getIt(3),
                     RaceCode::getIt(RaceCode::ORC),
                     SubRaceCode::getIt(SubRaceCode::GOBLIN),
@@ -82,7 +82,7 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             new Glare(
                 Contrast::createBySimplifiedRules(new LightingQuality(213), new LightingQuality(569)),
                 new RollOnSenses(
-                    new Senses(Knack::getIt(1), RaceCode::getIt(RaceCode::ELF), SubRaceCode::getIt(SubRaceCode::DARK), Tables::getIt()),
+                    Senses::getIt(Knack::getIt(1), RaceCode::getIt(RaceCode::ELF), SubRaceCode::getIt(SubRaceCode::DARK), Tables::getIt()),
                     Roller2d6DrdPlus::getIt()->roll()
                 ),
                 false

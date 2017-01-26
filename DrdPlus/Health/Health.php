@@ -257,7 +257,7 @@ class Health extends StrictObject implements Entity
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        $this->resolveMalusAfterHeal($healedAmount, new WoundBoundary($toughness, $tables));
+        $this->resolveMalusAfterHeal($healedAmount, WoundBoundary::getIt($toughness, $tables));
 
         return $healedAmount;
     }
@@ -326,7 +326,7 @@ class Health extends StrictObject implements Entity
         // treatment boundary is taken with wounds down together
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->treatmentBoundary->getValue() - $healedAmount);
-        $this->resolveMalusAfterHeal($healedAmount, new WoundBoundary($toughness, $tables));
+        $this->resolveMalusAfterHeal($healedAmount, WoundBoundary::getIt($toughness, $tables));
 
         return $healedAmount;
     }
@@ -357,7 +357,7 @@ class Health extends StrictObject implements Entity
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        $this->resolveMalusAfterHeal($regeneratedAmount, new WoundBoundary($toughness, $tables));
+        $this->resolveMalusAfterHeal($regeneratedAmount, WoundBoundary::getIt($toughness, $tables));
 
         return $regeneratedAmount;
     }

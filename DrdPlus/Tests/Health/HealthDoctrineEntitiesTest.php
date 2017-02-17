@@ -2,7 +2,8 @@
 namespace DrdPlus\Tests\Health;
 
 use Doctrineum\Tests\Entity\AbstractDoctrineEntitiesTest;
-use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
+use Drd\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
+use DrdPlus\Codes\Properties\RemarkableSenseCode;
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Health\Afflictions\AfflictionSize;
@@ -27,6 +28,7 @@ use DrdPlus\Properties\Base\Strength;
 use DrdPlus\Properties\Derived\Senses;
 use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Properties\Derived\WoundBoundary;
+use DrdPlus\RollsOn\Traps\BonusFromUsedRemarkableSense;
 use DrdPlus\RollsOn\Traps\RollOnSenses;
 use DrdPlus\Tables\Tables;
 
@@ -82,8 +84,14 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             new Glare(
                 Contrast::createBySimplifiedRules(new LightingQuality(213), new LightingQuality(569)),
                 new RollOnSenses(
-                    Senses::getIt(Knack::getIt(1), RaceCode::getIt(RaceCode::ELF), SubRaceCode::getIt(SubRaceCode::DARK), Tables::getIt()),
-                    Roller2d6DrdPlus::getIt()->roll()
+                    Senses::getIt(Knack::getIt(1), $raceCode = RaceCode::getIt(RaceCode::ELF), $subraceCode = SubRaceCode::getIt(SubRaceCode::DARK), Tables::getIt()),
+                    Roller2d6DrdPlus::getIt()->roll(),
+                    new BonusFromUsedRemarkableSense(
+                        $raceCode,
+                        $subraceCode,
+                        RemarkableSenseCode::getIt(RemarkableSenseCode::SIGHT),
+                        Tables::getIt()
+                    )
                 ),
                 false
             )

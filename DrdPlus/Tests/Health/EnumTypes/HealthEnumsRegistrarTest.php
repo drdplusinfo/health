@@ -8,8 +8,9 @@ use DrdPlus\Health\EnumTypes\WoundOriginType;
 use DrdPlus\Health\OrdinaryWoundOrigin;
 use DrdPlus\Health\SeriousWoundOrigin;
 use Granam\String\StringTools;
+use PHPUnit\Framework\TestCase;
 
-class HealthEnumsRegistrarTest extends \PHPUnit_Framework_TestCase
+class HealthEnumsRegistrarTest extends TestCase
 {
     /**
      * @test

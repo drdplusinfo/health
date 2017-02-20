@@ -3,8 +3,9 @@ namespace DrdPlus\Tests\Health\Afflictions\ElementalPertinence;
 
 use DrdPlus\Health\Afflictions\ElementalPertinence\AirPertinence;
 use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
+use PHPUnit\Framework\TestCase;
 
-abstract class ElementalPertinenceTest extends \PHPUnit_Framework_TestCase
+abstract class ElementalPertinenceTest extends TestCase
 {
     /**
      * @test
@@ -15,7 +16,7 @@ abstract class ElementalPertinenceTest extends \PHPUnit_Framework_TestCase
         $classConstantName = "{$pertinenceClass}::" . strtoupper($pertinenceClass::getPertinenceCode());
         self::assertTrue(defined($classConstantName), "Expected constant {$classConstantName}");
         self::assertSame(constant($classConstantName), $pertinenceClass::getPertinenceCode());
-        
+
         $minusPertinence = $pertinenceClass::getMinus();
         self::assertInstanceOf($pertinenceClass, $minusPertinence);
         self::assertTrue($minusPertinence->isMinus());

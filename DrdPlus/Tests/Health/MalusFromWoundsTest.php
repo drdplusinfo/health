@@ -2,8 +2,9 @@
 namespace DrdPlus\Tests\Health;
 
 use DrdPlus\Health\MalusFromWounds;
+use PHPUnit\Framework\TestCase;
 
-class MalusFromWoundsTest extends \PHPUnit_Framework_TestCase
+class MalusFromWoundsTest extends TestCase
 {
     /**
      * @test

@@ -3,8 +3,9 @@ namespace DrdPlus\Tests\Health;
 
 use DrdPlus\Health\WoundSize;
 use Granam\Integer\IntegerInterface;
+use PHPUnit\Framework\TestCase;
 
-class WoundSizeTest extends \PHPUnit_Framework_TestCase
+class WoundSizeTest extends TestCase
 {
     /**
      * @test

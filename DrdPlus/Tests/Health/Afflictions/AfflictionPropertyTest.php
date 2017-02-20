@@ -2,8 +2,9 @@
 namespace DrdPlus\Tests\Health\Afflictions;
 
 use DrdPlus\Health\Afflictions\AfflictionProperty;
+use PHPUnit\Framework\TestCase;
 
-class AfflictionPropertyTest extends \PHPUnit_Framework_TestCase
+class AfflictionPropertyTest extends TestCase
 {
     /**
      * @test

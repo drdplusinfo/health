@@ -4,8 +4,9 @@ namespace DrdPlus\Tests\Health\Afflictions;
 use DrdPlus\Codes\Body\AfflictionByWoundDomainCode;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
 use Granam\String\StringTools;
+use PHPUnit\Framework\TestCase;
 
-class AfflictionDomainTest extends \PHPUnit_Framework_TestCase
+class AfflictionDomainTest extends TestCase
 {
     /**
      * @test

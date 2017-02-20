@@ -2,8 +2,9 @@
 namespace DrdPlus\Tests\Health\Afflictions;
 
 use DrdPlus\Health\Afflictions\AfflictionVirulence;
+use PHPUnit\Framework\TestCase;
 
-class AfflictionVirulenceTest extends \PHPUnit_Framework_TestCase
+class AfflictionVirulenceTest extends TestCase
 {
     /**
      * @test

@@ -3,8 +3,9 @@ namespace DrdPlus\Tests\Health;
 
 use Doctrineum\Integer\IntegerEnum;
 use DrdPlus\Health\TreatmentBoundary;
+use PHPUnit\Framework\TestCase;
 
-class TreatmentBoundaryTest extends \PHPUnit_Framework_TestCase
+class TreatmentBoundaryTest extends TestCase
 {
     /**
      * @test

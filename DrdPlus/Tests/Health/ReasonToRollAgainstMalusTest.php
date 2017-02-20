@@ -2,8 +2,9 @@
 namespace DrdPlus\Tests\Health;
 
 use DrdPlus\Health\ReasonToRollAgainstWoundMalus;
+use PHPUnit\Framework\TestCase;
 
-class ReasonToRollAgainstMalusTest extends \PHPUnit_Framework_TestCase
+class ReasonToRollAgainstMalusTest extends TestCase
 {
     /**
      * @test

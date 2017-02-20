@@ -3,8 +3,9 @@ namespace DrdPlus\Tests\Health\Afflictions;
 
 use Doctrineum\Integer\IntegerEnum;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
+use PHPUnit\Framework\TestCase;
 
-class AfflictionDangerousnessTest extends \PHPUnit_Framework_TestCase
+class AfflictionDangerousnessTest extends TestCase
 {
     /**
      * @test

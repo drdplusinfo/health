@@ -3,8 +3,9 @@ namespace DrdPlus\Tests\Health\Afflictions;
 
 use DrdPlus\Health\Afflictions\AfflictionSource;
 use Granam\String\StringTools;
+use PHPUnit\Framework\TestCase;
 
-class AfflictionSourceTest extends \PHPUnit_Framework_TestCase
+class AfflictionSourceTest extends TestCase
 {
     /**
      * @test

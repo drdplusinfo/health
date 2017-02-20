@@ -3,8 +3,9 @@ namespace DrdPlus\Tests\Health;
 
 use DrdPlus\Health\Afflictions\AfflictionSize;
 use Granam\Integer\IntegerInterface;
+use PHPUnit\Framework\TestCase;
 
-class AfflictionSizeTest extends \PHPUnit_Framework_TestCase
+class AfflictionSizeTest extends TestCase
 {
     /**
      * @test

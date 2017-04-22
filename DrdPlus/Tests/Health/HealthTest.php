@@ -173,7 +173,7 @@ class HealthTest extends TestWithMockery
             ->andReturn($woundsBonus = $this->mockery(WoundsBonus::class));
         /** just for @see \DrdPlus\Properties\Partials\WithHistoryTrait::extractArgumentsDescription */
         $woundsBonus->shouldReceive('getValue')
-            ->andReturn('foo');
+            ->andReturn(789);
 
         return $tables;
     }

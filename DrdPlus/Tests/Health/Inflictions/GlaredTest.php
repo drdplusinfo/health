@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Health\Inflictions;
 
+use DrdPlus\Codes\TimeCode;
 use DrdPlus\Health\Health;
 use DrdPlus\Lighting\Glare;
 use DrdPlus\Tables\Measurements\Time\Time;
@@ -74,15 +75,15 @@ class GlaredTest extends TestWithMockery
         self::assertSame(0, $glared->getGettingUsedToForRounds());
 
         $timeTable = new TimeTable();
-        $glared->setGettingUsedToForTime(new Time(1, Time::ROUND, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(1, TimeCode::ROUND, $timeTable));
         self::assertSame(-14, $glared->getCurrentMalus());
         self::assertSame(1, $glared->getGettingUsedToForRounds());
 
-        $glared->setGettingUsedToForTime(new Time(5, Time::ROUND, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(5, TimeCode::ROUND, $timeTable));
         self::assertSame(-10, $glared->getCurrentMalus());
         self::assertSame(5, $glared->getGettingUsedToForRounds());
 
-        $glared->setGettingUsedToForTime(new Time(999, Time::ROUND, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(999, TimeCode::ROUND, $timeTable));
         self::assertSame(0, $glared->getCurrentMalus());
         self::assertSame(15, $glared->getGettingUsedToForRounds());
     }
@@ -99,7 +100,7 @@ class GlaredTest extends TestWithMockery
         self::assertSame(0, $glared->getGettingUsedToForRounds());
 
         $timeTable = new TimeTable();
-        $glared->setGettingUsedToForTime(new Time(1, Time::HOUR, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(1, TimeCode::HOUR, $timeTable));
         self::assertSame(0, $glared->getCurrentMalus());
         self::assertSame(50, $glared->getGettingUsedToForRounds());
     }
@@ -116,23 +117,23 @@ class GlaredTest extends TestWithMockery
         self::assertSame(0, $glared->getGettingUsedToForRounds());
 
         $timeTable = new TimeTable();
-        $glared->setGettingUsedToForTime(new Time(1, Time::ROUND, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(1, TimeCode::ROUND, $timeTable));
         self::assertSame(-36, $glared->getCurrentMalus());
         self::assertSame(1, $glared->getGettingUsedToForRounds());
 
-        $glared->setGettingUsedToForTime(new Time(9, Time::ROUND, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(9, TimeCode::ROUND, $timeTable));
         self::assertSame(-36, $glared->getCurrentMalus());
         self::assertSame(9, $glared->getGettingUsedToForRounds());
 
-        $glared->setGettingUsedToForTime(new Time(10, Time::ROUND, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(10, TimeCode::ROUND, $timeTable));
         self::assertSame(-35, $glared->getCurrentMalus());
         self::assertSame(10, $glared->getGettingUsedToForRounds());
 
-        $glared->setGettingUsedToForTime(new Time(359, Time::ROUND, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(359, TimeCode::ROUND, $timeTable));
         self::assertSame(-1, $glared->getCurrentMalus());
         self::assertSame(359, $glared->getGettingUsedToForRounds());
 
-        $glared->setGettingUsedToForTime(new Time(800, Time::ROUND, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(800, TimeCode::ROUND, $timeTable));
         self::assertSame(0, $glared->getCurrentMalus());
         self::assertSame(360, $glared->getGettingUsedToForRounds());
     }
@@ -149,7 +150,7 @@ class GlaredTest extends TestWithMockery
         self::assertSame(0, $glared->getGettingUsedToForRounds());
 
         $timeTable = new TimeTable();
-        $glared->setGettingUsedToForTime(new Time(1, Time::HOUR, $timeTable));
+        $glared->setGettingUsedToForTime(new Time(1, TimeCode::HOUR, $timeTable));
         self::assertSame(0, $glared->getCurrentMalus());
         self::assertSame(210, $glared->getGettingUsedToForRounds());
     }

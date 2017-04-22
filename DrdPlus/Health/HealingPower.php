@@ -92,7 +92,7 @@ class HealingPower extends StrictObject implements IntegerInterface
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->healUpToWounds->getBonus()->getValue();
     }
@@ -101,7 +101,7 @@ class HealingPower extends StrictObject implements IntegerInterface
      * @param Toughness $toughness
      * @return int
      */
-    public function getHealUpTo(Toughness $toughness)
+    public function getHealUpTo(Toughness $toughness): int
     {
         return $this->healUpToWounds->getValue() + $toughness->getValue();
     }

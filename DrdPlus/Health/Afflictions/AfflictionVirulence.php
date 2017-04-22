@@ -2,7 +2,7 @@
 namespace DrdPlus\Health\Afflictions;
 
 use Doctrineum\String\StringEnum;
-use DrdPlus\Codes\TimeCode;
+use DrdPlus\Codes\TimeUnitCode;
 use Granam\Tools\ValueDescriber;
 
 /**
@@ -12,7 +12,7 @@ class AfflictionVirulence extends StringEnum
 {
     const AFFLICTION_VIRULENCE = 'affliction_virulence';
 
-    const ROUND = TimeCode::ROUND;
+    const ROUND = TimeUnitCode::ROUND;
 
     /**
      * @return AfflictionVirulence
@@ -22,17 +22,17 @@ class AfflictionVirulence extends StringEnum
         return static::getEnum(self::ROUND);
     }
 
-    const MINUTE = TimeCode::MINUTE;
+    const MINUTE = TimeUnitCode::MINUTE;
 
     /**
      * @return AfflictionVirulence
      */
     public static function getMinuteVirulence()
     {
-        return static::getEnum(TimeCode::MINUTE);
+        return static::getEnum(TimeUnitCode::MINUTE);
     }
 
-    const HOUR = TimeCode::HOUR;
+    const HOUR = TimeUnitCode::HOUR;
 
     /**
      * @return AfflictionVirulence
@@ -42,7 +42,7 @@ class AfflictionVirulence extends StringEnum
         return static::getEnum(self::HOUR);
     }
 
-    const DAY = TimeCode::DAY;
+    const DAY = TimeUnitCode::DAY;
 
     /**
      * @return AfflictionVirulence

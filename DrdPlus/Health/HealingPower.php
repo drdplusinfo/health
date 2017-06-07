@@ -53,7 +53,7 @@ class HealingPower extends StrictObject implements IntegerInterface
         HealingByConditionsTable $healingByConditionsTable,
         Roll2d6DrdPlus $roll2d6DrdPlus,
         Tables $tables
-    )
+    ): HealingPower
     {
         /** see PPH page 80 right column */
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */

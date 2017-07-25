@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Inflictions;
 
-use DrdPlus\Codes\TimeUnitCode;
+use DrdPlus\Codes\Units\TimeUnitCode;
 use DrdPlus\Health\Health;
 use DrdPlus\Lighting\Glare;
 use DrdPlus\Tables\Measurements\Time\Time;

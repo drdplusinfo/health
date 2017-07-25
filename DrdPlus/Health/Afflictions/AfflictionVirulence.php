@@ -2,7 +2,7 @@
 namespace DrdPlus\Health\Afflictions;
 
 use Doctrineum\String\StringEnum;
-use DrdPlus\Codes\TimeUnitCode;
+use DrdPlus\Codes\Units\TimeUnitCode;
 use Granam\Tools\ValueDescriber;
 
 /**
@@ -17,7 +17,7 @@ class AfflictionVirulence extends StringEnum
     /**
      * @return AfflictionVirulence
      */
-    public static function getRoundVirulence()
+    public static function getRoundVirulence(): AfflictionVirulence
     {
         return static::getEnum(self::ROUND);
     }
@@ -27,7 +27,7 @@ class AfflictionVirulence extends StringEnum
     /**
      * @return AfflictionVirulence
      */
-    public static function getMinuteVirulence()
+    public static function getMinuteVirulence(): AfflictionVirulence
     {
         return static::getEnum(TimeUnitCode::MINUTE);
     }
@@ -37,7 +37,7 @@ class AfflictionVirulence extends StringEnum
     /**
      * @return AfflictionVirulence
      */
-    public static function getHourVirulence()
+    public static function getHourVirulence(): AfflictionVirulence
     {
         return static::getEnum(self::HOUR);
     }
@@ -47,17 +47,18 @@ class AfflictionVirulence extends StringEnum
     /**
      * @return AfflictionVirulence
      */
-    public static function getDayVirulence()
+    public static function getDayVirulence(): AfflictionVirulence
     {
         return static::getEnum(self::DAY);
     }
 
     /**
-     * @param bool|float|int|string $enumValue
+     * @param bool|float|int|string|object $enumValue
      * @return string
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownVirulencePeriod
+     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): string
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
         if (!in_array($finalValue, [self::ROUND, self::MINUTE, self::HOUR, self::DAY], true)) {

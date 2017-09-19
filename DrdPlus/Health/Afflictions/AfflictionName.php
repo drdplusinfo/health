@@ -13,7 +13,7 @@ class AfflictionName extends StringEnum
      * @param string $nameValue
      * @return AfflictionName
      */
-    public static function getIt($nameValue)
+    public static function getIt($nameValue): AfflictionName
     {
         return self::getEnum($nameValue);
     }
@@ -23,7 +23,7 @@ class AfflictionName extends StringEnum
      * @throws \DrdPlus\Health\Afflictions\Exceptions\AfflictionNameCanNotBeEmpty
      * @return string
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): string
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
         if ($finalValue === '') {

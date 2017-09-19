@@ -79,7 +79,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
      * @param WoundSize $woundSize
      * @return PointOfWound[]|array
      */
-    private function createPointsOfWound(WoundSize $woundSize)
+    private function createPointsOfWound(WoundSize $woundSize): array
     {
         $pointsOfWound = [];
         for ($wounded = $woundSize->getValue(); $wounded > 0; $wounded--) {
@@ -89,18 +89,12 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
         return $pointsOfWound;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId():? int
     {
         return $this->id;
     }
 
-    /**
-     * @return Health
-     */
-    public function getHealth()
+    public function getHealth(): Health
     {
         return $this->health;
     }
@@ -108,7 +102,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     /**
      * @return Collection|PointOfWound[]
      */
-    public function getPointsOfWound()
+    public function getPointsOfWound(): Collection
     {
         return clone $this->pointsOfWound; // to avoid external changes of the collection
     }
@@ -116,40 +110,31 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     /**
      * @return SeriousWoundOrigin|OrdinaryWoundOrigin|WoundOrigin
      */
-    public function getWoundOrigin()
+    public function getWoundOrigin(): WoundOrigin
     {
         return $this->woundOrigin;
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         // each point has value of 1, therefore count is enough
         return count($this->getPointsOfWound());
     }
 
-    /**
-     * @return WoundSize
-     */
-    public function getWoundSize()
+    public function getWoundSize(): WoundSize
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return WoundSize::createIt($this->getValue());
     }
 
-    /**
-     * @return bool
-     */
-    abstract public function isSerious();
+    abstract public function isSerious(): bool;
 
     /**
      * @param HealingPower $healingPower
      * @param Toughness $toughness
      * @return int amount of healed points of wound
      */
-    public function heal(HealingPower $healingPower, Toughness $toughness)
+    public function heal(HealingPower $healingPower, Toughness $toughness): int
     {
         $this->setOld(); // any wound is "old", treated and can be healed by regeneration or professional only
         // technical note: orphaned points of wound are removed automatically on persistence
@@ -171,7 +156,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     /**
      * @return bool
      */
-    public function isHealed()
+    public function isHealed(): bool
     {
         return $this->getValue() === 0;
     }
@@ -179,7 +164,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     /**
      * @return bool
      */
-    public function isOld()
+    public function isOld(): bool
     {
         return $this->old;
     }

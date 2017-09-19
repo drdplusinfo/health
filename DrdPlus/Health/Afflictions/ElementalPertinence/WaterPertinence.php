@@ -10,7 +10,7 @@ class WaterPertinence extends ElementalPertinence
     /**
      * @return WaterPertinence|ElementalPertinence
      */
-    public static function getMinus()
+    public static function getMinus(): WaterPertinence
     {
         return parent::getMinus();
     }
@@ -18,7 +18,7 @@ class WaterPertinence extends ElementalPertinence
     /**
      * @return WaterPertinence|ElementalPertinence
      */
-    public static function getPlus()
+    public static function getPlus(): WaterPertinence
     {
         return parent::getPlus();
     }

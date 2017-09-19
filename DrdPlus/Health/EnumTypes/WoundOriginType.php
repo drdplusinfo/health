@@ -9,20 +9,22 @@ class WoundOriginType extends StringEnumType
 {
     const WOUND_ORIGIN = 'wound_origin';
 
-    public static function registerSelf()
+    public static function registerSelf(): bool
     {
-        parent::registerSelf();
+        $registered = parent::registerSelf();
         self::registerSubTypeEnum(OrdinaryWoundOrigin::class, '~^' . OrdinaryWoundOrigin::ORDINARY . '$~');
         self::registerSubTypeEnum(
             SeriousWoundOrigin::class,
             '~^(?:(?!' . OrdinaryWoundOrigin::ORDINARY . ').)+$~' // just not the "ordinary" string
         );
+
+        return $registered;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::WOUND_ORIGIN;
     }

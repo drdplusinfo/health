@@ -22,7 +22,7 @@ class SeriousWound extends Wound
     /**
      * @return bool
      */
-    public function isSerious()
+    public function isSerious(): bool
     {
         return true;
     }

@@ -10,27 +10,17 @@ class CrackedBonesEffect extends AfflictionEffect
 {
     const CRACKED_BONES_EFFECT = 'cracked_bones_effect';
 
-    /**
-     * @return CrackedBonesEffect
-     */
-    public static function getIt()
+    public static function getIt(): CrackedBonesEffect
     {
         return static::getEnum(self::CRACKED_BONES_EFFECT);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isEffectiveEvenOnSuccessAgainstTrap()
+    public function isEffectiveEvenOnSuccessAgainstTrap(): bool
     {
         return true;
     }
 
-    /**
-     * @param CrackedBones $crackedBones
-     * @return int
-     */
-    public function getHealingMalus(CrackedBones $crackedBones)
+    public function getHealingMalus(CrackedBones $crackedBones): int
     {
         // note: affliction size is always at least zero, therefore this malus is at least zero or less
         return -$crackedBones->getSize()->getValue();

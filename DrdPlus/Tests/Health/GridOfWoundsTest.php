@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\PointOfWound;
@@ -85,11 +86,11 @@ class GridOfWoundsTest extends TestWithMockery
 
     /**
      * @param int $woundValue
-     * @return array|PointOfWound[]
+     * @return ArrayCollection|PointOfWound[]
      */
-    private function createPointsOfWound($woundValue)
+    private function createPointsOfWound($woundValue): ArrayCollection
     {
-        $pointsOfWound = [];
+        $pointsOfWound = new ArrayCollection();
         for ($pointRank = 1; $pointRank <= $woundValue; $pointRank++) {
             $pointsOfWound[] = self::$pointOfWound;
         }

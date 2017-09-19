@@ -13,33 +13,22 @@ class SeveredArmEffect extends AfflictionEffect
     /**
      * @return SeveredArmEffect
      */
-    public static function getIt()
+    public static function getIt(): SeveredArmEffect
     {
         return static::getEnum(self::SEVERED_ARM_EFFECT);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isEffectiveEvenOnSuccessAgainstTrap()
+    public function isEffectiveEvenOnSuccessAgainstTrap(): bool
     {
         return true;
     }
 
-    /**
-     * @param SeveredArm $severedArm
-     * @return int
-     */
-    public function getStrengthMalus(SeveredArm $severedArm)
+    public function getStrengthMalus(SeveredArm $severedArm): int
     {
         return -$severedArm->getSize()->getValue();
     }
 
-    /**
-     * @param SeveredArm $severedArm
-     * @return int
-     */
-    public function getKnackMalus(SeveredArm $severedArm)
+    public function getKnackMalus(SeveredArm $severedArm): int
     {
         return -2 * $severedArm->getSize()->getValue();
     }

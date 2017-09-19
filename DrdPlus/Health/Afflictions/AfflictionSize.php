@@ -15,7 +15,7 @@ class AfflictionSize extends IntegerEnum
      * @throws \DrdPlus\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    public static function getIt($size)
+    public static function getIt($size): AfflictionSize
     {
         return self::getEnum($size);
     }
@@ -26,7 +26,7 @@ class AfflictionSize extends IntegerEnum
      * @throws \DrdPlus\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): int
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
         if ($finalValue < 0) {

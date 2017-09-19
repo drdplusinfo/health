@@ -21,7 +21,7 @@ class OrdinaryWound extends Wound
     /**
      * @return bool
      */
-    public function isSerious()
+    public function isSerious(): bool
     {
         return false;
     }

@@ -13,7 +13,7 @@ class OrdinaryWoundOrigin extends WoundOrigin
     /**
      * @return OrdinaryWoundOrigin
      */
-    public static function getIt()
+    public static function getIt(): OrdinaryWoundOrigin
     {
         return static::getEnum(self::ORDINARY);
     }
@@ -23,7 +23,7 @@ class OrdinaryWoundOrigin extends WoundOrigin
      * @return string
      * @throws \DrdPlus\Health\Exceptions\UnknownWoundOriginCode
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): string
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
         if ($enumFinalValue !== self::ORDINARY) {
@@ -38,7 +38,7 @@ class OrdinaryWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isSeriousWoundOrigin()
+    public function isSeriousWoundOrigin(): bool
     {
         return false;
     }
@@ -46,7 +46,7 @@ class OrdinaryWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isOrdinaryWoundOrigin()
+    public function isOrdinaryWoundOrigin(): bool
     {
         return true;
     }

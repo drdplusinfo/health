@@ -18,7 +18,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return SeriousWoundOrigin
      */
-    public static function getMechanicalStabWoundOrigin()
+    public static function getMechanicalStabWoundOrigin(): SeriousWoundOrigin
     {
         return static::getEnum(WoundsOriginCode::MECHANICAL_STAB);
     }
@@ -26,7 +26,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return SeriousWoundOrigin
      */
-    public static function getMechanicalCutWoundOrigin()
+    public static function getMechanicalCutWoundOrigin(): SeriousWoundOrigin
     {
         return static::getEnum(WoundsOriginCode::MECHANICAL_CUT);
     }
@@ -34,7 +34,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return SeriousWoundOrigin
      */
-    public static function getMechanicalCrushWoundOrigin()
+    public static function getMechanicalCrushWoundOrigin(): SeriousWoundOrigin
     {
         return static::getEnum(WoundsOriginCode::MECHANICAL_CRUSH);
     }
@@ -42,7 +42,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return SeriousWoundOrigin
      */
-    public static function getElementalWoundOrigin()
+    public static function getElementalWoundOrigin(): SeriousWoundOrigin
     {
         return static::getEnum(WoundsOriginCode::ELEMENTAL);
     }
@@ -50,7 +50,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return SeriousWoundOrigin
      */
-    public static function getPsychicalWoundOrigin()
+    public static function getPsychicalWoundOrigin(): SeriousWoundOrigin
     {
         return static::getEnum(WoundsOriginCode::PSYCHICAL);
     }
@@ -60,7 +60,7 @@ class SeriousWoundOrigin extends WoundOrigin
      * @return string
      * @throws \DrdPlus\Health\Exceptions\UnknownWoundOriginCode
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): string
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
         if (!in_array($enumFinalValue, WoundsOriginCode::getPossibleValues(), true)) {
@@ -75,7 +75,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isSeriousWoundOrigin()
+    public function isSeriousWoundOrigin(): bool
     {
         return true;
     }
@@ -83,7 +83,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isOrdinaryWoundOrigin()
+    public function isOrdinaryWoundOrigin(): bool
     {
         return false;
     }
@@ -91,7 +91,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isMechanical()
+    public function isMechanical(): bool
     {
         return WoundsOriginCode::getIt($this->getValue())->isMechanical();
     }
@@ -99,7 +99,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isMechanicalStabWoundOrigin()
+    public function isMechanicalStabWoundOrigin(): bool
     {
         return $this->getValue() === WoundsOriginCode::MECHANICAL_STAB;
     }
@@ -107,7 +107,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isMechanicalCutWoundOrigin()
+    public function isMechanicalCutWoundOrigin(): bool
     {
         return $this->getValue() === WoundsOriginCode::MECHANICAL_CUT;
     }
@@ -115,7 +115,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isMechanicalCrushWoundOrigin()
+    public function isMechanicalCrushWoundOrigin(): bool
     {
         return $this->getValue() === WoundsOriginCode::MECHANICAL_CRUSH;
     }
@@ -123,7 +123,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isElementalWoundOrigin()
+    public function isElementalWoundOrigin(): bool
     {
         return $this->getValue() === WoundsOriginCode::ELEMENTAL;
     }
@@ -131,7 +131,7 @@ class SeriousWoundOrigin extends WoundOrigin
     /**
      * @return bool
      */
-    public function isPsychicalWoundOrigin()
+    public function isPsychicalWoundOrigin(): bool
     {
         return $this->getValue() === WoundsOriginCode::PSYCHICAL;
     }

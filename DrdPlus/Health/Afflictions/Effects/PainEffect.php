@@ -13,7 +13,7 @@ class PainEffect extends AfflictionEffect
     /**
      * @return PainEffect
      */
-    public static function getIt()
+    public static function getIt(): PainEffect
     {
         return static::getEnum(self::PAIN_EFFECT);
     }
@@ -21,7 +21,7 @@ class PainEffect extends AfflictionEffect
     /**
      * @return bool
      */
-    public function isEffectiveEvenOnSuccessAgainstTrap()
+    public function isEffectiveEvenOnSuccessAgainstTrap(): bool
     {
         return false;
     }
@@ -30,7 +30,7 @@ class PainEffect extends AfflictionEffect
      * @param Pain $pain
      * @return int
      */
-    public function getMalusFromPain(Pain $pain)
+    public function getMalusFromPain(Pain $pain): int
     {
         return -$pain->getSize()->getValue();
     }

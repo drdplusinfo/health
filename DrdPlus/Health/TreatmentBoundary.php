@@ -15,7 +15,7 @@ class TreatmentBoundary extends IntegerEnum
      * @return TreatmentBoundary
      * @throws \DrdPlus\Health\Exceptions\TreatmentBoundaryCanNotBeNegative
      */
-    public static function getIt($value)
+    public static function getIt($value): TreatmentBoundary
     {
         return static::getEnum($value);
     }
@@ -25,7 +25,7 @@ class TreatmentBoundary extends IntegerEnum
      * @throws \DrdPlus\Health\Exceptions\TreatmentBoundaryCanNotBeNegative
      * @return int
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): int
     {
         try {
             $finalValue = parent::convertToEnumFinalValue($enumValue);

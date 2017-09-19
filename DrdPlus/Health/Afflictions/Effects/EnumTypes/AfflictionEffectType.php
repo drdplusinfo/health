@@ -14,9 +14,9 @@ class AfflictionEffectType extends ScalarEnumType
 {
     const AFFLICTION_EFFECT = 'affliction_effect';
 
-    public static function registerSelf()
+    public static function registerSelf(): bool
     {
-        parent::registerSelf();
+        $registered = parent::registerSelf();
         self::registerSubTypeEnum(BleedingEffect::class, '~^' . BleedingEffect::BLEEDING_EFFECT . '$~');
         self::registerSubTypeEnum(ColdEffect::class, '~^' . ColdEffect::COLD_EFFECT . '$~');
         self::registerSubTypeEnum(CrackedBonesEffect::class, '~^' . CrackedBonesEffect::CRACKED_BONES_EFFECT . '$~');
@@ -24,12 +24,14 @@ class AfflictionEffectType extends ScalarEnumType
         self::registerSubTypeEnum(ThirstEffect::class, '~^' . ThirstEffect::THIRST_EFFECT . '$~');
         self::registerSubTypeEnum(PainEffect::class, '~^' . PainEffect::PAIN_EFFECT . '$~');
         self::registerSubTypeEnum(SeveredArmEffect::class, '~^' . SeveredArmEffect::SEVERED_ARM_EFFECT . '$~');
+
+        return $registered;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::AFFLICTION_EFFECT;
     }

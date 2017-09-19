@@ -5,14 +5,8 @@ use Doctrineum\String\StringEnum;
 
 abstract class WoundOrigin extends StringEnum
 {
-    /**
-     * @return bool
-     */
-    abstract public function isSeriousWoundOrigin();
+    abstract public function isSeriousWoundOrigin(): bool;
 
-    /**
-     * @return bool
-     */
-    abstract public function isOrdinaryWoundOrigin();
+    abstract public function isOrdinaryWoundOrigin(): bool;
 
 }

@@ -15,7 +15,7 @@ class AfflictionSource extends StringEnum
      * @param string $sourceCode
      * @return AfflictionSource
      */
-    public static function getIt($sourceCode)
+    public static function getIt($sourceCode): AfflictionSource
     {
         return static::getEnum($sourceCode);
     }
@@ -25,7 +25,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return AfflictionSource
      */
-    public static function getExternalSource()
+    public static function getExternalSource(): AfflictionSource
     {
         return self::getEnum(self::EXTERNAL);
     }
@@ -33,7 +33,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return bool
      */
-    public function isExternal()
+    public function isExternal(): bool
     {
         return $this->getValue() === self::EXTERNAL;
     }
@@ -43,7 +43,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return AfflictionSource
      */
-    public static function getActiveSource()
+    public static function getActiveSource(): AfflictionSource
     {
         return self::getEnum(self::ACTIVE);
     }
@@ -51,7 +51,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->getValue() === self::ACTIVE;
     }
@@ -61,7 +61,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return AfflictionSource
      */
-    public static function getPassiveSource()
+    public static function getPassiveSource(): AfflictionSource
     {
         return self::getEnum(self::PASSIVE);
     }
@@ -69,7 +69,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return bool
      */
-    public function isPassive()
+    public function isPassive(): bool
     {
         return $this->getValue() === self::PASSIVE;
     }
@@ -79,7 +79,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return AfflictionSource
      */
-    public static function getPartialDeformationSource()
+    public static function getPartialDeformationSource(): AfflictionSource
     {
         return self::getEnum(self::PARTIAL_DEFORMATION);
     }
@@ -87,7 +87,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return bool
      */
-    public function isPartialDeformation()
+    public function isPartialDeformation(): bool
     {
         return $this->getValue() === self::PARTIAL_DEFORMATION;
     }
@@ -97,7 +97,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return AfflictionSource
      */
-    public static function getFullDeformationSource()
+    public static function getFullDeformationSource(): AfflictionSource
     {
         return self::getEnum(self::FULL_DEFORMATION);
     }
@@ -105,7 +105,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return bool
      */
-    public function isFullDeformation()
+    public function isFullDeformation(): bool
     {
         return $this->getValue() === self::FULL_DEFORMATION;
     }
@@ -113,7 +113,7 @@ class AfflictionSource extends StringEnum
     /**
      * @return bool
      */
-    public function isDeformation()
+    public function isDeformation(): bool
     {
         return $this->isPartialDeformation() || $this->isFullDeformation();
     }
@@ -123,7 +123,7 @@ class AfflictionSource extends StringEnum
      * @return string
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionSource
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): string
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
         if (!in_array($enumFinalValue, [self::EXTERNAL, self::PASSIVE, self::ACTIVE, self::PARTIAL_DEFORMATION, self::FULL_DEFORMATION], true)) {

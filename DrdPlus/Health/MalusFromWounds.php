@@ -9,18 +9,18 @@ use Granam\Tools\ValueDescriber;
  */
 class MalusFromWounds extends IntegerEnum
 {
+    const MOST = -3;
+
     /**
      * @param int $malusValue
      * @return MalusFromWounds
      * @throws \DrdPlus\Health\Exceptions\UnexpectedMalusValue
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    public static function getIt($malusValue)
+    public static function getIt($malusValue): MalusFromWounds
     {
         return static::getEnum($malusValue);
     }
-
-    const MOST = -3;
 
     /**
      * @param mixed $enumValue
@@ -28,7 +28,7 @@ class MalusFromWounds extends IntegerEnum
      * @throws \DrdPlus\Health\Exceptions\UnexpectedMalusValue
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): int
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
         if ($finalValue > 0 // note: comparing negative numbers

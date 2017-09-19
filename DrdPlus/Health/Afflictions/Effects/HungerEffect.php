@@ -11,7 +11,7 @@ class HungerEffect extends AfflictionEffect
     /**
      * @return HungerEffect
      */
-    public static function getIt()
+    public static function getIt(): HungerEffect
     {
         return static::getEnum(self::HUNGER_EFFECT);
     }
@@ -19,7 +19,7 @@ class HungerEffect extends AfflictionEffect
     /**
      * @return bool
      */
-    public function isEffectiveEvenOnSuccessAgainstTrap()
+    public function isEffectiveEvenOnSuccessAgainstTrap(): bool
     {
         return true;
     }

@@ -22,7 +22,7 @@ abstract class ElementalPertinence extends StringEnum
     /**
      * @return string
      */
-    public static function getPertinenceCode()
+    public static function getPertinenceCode(): string
     {
         return preg_replace('~_pertinence$~', '', StringTools::camelCaseToSnakeCasedBasename(static::class));
     }
@@ -30,7 +30,7 @@ abstract class ElementalPertinence extends StringEnum
     /**
      * @return bool
      */
-    public function isMinus()
+    public function isMinus(): bool
     {
         return strpos($this->getValue(), self::MINUS) === 0;
     }
@@ -48,7 +48,7 @@ abstract class ElementalPertinence extends StringEnum
     /**
      * @return bool
      */
-    public function isPlus()
+    public function isPlus(): bool
     {
         return strpos($this->getValue(), self::PLUS) === 0;
     }

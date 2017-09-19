@@ -14,7 +14,7 @@ class AfflictionDomain extends StringEnum
      * @param string $domainCode
      * @return AfflictionDomain
      */
-    public static function getIt($domainCode)
+    public static function getIt($domainCode): AfflictionDomain
     {
         return static::getEnum($domainCode);
     }
@@ -24,7 +24,7 @@ class AfflictionDomain extends StringEnum
     /**
      * @return AfflictionDomain
      */
-    public static function getPhysicalDomain()
+    public static function getPhysicalDomain(): AfflictionDomain
     {
         return static::getEnum(self::PHYSICAL);
     }
@@ -34,12 +34,12 @@ class AfflictionDomain extends StringEnum
     /**
      * @return AfflictionDomain
      */
-    public static function getPsychicalDomain()
+    public static function getPsychicalDomain(): AfflictionDomain
     {
         return static::getEnum(self::PSYCHICAL);
     }
 
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): string
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
         if (!in_array($finalValue, AfflictionByWoundDomainCode::getPossibleValues(), true)) {

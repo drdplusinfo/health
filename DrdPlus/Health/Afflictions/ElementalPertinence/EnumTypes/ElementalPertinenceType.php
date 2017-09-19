@@ -11,19 +11,21 @@ class ElementalPertinenceType extends StringEnumType
 {
     const ELEMENTAL_PERTINENCE = 'elemental_pertinence';
 
-    public static function registerSelf()
+    public static function registerSelf(): bool
     {
-        parent::registerSelf();
+        $registered = parent::registerSelf();
         self::registerSubTypeEnum(FirePertinence::class, '~' . FirePertinence::FIRE . '$~');
         self::registerSubTypeEnum(WaterPertinence::class, '~' . WaterPertinence::WATER . '$~');
         self::registerSubTypeEnum(EarthPertinence::class, '~' . EarthPertinence::EARTH . '$~');
         self::registerSubTypeEnum(AirPertinence::class, '~' . AirPertinence::AIR . '$~');
+
+        return $registered;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::ELEMENTAL_PERTINENCE;
     }

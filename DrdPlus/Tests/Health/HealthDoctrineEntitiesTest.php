@@ -45,18 +45,17 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
         return [str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__)];
     }
 
-    protected function createEntitiesToPersist()
+    protected function createEntitiesToPersist(): array
     {
-        $health = new Health(
-            $woundBoundary = WoundBoundary::getIt(
-                Toughness::getIt(
-                    Strength::getIt(3),
-                    RaceCode::getIt(RaceCode::ORC),
-                    SubRaceCode::getIt(SubRaceCode::GOBLIN),
-                    Tables::getIt()
-                ),
+        $health = new Health();
+        $woundBoundary = WoundBoundary::getIt(
+            Toughness::getIt(
+                Strength::getIt(3),
+                RaceCode::getIt(RaceCode::ORC),
+                SubRaceCode::getIt(SubRaceCode::GOBLIN),
                 Tables::getIt()
-            )
+            ),
+            Tables::getIt()
         );
         $ordinaryWound = $health->createWound(
             new WoundSize(1),
@@ -84,7 +83,12 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             new Glare(
                 Contrast::createBySimplifiedRules(new LightingQuality(213), new LightingQuality(569)),
                 new RollOnSenses(
-                    Senses::getIt(Knack::getIt(1), $raceCode = RaceCode::getIt(RaceCode::ELF), $subraceCode = SubRaceCode::getIt(SubRaceCode::DARK), Tables::getIt()),
+                    Senses::getIt(
+                        Knack::getIt(1),
+                        $raceCode = RaceCode::getIt(RaceCode::ELF),
+                        $subraceCode = SubRaceCode::getIt(SubRaceCode::DARK),
+                        Tables::getIt()
+                    ),
                     Roller2d6DrdPlus::getIt()->roll(),
                     new BonusFromUsedRemarkableSense(
                         $raceCode,

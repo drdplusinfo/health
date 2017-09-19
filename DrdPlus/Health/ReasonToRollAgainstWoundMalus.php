@@ -15,12 +15,12 @@ class ReasonToRollAgainstWoundMalus extends StringEnum
     /**
      * @return ReasonToRollAgainstWoundMalus
      */
-    public static function getWoundReason()
+    public static function getWoundReason(): ReasonToRollAgainstWoundMalus
     {
         return static::getEnum(self::WOUND);
     }
 
-    public function becauseOfWound()
+    public function becauseOfWound(): bool
     {
         return $this->getValue() === self::WOUND;
     }
@@ -30,12 +30,12 @@ class ReasonToRollAgainstWoundMalus extends StringEnum
     /**
      * @return ReasonToRollAgainstWoundMalus
      */
-    public static function getHealReason()
+    public static function getHealReason(): ReasonToRollAgainstWoundMalus
     {
         return static::getEnum(self::HEAL);
     }
 
-    public function becauseOfHeal()
+    public function becauseOfHeal(): bool
     {
         return $this->getValue() === self::HEAL;
     }
@@ -45,7 +45,7 @@ class ReasonToRollAgainstWoundMalus extends StringEnum
      * @return ReasonToRollAgainstWoundMalus
      * @throws \DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus
      */
-    public static function getIt($reasonCode)
+    public static function getIt($reasonCode): ReasonToRollAgainstWoundMalus
     {
         return static::getEnum($reasonCode);
     }
@@ -55,7 +55,7 @@ class ReasonToRollAgainstWoundMalus extends StringEnum
      * @return string
      * @throws \DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): string
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
         if ($finalValue !== self::WOUND && $finalValue !== self::HEAL) {

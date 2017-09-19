@@ -11,15 +11,12 @@ class ThirstEffect extends AfflictionEffect
     /**
      * @return ThirstEffect
      */
-    public static function getIt()
+    public static function getIt(): ThirstEffect
     {
         return static::getEnum(self::THIRST_EFFECT);
     }
 
-    /**
-     * @return bool
-     */
-    public function isEffectiveEvenOnSuccessAgainstTrap()
+    public function isEffectiveEvenOnSuccessAgainstTrap(): bool
     {
         return true;
     }

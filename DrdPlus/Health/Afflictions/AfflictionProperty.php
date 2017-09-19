@@ -16,7 +16,7 @@ class AfflictionProperty extends StringEnum
      * @return AfflictionProperty
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionPropertyCode
      */
-    public static function getIt($propertyCode)
+    public static function getIt($propertyCode): AfflictionProperty
     {
         return self::getEnum($propertyCode);
     }
@@ -26,7 +26,7 @@ class AfflictionProperty extends StringEnum
      * @return string
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionPropertyCode
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): string
     {
         $enumFinalValue = parent::convertToEnumFinalValue($enumValue);
         if (!in_array($enumFinalValue, self::getProperties(), true)) {
@@ -52,7 +52,7 @@ class AfflictionProperty extends StringEnum
     /**
      * @return array|string[]
      */
-    public static function getProperties()
+    public static function getProperties(): array
     {
         return [
             self::STRENGTH,

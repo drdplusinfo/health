@@ -36,10 +36,10 @@ class HealthEnumsRegistrarTest extends TestCase
     }
 
     /**
-     * @param $dirToScan
+     * @param string $dirToScan
      * @return array|string[]
      */
-    private function getLocalEnumTypeClasses($dirToScan)
+    private function getLocalEnumTypeClasses(string $dirToScan): array
     {
         if (basename($dirToScan) === 'EnumTypes' && is_dir($dirToScan)) {
             return array_filter(
@@ -53,16 +53,16 @@ class HealthEnumsRegistrarTest extends TestCase
 
                         return $namespace . '\\' . $classBasename;
                     },
-                    $this->removeCurrentAndParentDir(scandir($dirToScan))
+                    $this->removeCurrentAndParentDir(scandir($dirToScan, SCANDIR_SORT_NONE))
                 ),
-                function($class) {
+                function ($class) {
                     return is_a($class, Type::class, true);
                 }
             );
         }
 
         $enumTypes = [];
-        foreach ($this->removeCurrentAndParentDir(scandir($dirToScan)) as $folder) {
+        foreach ($this->removeCurrentAndParentDir(scandir($dirToScan, SCANDIR_SORT_NONE)) as $folder) {
             if (is_dir($dirToScan . '/' . $folder)) {
                 foreach ($this->getLocalEnumTypeClasses($dirToScan . DIRECTORY_SEPARATOR . $folder) as $enumType) {
                     $enumTypes[] = $enumType;

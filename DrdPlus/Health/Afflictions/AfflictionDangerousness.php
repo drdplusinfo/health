@@ -12,7 +12,7 @@ class AfflictionDangerousness extends IntegerEnum
      * @param $value
      * @return AfflictionDangerousness
      */
-    public static function getIt($value)
+    public static function getIt($value): AfflictionDangerousness
     {
         return static::getEnum($value);
     }

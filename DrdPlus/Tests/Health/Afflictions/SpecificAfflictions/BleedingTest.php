@@ -19,7 +19,7 @@ class BleedingTest extends AfflictionByWoundTest
     /**
      * @return Bleeding
      */
-    protected function getSut()
+    protected function getSut(): Bleeding
     {
         $wound = $this->createWound();
         $woundBoundary = $this->createWoundBoundary(20);
@@ -56,8 +56,8 @@ class BleedingTest extends AfflictionByWoundTest
         self::assertInstanceOf(AfflictionDangerousness::class, $bleeding->getDangerousness());
         self::assertSame(15, $bleeding->getDangerousness()->getValue());
 
-        self::assertInstanceOf(AfflictionSize::class, $bleeding->getSize());
-        self::assertSame($filledHalfOfRows - 1, $bleeding->getSize()->getValue());
+        self::assertInstanceOf(AfflictionSize::class, $bleeding->getAfflictionSize());
+        self::assertSame($filledHalfOfRows - 1, $bleeding->getAfflictionSize()->getValue());
 
         self::assertInstanceOf(WaterPertinence::class, $bleeding->getElementalPertinence());
         self::assertTrue($bleeding->getElementalPertinence()->isMinus());

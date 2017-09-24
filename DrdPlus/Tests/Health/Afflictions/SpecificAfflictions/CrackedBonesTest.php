@@ -19,7 +19,7 @@ class CrackedBonesTest extends AfflictionByWoundTest
     /**
      * @return CrackedBones
      */
-    protected function getSut()
+    protected function getSut(): CrackedBones
     {
         $wound = $this->createWound();
         $woundBoundary = $this->createWoundBoundary(15);
@@ -56,8 +56,8 @@ class CrackedBonesTest extends AfflictionByWoundTest
         self::assertInstanceOf(AfflictionDangerousness::class, $crackedBones->getDangerousness());
         self::assertSame(15, $crackedBones->getDangerousness()->getValue());
 
-        self::assertInstanceOf(AfflictionSize::class, $crackedBones->getSize());
-        self::assertSame($filledHalfOfRows * 2, $crackedBones->getSize()->getValue());
+        self::assertInstanceOf(AfflictionSize::class, $crackedBones->getAfflictionSize());
+        self::assertSame($filledHalfOfRows * 2, $crackedBones->getAfflictionSize()->getValue());
 
         self::assertInstanceOf(EarthPertinence::class, $crackedBones->getElementalPertinence());
         self::assertTrue($crackedBones->getElementalPertinence()->isMinus());

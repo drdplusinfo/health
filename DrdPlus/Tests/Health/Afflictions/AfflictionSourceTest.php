@@ -48,7 +48,7 @@ class AfflictionSourceTest extends TestCase
     /**
      * @return array|string[]
      */
-    private function getSourceCodes()
+    private function getSourceCodes(): array
     {
         return [
             'active',

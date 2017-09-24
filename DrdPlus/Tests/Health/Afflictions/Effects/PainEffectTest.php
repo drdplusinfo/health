@@ -23,7 +23,7 @@ class PainEffectTest extends AfflictionEffectTest
     {
         $painEffect = PainEffect::getIt();
         $pain = $this->mockery(Pain::class);
-        $pain->shouldReceive('getSize')
+        $pain->shouldReceive('getAfflictionSize')
             ->andReturn(AfflictionSize::getIt(123));
         /** @var Pain $pain */
         self::assertSame(-123, $painEffect->getMalusFromPain($pain));

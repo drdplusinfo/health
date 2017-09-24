@@ -21,7 +21,7 @@ abstract class WoundTest extends TestWithMockery
      * @test
      * @return Wound
      */
-    public function I_can_use_it()
+    public function I_can_use_it(): Wound
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $this->createWound(

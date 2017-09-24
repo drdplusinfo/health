@@ -18,7 +18,7 @@ use DrdPlus\Properties\Derived\WoundBoundary;
 
 /**
  * @ORM\Entity
- * @method CrackedBonesEffect getAfflictionEffect()
+ * @method CrackedBonesEffect getAfflictionEffect(): int
  */
 class CrackedBones extends AfflictionByWound
 {
@@ -30,7 +30,7 @@ class CrackedBones extends AfflictionByWound
      * @return CrackedBones
      * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
-    public static function createIt(SeriousWound $seriousWound, WoundBoundary $woundBoundary)
+    public static function createIt(SeriousWound $seriousWound, WoundBoundary $woundBoundary): CrackedBones
     {
         // see PPH page 78 right column, Cracked bones
         $sizeValue = 2 * $seriousWound
@@ -57,7 +57,7 @@ class CrackedBones extends AfflictionByWound
     /**
      * @return int
      */
-    public function getHealMalus()
+    public function getHealMalus(): int
     {
         return $this->getAfflictionEffect()->getHealingMalus($this);
     }
@@ -65,7 +65,7 @@ class CrackedBones extends AfflictionByWound
     /**
      * @return int
      */
-    public function getMalusToActivities()
+    public function getMalusToActivities(): int
     {
         return 0;
     }
@@ -73,7 +73,7 @@ class CrackedBones extends AfflictionByWound
     /**
      * @return int
      */
-    public function getStrengthMalus()
+    public function getStrengthMalus(): int
     {
         return 0;
     }
@@ -81,7 +81,7 @@ class CrackedBones extends AfflictionByWound
     /**
      * @return int
      */
-    public function getAgilityMalus()
+    public function getAgilityMalus(): int
     {
         return 0;
     }
@@ -89,7 +89,7 @@ class CrackedBones extends AfflictionByWound
     /**
      * @return int
      */
-    public function getKnackMalus()
+    public function getKnackMalus(): int
     {
         return 0;
     }

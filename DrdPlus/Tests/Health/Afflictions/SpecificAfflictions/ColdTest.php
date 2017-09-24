@@ -19,7 +19,7 @@ class ColdTest extends AfflictionByWoundTest
     /**
      * @return Cold
      */
-    protected function getSut()
+    protected function getSut(): Cold
     {
         return Cold::createIt($this->createWound());
     }
@@ -49,8 +49,8 @@ class ColdTest extends AfflictionByWoundTest
         self::assertInstanceOf(AfflictionDangerousness::class, $cold->getDangerousness());
         self::assertSame(7, $cold->getDangerousness()->getValue());
 
-        self::assertInstanceOf(AfflictionSize::class, $cold->getSize());
-        self::assertSame(4, $cold->getSize()->getValue());
+        self::assertInstanceOf(AfflictionSize::class, $cold->getAfflictionSize());
+        self::assertSame(4, $cold->getAfflictionSize()->getValue());
 
         self::assertInstanceOf(WaterPertinence::class, $cold->getElementalPertinence());
         self::assertTrue($cold->getElementalPertinence()->isPlus());

@@ -15,7 +15,7 @@ class SeriousWoundTest extends WoundTest
      * @param SeriousWoundOrigin $seriousWoundOrigin
      * @return SeriousWound
      */
-    protected function createWound(Health $health, WoundSize $woundSize, SeriousWoundOrigin $seriousWoundOrigin)
+    protected function createWound(Health $health, WoundSize $woundSize, SeriousWoundOrigin $seriousWoundOrigin): SeriousWound
     {
         return new SeriousWound($health, $woundSize, $seriousWoundOrigin);
     }

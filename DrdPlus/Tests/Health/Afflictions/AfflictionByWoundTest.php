@@ -97,11 +97,11 @@ abstract class AfflictionByWoundTest extends AfflictionTest
         $woundBoundary = $this->mockery(WoundBoundary::class);
         $woundBoundary->shouldReceive('getValue')
             ->andReturn(5);
-        /** @var WoundBoundary $woundBoundary */
-        $health = new Health($woundBoundary);
+        $health = new Health();
         $woundSize = $this->mockery(WoundSize::class);
         $woundSize->shouldReceive('getValue')
             ->andReturn(5);
+        /** @var WoundBoundary $woundBoundary */
         /** @var WoundSize $woundSize */
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWound = $health->createWound(

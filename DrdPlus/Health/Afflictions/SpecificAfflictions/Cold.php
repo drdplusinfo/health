@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * See PPH page 78, left column
  *
  * @ORM\Entity
- * @method ColdEffect getAfflictionEffect()
+ * @method ColdEffect getAfflictionEffect(): int
  */
 class Cold extends AfflictionByWound
 {
@@ -30,7 +30,7 @@ class Cold extends AfflictionByWound
      * @return Cold
      * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      */
-    public static function createIt(SeriousWound $seriousWound)
+    public static function createIt(SeriousWound $seriousWound): Cold
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
@@ -51,7 +51,7 @@ class Cold extends AfflictionByWound
     /**
      * @return int
      */
-    public function getHealMalus()
+    public function getHealMalus(): int
     {
         return 0;
     }
@@ -59,7 +59,7 @@ class Cold extends AfflictionByWound
     /**
      * @return int
      */
-    public function getMalusToActivities()
+    public function getMalusToActivities(): int
     {
         return 0;
     }
@@ -67,7 +67,7 @@ class Cold extends AfflictionByWound
     /**
      * @return int
      */
-    public function getStrengthMalus()
+    public function getStrengthMalus(): int
     {
         return $this->getAfflictionEffect()->getStrengthMalus($this);
     }
@@ -75,7 +75,7 @@ class Cold extends AfflictionByWound
     /**
      * @return int
      */
-    public function getAgilityMalus()
+    public function getAgilityMalus(): int
     {
         return $this->getAfflictionEffect()->getAgilityMalus($this);
     }
@@ -83,7 +83,7 @@ class Cold extends AfflictionByWound
     /**
      * @return int
      */
-    public function getKnackMalus()
+    public function getKnackMalus(): int
     {
         return $this->getAfflictionEffect()->getKnackMalus($this);
     }

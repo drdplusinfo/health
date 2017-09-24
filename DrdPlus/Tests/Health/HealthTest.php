@@ -4,6 +4,7 @@ namespace DrdPlus\Tests\Health;
 use Drd\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
 use Drd\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
+use DrdPlus\Health\Afflictions\AfflictionName;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
 use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\HealingPower;
@@ -43,7 +44,7 @@ class HealthTest extends TestWithMockery
      * @param WoundBoundary $woundBoundary
      * @return Health
      */
-    private function createHealthToTest(WoundBoundary $woundBoundary)
+    private function createHealthToTest(WoundBoundary $woundBoundary): Health
     {
         $health = new Health();
         $this->assertUnwounded($health, $woundBoundary);
@@ -821,23 +822,23 @@ class HealthTest extends TestWithMockery
     }
 
     /**
-     * @param Wound $wound
+     * @param SeriousWound $seriousWound
      * @param array $values
      * @return \Mockery\MockInterface|AfflictionByWound
      */
-    private function createAffliction(Wound $wound, array $values = [])
+    private function createAffliction(SeriousWound $seriousWound, array $values = [])
     {
-        $affliction = $this->mockery(AfflictionByWound::class);
-        $affliction->shouldReceive('getSeriousWound')
-            ->andReturn($wound);
-        $affliction->shouldReceive('getName')
-            ->andReturn('some terrible affliction');
+        $afflictionByWound = $this->mockery(AfflictionByWound::class);
+        $afflictionByWound->shouldReceive('getSeriousWound')
+            ->andReturn($seriousWound);
+        $afflictionByWound->shouldReceive('getName')
+            ->andReturn($this->mockery(AfflictionName::class));
         foreach ($values as $valueName => $value) {
-            $affliction->shouldReceive('get' . ucfirst($valueName))
+            $afflictionByWound->shouldReceive('get' . ucfirst($valueName))
                 ->andReturn($value);
         }
 
-        return $affliction;
+        return $afflictionByWound;
     }
 
     /**
@@ -847,17 +848,17 @@ class HealthTest extends TestWithMockery
     public function I_can_not_add_affliction_of_unknown_wound()
     {
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(5));
-        $affliction = $this->createAffliction($this->createWound());
+        $affliction = $this->createAffliction($this->createSeriousWound());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->addAffliction($affliction);
     }
 
     /**
-     * @return \Mockery\MockInterface|Wound
+     * @return \Mockery\MockInterface|SeriousWound
      */
-    private function createWound()
+    private function createSeriousWound()
     {
-        $wound = $this->mockery(Wound::class);
+        $wound = $this->mockery(SeriousWound::class);
         $wound->shouldReceive('getHealth')
             ->andReturn($this->mockery(Health::class));
         $wound->shouldReceive('getWoundOrigin')
@@ -1393,15 +1394,15 @@ class HealthTest extends TestWithMockery
     }
 
     /**
-     * @param Wound $wound
+     * @param SeriousWound $seriousWound
      * @param array $maluses
      * @return \Mockery\MockInterface|Pain
      */
-    private function createPain(Wound $wound, array $maluses = [])
+    private function createPain(SeriousWound $seriousWound, array $maluses = [])
     {
         $pain = $this->mockery(Pain::class);
         $pain->shouldReceive('getSeriousWound')
-            ->andReturn($wound);
+            ->andReturn($seriousWound);
         foreach ($maluses as $nameOfValue => $otherValue) {
             $pain->shouldReceive('get' . ucfirst($nameOfValue))
                 ->andReturn($otherValue);

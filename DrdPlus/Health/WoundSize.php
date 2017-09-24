@@ -13,7 +13,7 @@ class WoundSize extends PositiveIntegerObject
      * @throws \Granam\Integer\Tools\Exceptions\ValueLostOnCast
      * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
      */
-    public static function createIt($value)
+    public static function createIt($value): WoundSize
     {
         return new static($value);
     }

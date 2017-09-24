@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * See PPH page 78, right column
  *
  * @ORM\Entity
- * @method SeveredArmEffect getAfflictionEffect()
+ * @method SeveredArmEffect getAfflictionEffect(): int
  */
 class SeveredArm extends AfflictionByWound
 {
@@ -37,7 +37,7 @@ class SeveredArm extends AfflictionByWound
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
-    public static function createIt(SeriousWound $seriousWound, $sizeValue = self::COMPLETELY_SEVERED_ARM_SIZE)
+    public static function createIt(SeriousWound $seriousWound, $sizeValue = self::COMPLETELY_SEVERED_ARM_SIZE): SeveredArm
     {
         $size = AfflictionSize::getIt($sizeValue); // completely severed arm has +6, partially related lower
         if ($size->getValue() > self::COMPLETELY_SEVERED_ARM_SIZE) {
@@ -46,6 +46,7 @@ class SeveredArm extends AfflictionByWound
             );
         }
 
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $seriousWound,
             AfflictionProperty::getIt(AfflictionProperty::TOUGHNESS), // irrelevant, full deformation can not be avoided
@@ -68,7 +69,7 @@ class SeveredArm extends AfflictionByWound
     /**
      * @return int
      */
-    public function getHealMalus()
+    public function getHealMalus(): int
     {
         return 0;
     }
@@ -76,7 +77,7 @@ class SeveredArm extends AfflictionByWound
     /**
      * @return int
      */
-    public function getMalusToActivities()
+    public function getMalusToActivities(): int
     {
         return 0;
     }
@@ -84,7 +85,7 @@ class SeveredArm extends AfflictionByWound
     /**
      * @return int
      */
-    public function getStrengthMalus()
+    public function getStrengthMalus(): int
     {
         return $this->getAfflictionEffect()->getStrengthMalus($this);
     }
@@ -92,7 +93,7 @@ class SeveredArm extends AfflictionByWound
     /**
      * @return int
      */
-    public function getAgilityMalus()
+    public function getAgilityMalus(): int
     {
         return 0;
     }
@@ -100,7 +101,7 @@ class SeveredArm extends AfflictionByWound
     /**
      * @return int
      */
-    public function getKnackMalus()
+    public function getKnackMalus(): int
     {
         return $this->getAfflictionEffect()->getKnackMalus($this);
     }

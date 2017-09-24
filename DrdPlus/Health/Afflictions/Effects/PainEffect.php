@@ -32,6 +32,6 @@ class PainEffect extends AfflictionEffect
      */
     public function getMalusFromPain(Pain $pain): int
     {
-        return -$pain->getSize()->getValue();
+        return -$pain->getAfflictionSize()->getValue();
     }
 }

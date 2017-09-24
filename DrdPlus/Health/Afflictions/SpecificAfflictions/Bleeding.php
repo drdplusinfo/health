@@ -21,7 +21,7 @@ use DrdPlus\Properties\Derived\WoundBoundary;
  * See PPH page 78, right column
  *
  * @ORM\Entity
- * @method BleedingEffect getAfflictionEffect()
+ * @method BleedingEffect getAfflictionEffect(): int
  */
 class Bleeding extends AfflictionByWound
 {
@@ -36,7 +36,7 @@ class Bleeding extends AfflictionByWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      */
-    public static function createIt(SeriousWound $seriousWound, WoundBoundary $woundBoundary)
+    public static function createIt(SeriousWound $seriousWound, WoundBoundary $woundBoundary): Bleeding
     {
         // see PPH page 78 right column, Bleeding
         $bleedingSizeValue = $seriousWound->getHealth()->getGridOfWounds()
@@ -69,7 +69,7 @@ class Bleeding extends AfflictionByWound
     /**
      * @return int
      */
-    public function getHealMalus()
+    public function getHealMalus(): int
     {
         return 0;
     }
@@ -77,7 +77,7 @@ class Bleeding extends AfflictionByWound
     /**
      * @return int
      */
-    public function getMalusToActivities()
+    public function getMalusToActivities(): int
     {
         return 0;
     }
@@ -85,7 +85,7 @@ class Bleeding extends AfflictionByWound
     /**
      * @return int
      */
-    public function getStrengthMalus()
+    public function getStrengthMalus(): int
     {
         return 0;
     }
@@ -93,7 +93,7 @@ class Bleeding extends AfflictionByWound
     /**
      * @return int
      */
-    public function getAgilityMalus()
+    public function getAgilityMalus(): int
     {
         return 0;
     }
@@ -101,7 +101,7 @@ class Bleeding extends AfflictionByWound
     /**
      * @return int
      */
-    public function getKnackMalus()
+    public function getKnackMalus(): int
     {
         return 0;
     }

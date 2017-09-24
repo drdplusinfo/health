@@ -11,7 +11,6 @@ use DrdPlus\Health\Afflictions\Effects\HungerEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Hunger;
 use DrdPlus\Health\Health;
-use DrdPlus\Properties\Derived\WoundBoundary;
 use DrdPlus\Tests\Health\Afflictions\AfflictionTest;
 
 class HungerTest extends AfflictionTest
@@ -19,9 +18,9 @@ class HungerTest extends AfflictionTest
     /**
      * @return Hunger
      */
-    protected function getSut()
+    protected function getSut(): Hunger
     {
-        return Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(4));
+        return Hunger::createIt(new Health(), $this->createAfflictionSize(4));
     }
 
     /**
@@ -30,22 +29,9 @@ class HungerTest extends AfflictionTest
     public function It_is_linked_with_health_immediately()
     {
 
-        $health = new Health($this->createWoundBoundary());
+        $health = new Health();
         $hunger = Hunger::createIt($health, $this->createAfflictionSize());
         self::assertSame([$hunger], $health->getAfflictions()->toArray());
-    }
-
-    /**
-     * @param int $value
-     * @return \Mockery\MockInterface|WoundBoundary
-     */
-    private function createWoundBoundary($value = 5)
-    {
-        $woundBoundary = $this->mockery(WoundBoundary::class);
-        $woundBoundary->shouldReceive('getValue')
-            ->andReturn($value);
-
-        return $woundBoundary;
     }
 
     /**
@@ -53,7 +39,7 @@ class HungerTest extends AfflictionTest
      */
     public function I_can_use_it()
     {
-        $health = new Health($this->createWoundBoundary());
+        $health = new Health();
         $hunger = Hunger::createIt($health, $this->createAfflictionSize(7));
         self::assertInstanceOf(Hunger::class, $hunger);
         $anotherHunger = Hunger::createIt($health, $this->createAfflictionSize());
@@ -74,7 +60,7 @@ class HungerTest extends AfflictionTest
      */
     public function I_can_get_heal_malus()
     {
-        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(546));
+        $hunger = Hunger::createIt(new Health(), $this->createAfflictionSize(546));
         self::assertSame(0, $hunger->getHealMalus());
     }
 
@@ -83,7 +69,7 @@ class HungerTest extends AfflictionTest
      */
     public function I_can_get_malus_to_activities()
     {
-        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(987));
+        $hunger = Hunger::createIt(new Health(), $this->createAfflictionSize(987));
         self::assertSame(0, $hunger->getMalusToActivities());
     }
 
@@ -92,7 +78,7 @@ class HungerTest extends AfflictionTest
      */
     public function I_can_get_strength_malus()
     {
-        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(3));
+        $hunger = Hunger::createIt(new Health(), $this->createAfflictionSize(3));
         self::assertInstanceOf(Hunger::class, $hunger);
         self::assertSame(-2, $hunger->getStrengthMalus());
     }
@@ -102,7 +88,7 @@ class HungerTest extends AfflictionTest
      */
     public function I_can_get_agility_malus()
     {
-        $health = new Health($this->createWoundBoundary());
+        $health = new Health();
         $hunger = Hunger::createIt($health, $this->createAfflictionSize(6));
         self::assertSame(-3, $hunger->getAgilityMalus());
     }
@@ -112,25 +98,25 @@ class HungerTest extends AfflictionTest
      */
     public function I_can_get_knack_malus()
     {
-        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(21));
+        $hunger = Hunger::createIt(new Health(), $this->createAfflictionSize(21));
         self::assertSame(-11, $hunger->getKnackMalus());
     }
 
     public function I_can_get_will_malus()
     {
-        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(123541));
+        $hunger = Hunger::createIt(new Health(), $this->createAfflictionSize(123541));
         self::assertSame(0, $hunger->getKnackMalus());
     }
 
     public function I_can_get_intelligence_malus()
     {
-        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(65178));
+        $hunger = Hunger::createIt(new Health(), $this->createAfflictionSize(65178));
         self::assertSame(0, $hunger->getKnackMalus());
     }
 
     public function I_can_get_charisma_malus()
     {
-        $hunger = Hunger::createIt(new Health($this->createWoundBoundary()), $this->createAfflictionSize(782));
+        $hunger = Hunger::createIt(new Health(), $this->createAfflictionSize(782));
         self::assertSame(0, $hunger->getKnackMalus());
     }
 

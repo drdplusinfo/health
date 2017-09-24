@@ -70,7 +70,7 @@ class GridOfWoundsTest extends TestWithMockery
      * @param array|int[] $woundValues
      * @return Wound[]
      */
-    private function createWounds(array $woundValues)
+    private function createWounds(array $woundValues): array
     {
         $wounds = [];
         foreach ($woundValues as $woundValue) {

@@ -14,7 +14,7 @@ use DrdPlus\Health\Afflictions\EnumTypes\AfflictionVirulenceType;
 
 class HealthEnumsRegistrar
 {
-    public static function registerAll()
+    public static function registerAll(): void
     {
         DateIntervalType::registerSelf();
 

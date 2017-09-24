@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * see PPH page 79 left column
  *
  * @ORM\Entity
- * @method PainEffect getAfflictionEffect()
+ * @method PainEffect getAfflictionEffect(): int
  */
 class Pain extends AfflictionByWound
 {
@@ -40,8 +40,9 @@ class Pain extends AfflictionByWound
         AfflictionVirulence $virulence,
         AfflictionSize $painSize,
         ElementalPertinence $elementalPertinence
-    )
+    ): Pain
     {
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $seriousWound,
             AfflictionProperty::getIt(PropertyCode::WILL),
@@ -60,7 +61,7 @@ class Pain extends AfflictionByWound
     /**
      * @return int
      */
-    public function getHealMalus()
+    public function getHealMalus(): int
     {
         return 0;
     }
@@ -68,7 +69,7 @@ class Pain extends AfflictionByWound
     /**
      * @return int
      */
-    public function getMalusToActivities()
+    public function getMalusToActivities(): int
     {
         // this malus affects activities, not passive actions like be healed
         return $this->getAfflictionEffect()->getMalusFromPain($this);
@@ -77,7 +78,7 @@ class Pain extends AfflictionByWound
     /**
      * @return int
      */
-    public function getStrengthMalus()
+    public function getStrengthMalus(): int
     {
         return 0;
     }
@@ -85,7 +86,7 @@ class Pain extends AfflictionByWound
     /**
      * @return int
      */
-    public function getAgilityMalus()
+    public function getAgilityMalus(): int
     {
         return 0;
     }
@@ -93,7 +94,7 @@ class Pain extends AfflictionByWound
     /**
      * @return int
      */
-    public function getKnackMalus()
+    public function getKnackMalus(): int
     {
         return 0;
     }

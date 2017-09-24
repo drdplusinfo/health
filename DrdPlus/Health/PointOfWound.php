@@ -30,10 +30,7 @@ class PointOfWound extends StrictObject implements Entity, IntegerInterface
         $this->wound = $wound;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId():? int
     {
         return $this->id;
     }
@@ -41,7 +38,7 @@ class PointOfWound extends StrictObject implements Entity, IntegerInterface
     /**
      * @return Wound
      */
-    public function getWound()
+    public function getWound(): Wound
     {
         return $this->wound;
     }
@@ -49,7 +46,7 @@ class PointOfWound extends StrictObject implements Entity, IntegerInterface
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return 1;
     }

@@ -33,7 +33,7 @@ class SeveredArmEffectTest extends AfflictionEffectTest
     private function createSeveredArm($serverArmSize)
     {
         $severedArm = $this->mockery(SeveredArm::class);
-        $severedArm->shouldReceive('getSize')
+        $severedArm->shouldReceive('getAfflictionSize')
             ->andReturn(AfflictionSize::getIt($serverArmSize));
 
         return $severedArm;

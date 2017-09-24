@@ -16,7 +16,7 @@ class PainTest extends AfflictionByWoundTest
     /**
      * @return Pain
      */
-    protected function getSut()
+    protected function getSut(): Pain
     {
         return Pain::createIt(
             $this->createWound(),
@@ -56,7 +56,7 @@ class PainTest extends AfflictionByWoundTest
         self::assertInstanceOf(AfflictionDangerousness::class, $someTerriblePain->getDangerousness());
         self::assertSame($painValue + 10, $someTerriblePain->getDangerousness()->getValue());
 
-        self::assertSame($size, $someTerriblePain->getSize());
+        self::assertSame($size, $someTerriblePain->getAfflictionSize());
 
         self::assertSame($elementalPertinence, $someTerriblePain->getElementalPertinence());
 

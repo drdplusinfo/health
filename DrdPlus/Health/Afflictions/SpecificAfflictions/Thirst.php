@@ -27,7 +27,7 @@ class Thirst extends Affliction
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
-    public static function createIt(Health $health, AfflictionSize $daysOfThirst)
+    public static function createIt(Health $health, AfflictionSize $daysOfThirst): Thirst
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
@@ -48,7 +48,7 @@ class Thirst extends Affliction
     /**
      * @return int
      */
-    public function getHealMalus()
+    public function getHealMalus(): int
     {
         return 0;
     }
@@ -56,7 +56,7 @@ class Thirst extends Affliction
     /**
      * @return int
      */
-    public function getMalusToActivities()
+    public function getMalusToActivities(): int
     {
         return 0;
     }
@@ -64,49 +64,49 @@ class Thirst extends Affliction
     /**
      * @return int
      */
-    public function getStrengthMalus()
+    public function getStrengthMalus(): int
     {
-        return -$this->getSize()->getValue();
+        return -$this->getAfflictionSize()->getValue();
     }
 
     /**
      * @return int
      */
-    public function getAgilityMalus()
+    public function getAgilityMalus(): int
     {
-        return -$this->getSize()->getValue();
+        return -$this->getAfflictionSize()->getValue();
     }
 
     /**
      * @return int
      */
-    public function getKnackMalus()
+    public function getKnackMalus(): int
     {
-        return -$this->getSize()->getValue();
+        return -$this->getAfflictionSize()->getValue();
     }
 
     /**
      * @return int
      */
-    public function getWillMalus()
+    public function getWillMalus(): int
     {
-        return -$this->getSize()->getValue();
+        return -$this->getAfflictionSize()->getValue();
     }
 
     /**
      * @return int
      */
-    public function getIntelligenceMalus()
+    public function getIntelligenceMalus(): int
     {
-        return -$this->getSize()->getValue();
+        return -$this->getAfflictionSize()->getValue();
     }
 
     /**
      * @return int
      */
-    public function getCharismaMalus()
+    public function getCharismaMalus(): int
     {
-        return -$this->getSize()->getValue();
+        return -$this->getAfflictionSize()->getValue();
     }
 
 }

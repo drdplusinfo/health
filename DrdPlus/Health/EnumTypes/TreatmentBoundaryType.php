@@ -10,7 +10,7 @@ class TreatmentBoundaryType extends IntegerEnumType
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::TREATMENT_BOUNDARY;
     }

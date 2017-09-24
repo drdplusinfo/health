@@ -10,7 +10,7 @@ class ReasonToRollAgainstWoundMalusType extends StringEnumType
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::REASON_TO_ROLL_AGAINST_WOUND_MALUS;
     }

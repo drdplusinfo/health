@@ -18,7 +18,7 @@ class SeveredArmTest extends AfflictionByWoundTest
     /**
      * @return SeveredArm
      */
-    protected function getSut()
+    protected function getSut(): SeveredArm
     {
         return SeveredArm::createIt($this->createWound());
     }
@@ -46,8 +46,8 @@ class SeveredArmTest extends AfflictionByWoundTest
 
         self::assertInstanceOf(AfflictionDangerousness::class, $severedArm->getDangerousness());
 
-        self::assertInstanceOf(AfflictionSize::class, $severedArm->getSize());
-        self::assertSame(6 /* by default*/, $severedArm->getSize()->getValue());
+        self::assertInstanceOf(AfflictionSize::class, $severedArm->getAfflictionSize());
+        self::assertSame(6 /* by default*/, $severedArm->getAfflictionSize()->getValue());
 
         self::assertInstanceOf(EarthPertinence::class, $severedArm->getElementalPertinence());
         self::assertTrue($severedArm->getElementalPertinence()->isMinus());
@@ -81,8 +81,8 @@ class SeveredArmTest extends AfflictionByWoundTest
 
         self::assertInstanceOf(AfflictionDangerousness::class, $severedArm->getDangerousness());
 
-        self::assertInstanceOf(AfflictionSize::class, $severedArm->getSize());
-        self::assertSame($sizeValue, $severedArm->getSize()->getValue());
+        self::assertInstanceOf(AfflictionSize::class, $severedArm->getAfflictionSize());
+        self::assertSame($sizeValue, $severedArm->getAfflictionSize()->getValue());
 
         self::assertInstanceOf(EarthPertinence::class, $severedArm->getElementalPertinence());
         self::assertTrue($severedArm->getElementalPertinence()->isMinus());

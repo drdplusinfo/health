@@ -9,7 +9,7 @@ class ExceptionsHierarchyTest extends AbstractExceptionsHierarchyTest
     /**
      * @return string
      */
-    protected function getTestedNamespace()
+    protected function getTestedNamespace(): string
     {
         return str_replace('\Tests', '', __NAMESPACE__);
     }
@@ -17,7 +17,7 @@ class ExceptionsHierarchyTest extends AbstractExceptionsHierarchyTest
     /**
      * @return string
      */
-    protected function getRootNamespace()
+    protected function getRootNamespace(): string
     {
         return (new \ReflectionClass(Health::class))->getNamespaceName();
     }

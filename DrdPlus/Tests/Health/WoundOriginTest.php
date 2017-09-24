@@ -9,7 +9,7 @@ abstract class WoundOriginTest extends TestWithMockery
     /**
      * @return array|\string[]
      */
-    protected function getSeriousWoundOriginCodes()
+    protected function getSeriousWoundOriginCodes(): array
     {
         return WoundsOriginCode::getPossibleValues(); // all of them can be serious in fact
     }

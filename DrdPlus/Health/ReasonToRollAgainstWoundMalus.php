@@ -54,6 +54,7 @@ class ReasonToRollAgainstWoundMalus extends StringEnum
      * @param bool|float|int|ScalarInterface|string $enumValue
      * @return string
      * @throws \DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus
+     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {

@@ -15,7 +15,7 @@ class CrackedBonesEffectTest extends AfflictionEffectTest
         $crackedBonesEffect = CrackedBonesEffect::getIt();
         /** @var CrackedBones|\Mockery\MockInterface $crackedBones */
         $crackedBones = $this->mockery(CrackedBones::class);
-        $crackedBones->shouldReceive('getSize')
+        $crackedBones->shouldReceive('getAfflictionSize')
             ->andReturn(AfflictionSize::getIt(123));
         self::assertSame(-123, $crackedBonesEffect->getHealingMalus($crackedBones));
     }

@@ -28,7 +28,7 @@ class Hunger extends Affliction
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
-    public static function createIt(Health $health, AfflictionSize $daysOfHunger)
+    public static function createIt(Health $health, AfflictionSize $daysOfHunger): Hunger
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
@@ -49,7 +49,7 @@ class Hunger extends Affliction
     /**
      * @return int
      */
-    public function getHealMalus()
+    public function getHealMalus(): int
     {
         return 0;
     }
@@ -57,7 +57,7 @@ class Hunger extends Affliction
     /**
      * @return int
      */
-    public function getMalusToActivities()
+    public function getMalusToActivities(): int
     {
         return 0;
     }
@@ -65,39 +65,31 @@ class Hunger extends Affliction
     /**
      * @return int
      */
-    public function getStrengthMalus()
+    public function getStrengthMalus(): int
     {
-        return -SumAndRound::half($this->getSize()->getValue());
+        return -SumAndRound::half($this->getAfflictionSize()->getValue());
     }
 
     /**
      * @return int
      */
-    public function getAgilityMalus()
+    public function getAgilityMalus(): int
     {
-        return -SumAndRound::half($this->getSize()->getValue());
+        return -SumAndRound::half($this->getAfflictionSize()->getValue());
     }
 
     /**
      * @return int
      */
-    public function getKnackMalus()
+    public function getKnackMalus(): int
     {
-        return -SumAndRound::half($this->getSize()->getValue());
+        return -SumAndRound::half($this->getAfflictionSize()->getValue());
     }
 
     /**
      * @return int
      */
-    public function getWillMalus()
-    {
-        return 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIntelligenceMalus()
+    public function getWillMalus(): int
     {
         return 0;
     }
@@ -105,7 +97,15 @@ class Hunger extends Affliction
     /**
      * @return int
      */
-    public function getCharismaMalus()
+    public function getIntelligenceMalus(): int
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCharismaMalus(): int
     {
         return 0;
     }

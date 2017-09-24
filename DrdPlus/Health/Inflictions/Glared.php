@@ -46,7 +46,7 @@ class Glared extends StrictObject implements Entity
      * @param Health $health
      * @return Glared
      */
-    public static function createWithoutGlare(Health $health)
+    public static function createWithoutGlare(Health $health): Glared
     {
         return new static(0, 0, $health);
     }
@@ -56,7 +56,7 @@ class Glared extends StrictObject implements Entity
      * @param Health $health
      * @return Glared
      */
-    public static function createFromGlare(Glare $glare, Health $health)
+    public static function createFromGlare(Glare $glare, Health $health): Glared
     {
         return new static($glare->getMalus(), $glare->isShined(), $health);
     }
@@ -74,10 +74,7 @@ class Glared extends StrictObject implements Entity
         $this->health = $health;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId():? int
     {
         return $this->id;
     }
@@ -87,7 +84,7 @@ class Glared extends StrictObject implements Entity
      *
      * @return int negative integer or zero
      */
-    public function getCurrentMalus()
+    public function getCurrentMalus(): int
     {
         if ($this->getGettingUsedToForRounds() === 0) {
             return $this->malus;
@@ -104,7 +101,7 @@ class Glared extends StrictObject implements Entity
     /**
      * @return bool
      */
-    public function isShined()
+    public function isShined(): bool
     {
         return $this->shined;
     }
@@ -112,7 +109,7 @@ class Glared extends StrictObject implements Entity
     /**
      * @return bool
      */
-    public function isBlinded()
+    public function isBlinded(): bool
     {
         return !$this->isShined();
     }
@@ -120,7 +117,7 @@ class Glared extends StrictObject implements Entity
     /**
      * @return Health
      */
-    public function getHealth()
+    public function getHealth(): Health
     {
         return $this->health;
     }
@@ -164,7 +161,7 @@ class Glared extends StrictObject implements Entity
      *
      * @return int
      */
-    public function getGettingUsedToForRounds()
+    public function getGettingUsedToForRounds(): int
     {
         return $this->gettingUsedToForRounds;
     }

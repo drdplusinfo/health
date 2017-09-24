@@ -44,7 +44,7 @@ class BleedingEffect extends AfflictionEffect
     public function bleed(Bleeding $bleeding, WoundsTable $woundsTable, WoundBoundary $woundBoundary): Wound
     {
         // see PPH page 78 right column, Bleeding
-        $effectSize = $bleeding->getSize()->getValue() - 6;
+        $effectSize = $bleeding->getAfflictionSize()->getValue() - 6;
         $woundsFromTable = $woundsTable->toWounds(new WoundsBonus($effectSize, $woundsTable));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $woundSize = new WoundSize($woundsFromTable->getValue());

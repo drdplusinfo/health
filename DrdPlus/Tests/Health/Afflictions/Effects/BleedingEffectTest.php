@@ -28,7 +28,8 @@ class BleedingEffectTest extends AfflictionEffectTest
     public function I_can_get_wound_caused_by_bleeding()
     {
         $bleedingEffect = BleedingEffect::getIt();
-        $health = new Health($woundBoundary = $this->createWoundLimitBoundary(10));
+        $health = new Health();
+        $woundBoundary = $this->createWoundLimitBoundary(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $woundCausedBleeding = $health->createWound(
             new WoundSize(25),

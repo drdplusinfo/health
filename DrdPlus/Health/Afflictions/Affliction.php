@@ -65,7 +65,7 @@ abstract class Affliction extends StrictObject implements Entity
      * @var AfflictionSize
      * @ORM\Column(type="affliction_size")
      */
-    private $size;
+    private $afflictionSize;
     /**
      * @var ElementalPertinence
      * @ORM\Column(type="elemental_pertinence")
@@ -124,7 +124,7 @@ abstract class Affliction extends StrictObject implements Entity
         $this->domain = $domain;
         $this->virulence = $virulence;
         $this->source = $source;
-        $this->size = $size;
+        $this->afflictionSize = $size;
         $this->elementalPertinence = $elementalPertinence;
         $this->afflictionEffect = $effect;
         $this->outbreakPeriod = $outbreakPeriod;
@@ -134,7 +134,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return int
      */
-    public function getId()
+    public function getId():? int
     {
         return $this->id;
     }
@@ -142,7 +142,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return AfflictionProperty
      */
-    public function getProperty()
+    public function getProperty(): AfflictionProperty
     {
         return $this->property;
     }
@@ -150,7 +150,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return AfflictionDangerousness
      */
-    public function getDangerousness()
+    public function getDangerousness(): AfflictionDangerousness
     {
         return $this->dangerousness;
     }
@@ -158,7 +158,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return AfflictionDomain
      */
-    public function getDomain()
+    public function getDomain(): AfflictionDomain
     {
         return $this->domain;
     }
@@ -166,7 +166,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return AfflictionVirulence
      */
-    public function getVirulence()
+    public function getVirulence(): AfflictionVirulence
     {
         return $this->virulence;
     }
@@ -174,7 +174,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return AfflictionSource
      */
-    public function getSource()
+    public function getSource(): AfflictionSource
     {
         return $this->source;
     }
@@ -182,15 +182,15 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return AfflictionSize
      */
-    public function getSize()
+    public function getAfflictionSize(): AfflictionSize
     {
-        return $this->size;
+        return $this->afflictionSize;
     }
 
     /**
      * @return ElementalPertinence
      */
-    public function getElementalPertinence()
+    public function getElementalPertinence(): ElementalPertinence
     {
         return $this->elementalPertinence;
     }
@@ -198,7 +198,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return AfflictionEffect
      */
-    public function getAfflictionEffect()
+    public function getAfflictionEffect(): AfflictionEffect
     {
         return $this->afflictionEffect;
     }
@@ -206,7 +206,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return \DateInterval
      */
-    public function getOutbreakPeriod()
+    public function getOutbreakPeriod(): \DateInterval
     {
         return $this->outbreakPeriod;
     }
@@ -214,7 +214,7 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return AfflictionName
      */
-    public function getName()
+    public function getName(): AfflictionName
     {
         return $this->afflictionName;
     }
@@ -222,40 +222,40 @@ abstract class Affliction extends StrictObject implements Entity
     /**
      * @return int
      */
-    abstract public function getHealMalus();
+    abstract public function getHealMalus(): int;
 
     /**
      * @return int
      */
-    abstract public function getMalusToActivities();
+    abstract public function getMalusToActivities(): int;
 
     /**
      * @return int
      */
-    abstract public function getStrengthMalus();
+    abstract public function getStrengthMalus(): int;
 
     /**
      * @return int
      */
-    abstract public function getAgilityMalus();
+    abstract public function getAgilityMalus(): int;
 
     /**
      * @return int
      */
-    abstract public function getKnackMalus();
+    abstract public function getKnackMalus(): int;
 
     /**
      * @return int
      */
-    abstract public function getWillMalus();
+    abstract public function getWillMalus(): int;
 
     /**
      * @return int
      */
-    abstract public function getIntelligenceMalus();
+    abstract public function getIntelligenceMalus(): int;
 
     /**
      * @return int
      */
-    abstract public function getCharismaMalus();
+    abstract public function getCharismaMalus(): int;
 }

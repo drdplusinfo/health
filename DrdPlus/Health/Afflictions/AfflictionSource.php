@@ -122,6 +122,7 @@ class AfflictionSource extends StringEnum
      * @param bool|float|int|string $enumValue
      * @return string
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionSource
+     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {

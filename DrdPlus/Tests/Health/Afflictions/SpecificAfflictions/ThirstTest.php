@@ -50,7 +50,7 @@ class ThirstTest extends AfflictionTest
     /**
      * @return Thirst
      */
-    protected function getSut()
+    protected function getSut(): Thirst
     {
         return Thirst::createIt(new Health(), AfflictionSize::getIt(46));
     }

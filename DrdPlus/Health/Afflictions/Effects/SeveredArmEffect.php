@@ -25,12 +25,12 @@ class SeveredArmEffect extends AfflictionEffect
 
     public function getStrengthMalus(SeveredArm $severedArm): int
     {
-        return -$severedArm->getSize()->getValue();
+        return -$severedArm->getAfflictionSize()->getValue();
     }
 
     public function getKnackMalus(SeveredArm $severedArm): int
     {
-        return -2 * $severedArm->getSize()->getValue();
+        return -2 * $severedArm->getAfflictionSize()->getValue();
     }
 
 }

@@ -29,7 +29,7 @@ class GridOfWounds extends StrictObject
      * @param WoundBoundary $woundBoundary
      * @return int
      */
-    public function getWoundsPerRowMaximum(WoundBoundary $woundBoundary)
+    public function getWoundsPerRowMaximum(WoundBoundary $woundBoundary): int
     {
         return $woundBoundary->getValue();
     }
@@ -39,7 +39,7 @@ class GridOfWounds extends StrictObject
      * @param WoundSize $woundSize
      * @return int
      */
-    public function calculateFilledHalfRowsFor(WoundSize $woundSize, WoundBoundary $woundBoundary)
+    public function calculateFilledHalfRowsFor(WoundSize $woundSize, WoundBoundary $woundBoundary): int
     {
         if ($this->getWoundsPerRowMaximum($woundBoundary) % 2 === 0) { // odd
             $filledHalfRows = SumAndRound::floor($woundSize->getValue() / ($this->getWoundsPerRowMaximum($woundBoundary) / 2));
@@ -68,7 +68,7 @@ class GridOfWounds extends StrictObject
      * @param WoundBoundary $woundBoundary
      * @return int
      */
-    public function getNumberOfFilledRows(WoundBoundary $woundBoundary)
+    public function getNumberOfFilledRows(WoundBoundary $woundBoundary): int
     {
         $numberOfFilledRows = SumAndRound::floor($this->health->getUnhealedWoundsSum() / $this->getWoundsPerRowMaximum($woundBoundary));
 

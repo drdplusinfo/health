@@ -25,6 +25,7 @@ class AfflictionProperty extends StringEnum
      * @param string|StringInterface $enumValue
      * @return string
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionPropertyCode
+     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {

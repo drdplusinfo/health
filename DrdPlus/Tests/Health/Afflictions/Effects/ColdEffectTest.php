@@ -1,9 +1,9 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions\Effects;
 
+use DrdPlus\Health\Afflictions\AfflictionSize;
 use DrdPlus\Health\Afflictions\Effects\ColdEffect;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Cold;
-use DrdPlus\Properties\Body\Size;
 
 class ColdEffectTest extends AfflictionEffectTest
 {
@@ -41,8 +41,8 @@ class ColdEffectTest extends AfflictionEffectTest
     private function createCold($coldSize)
     {
         $cold = $this->mockery(Cold::class);
-        $cold->shouldReceive('getSize')
-            ->andReturn(Size::getIt($coldSize));
+        $cold->shouldReceive('getAfflictionSize')
+            ->andReturn(AfflictionSize::getIt($coldSize));
 
         return $cold;
     }

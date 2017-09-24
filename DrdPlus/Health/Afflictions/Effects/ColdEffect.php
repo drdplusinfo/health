@@ -23,16 +23,16 @@ class ColdEffect extends AfflictionEffect
 
     public function getStrengthMalus(Cold $cold): int
     {
-        return -SumAndRound::ceil($cold->getSize()->getValue() / 4);
+        return -SumAndRound::ceil($cold->getAfflictionSize()->getValue() / 4);
     }
 
     public function getAgilityMalus(Cold $cold): int
     {
-        return -SumAndRound::ceil($cold->getSize()->getValue() / 4);
+        return -SumAndRound::ceil($cold->getAfflictionSize()->getValue() / 4);
     }
 
     public function getKnackMalus(Cold $cold): int
     {
-        return -SumAndRound::ceil($cold->getSize()->getValue() / 4);
+        return -SumAndRound::ceil($cold->getAfflictionSize()->getValue() / 4);
     }
 }

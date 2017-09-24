@@ -59,6 +59,7 @@ class SeriousWoundOrigin extends WoundOrigin
      * @param bool|float|int|string $enumValue
      * @return string
      * @throws \DrdPlus\Health\Exceptions\UnknownWoundOriginCode
+     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {

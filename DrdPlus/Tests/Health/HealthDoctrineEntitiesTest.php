@@ -2,7 +2,7 @@
 namespace DrdPlus\Tests\Health;
 
 use Doctrineum\Tests\Entity\AbstractDoctrineEntitiesTest;
-use Drd\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
+use DrdPlus\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Codes\Properties\RemarkableSenseCode;
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Codes\SubRaceCode;

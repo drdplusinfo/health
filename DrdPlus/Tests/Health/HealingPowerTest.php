@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health;
 
-use Drd\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
+use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Codes\Body\ActivityAffectingHealingCode;
 use DrdPlus\Codes\Body\ConditionsAffectingHealingCode;
 use DrdPlus\Codes\RaceCode;

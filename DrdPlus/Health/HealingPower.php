@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health;
 
-use Drd\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
+use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Codes\Body\ActivityAffectingHealingCode;
 use DrdPlus\Codes\Body\ConditionsAffectingHealingCode;
 use DrdPlus\Codes\RaceCode;
@@ -17,6 +17,7 @@ use DrdPlus\Tables\Races\RacesTable;
 use DrdPlus\Tables\Tables;
 use Granam\Integer\IntegerInterface;
 use Granam\Integer\Tools\ToInteger;
+use Granam\Number\NumberInterface;
 use Granam\Strict\Object\StrictObject;
 
 class HealingPower extends StrictObject implements IntegerInterface
@@ -107,7 +108,7 @@ class HealingPower extends StrictObject implements IntegerInterface
     }
 
     /**
-     * @param int $healedAmount not a healing power, but real amount of healed wound points
+     * @param int|float|string|NumberInterface $healedAmount not a healing power, but real amount of healed wound points
      * @param Toughness $toughness
      * @param Tables $tables
      * @return static|healingPower
@@ -130,6 +131,7 @@ class HealingPower extends StrictObject implements IntegerInterface
         }
         $decreasedHealingPower = clone $this;
         $remainingHealUpTo = $healUpTo - $healedAmount - $toughness->getValue();
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $decreasedHealingPower->healUpToWounds = new TableWounds($remainingHealUpTo, $tables->getWoundsTable());
 
         return $decreasedHealingPower;

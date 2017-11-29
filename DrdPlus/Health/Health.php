@@ -6,7 +6,7 @@ namespace DrdPlus\Health;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrineum\Entity\Entity;
-use Drd\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
+use DrdPlus\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Health\Afflictions\Affliction;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;

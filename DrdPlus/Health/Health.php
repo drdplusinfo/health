@@ -86,8 +86,8 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param WoundSize $woundSize
-     * @param SeriousWoundOrigin $seriousWoundOrigin Beware if the wound size is considered as serious than
-     *     OrdinaryWoundOrigin will be used instead
+     * @param SeriousWoundOrigin $seriousWoundOrigin Beware that if the wound size is considered as NOT serious then
+     *     OrdinaryWoundOrigin will be used instead (as the only possible for @see OrdinaryWound)
      * @param WoundBoundary $woundBoundary
      * @return OrdinaryWound|SeriousWound|Wound
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
@@ -128,6 +128,11 @@ class Health extends StrictObject implements Entity
         }
     }
 
+    /**
+     * A lock of current health instance to ensure that new wound is created by that health,
+     * @see \DrdPlus\Health\Wound::checkIfCreatedByGivenHealth
+     * @return bool
+     */
     public function isOpenForNewWound(): bool
     {
         return $this->openForNewWound;
@@ -172,10 +177,11 @@ class Health extends StrictObject implements Entity
      * Every serious injury SHOULD has at least one accompanying affliction (but it is PJ privilege to say it has not).
      *
      * @param Affliction $affliction
+     * @return Health
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
-    public function addAffliction(Affliction $affliction)
+    public function addAffliction(Affliction $affliction): Health
     {
         if ($affliction instanceof AfflictionByWound && !$this->doesHaveThatWound($affliction->getSeriousWound())) {
             throw new Exceptions\UnknownAfflictionOriginatingWound(
@@ -190,9 +196,15 @@ class Health extends StrictObject implements Entity
             );
         }
         $this->afflictions->add($affliction);
+
+        return $this;
     }
 
-    private function doesHaveThatWound(Wound $givenWound)
+    /**
+     * @param Wound $givenWound
+     * @return bool
+     */
+    private function doesHaveThatWound(Wound $givenWound): bool
     {
         if ($givenWound->getHealth() !== $this) {
             return false; // easiest test - the wound belongs to different health
@@ -206,7 +218,11 @@ class Health extends StrictObject implements Entity
         return false; // the wound know this health, but this health does not know that wound
     }
 
-    private function doesHaveThatAffliction(Affliction $givenAffliction)
+    /**
+     * @param Affliction $givenAffliction
+     * @return bool
+     */
+    private function doesHaveThatAffliction(Affliction $givenAffliction): bool
     {
         foreach ($this->afflictions as $registeredAffliction) {
             if ($givenAffliction === $registeredAffliction) {
@@ -226,20 +242,20 @@ class Health extends StrictObject implements Entity
      * @return int amount of actually healed points of wounds
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function healNewOrdinaryWoundsUpTo(HealingPower $healingPower, Toughness $toughness, Tables $tables): int
+    public function healFreshOrdinaryWounds(HealingPower $healingPower, Toughness $toughness, Tables $tables): int
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
         $healedAmount = 0;
-        foreach ($this->getUnhealedOrdinaryWounds() as $newOrdinaryWound) {
+        foreach ($this->getUnhealedOrdinaryWounds() as $unhealedOrdinaryWound) {
             if ($healingPower->getHealUpTo($toughness) > 0) { // we do not spent all the healing power
-                $currentlyHealed = $newOrdinaryWound->heal($healingPower, $toughness);
+                $currentlyHealed = $unhealedOrdinaryWound->heal($healingPower, $toughness);
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                 $healingPower = $healingPower->decreaseByHealedAmount($currentlyHealed, $toughness, $tables); // new instance
                 $healedAmount += $currentlyHealed;
             }
             // all new ordinary wounds become "old", healed or not (and those unhealed can be healed only by a professional or nature itself)
-            $newOrdinaryWound->setOld();
+            $unhealedOrdinaryWound->setOld();
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
@@ -271,7 +287,7 @@ class Health extends StrictObject implements Entity
         }
         if ($this->maySufferFromPain($woundBoundary)) {
             $this->reasonToRollAgainstWoundMalus = ReasonToRollAgainstWoundMalus::getHealReason();
-        } else if ($this->isConscious($woundBoundary)) {
+        } elseif ($this->isConscious($woundBoundary)) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->malusFromWounds = MalusFromWounds::getIt(0); // pain is gone and creature feel it - lets remove the malus
         } // otherwise left the previous malus - creature will suffer by it when comes conscious again
@@ -425,7 +441,7 @@ class Health extends StrictObject implements Entity
         return max(0, $this->getHealthMaximum($woundBoundary) - $this->getUnhealedWoundsSum());
     }
 
-    public function getId():? int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -563,7 +579,7 @@ class Health extends StrictObject implements Entity
         return $this->getUnhealedSeriousWounds()->count();
     }
 
-    const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
+    private const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
 
     /**
      * @param WoundBoundary $woundBoundary
@@ -625,7 +641,7 @@ class Health extends StrictObject implements Entity
     /**
      * @return ReasonToRollAgainstWoundMalus|null
      */
-    public function getReasonToRollAgainstWoundMalus():? ReasonToRollAgainstWoundMalus
+    public function getReasonToRollAgainstWoundMalus(): ?ReasonToRollAgainstWoundMalus
     {
         return $this->reasonToRollAgainstWoundMalus;
     }

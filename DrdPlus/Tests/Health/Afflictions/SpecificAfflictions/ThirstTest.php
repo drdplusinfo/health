@@ -30,9 +30,12 @@ class ThirstTest extends AfflictionTest
     {
         $health = $this->mockery(Health::class);
         $health->shouldReceive('addAffliction')
+            ->atLeast()->once()
             ->with($this->type(Thirst::class))
-            ->andReturnUsing(function ($thirst) use (&$afflictionsContainer) {
+            ->andReturnUsing(function ($thirst) use (&$afflictionsContainer, $health) {
                 $afflictionsContainer[] = $thirst;
+
+                return $health;
             });
 
         return $health;

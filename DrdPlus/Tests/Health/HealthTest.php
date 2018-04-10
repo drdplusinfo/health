@@ -135,7 +135,7 @@ class HealthTest extends TestWithMockery
         $health->createWound($this->createWoundSize(4), SeriousWoundOrigin::getMechanicalCutWoundOrigin(), $woundBoundary);
         self::assertSame(0, $health->getTreatmentBoundary()->getValue());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->healNewOrdinaryWoundsUpTo(
+        $health->healFreshOrdinaryWounds(
             $this->createHealingPower(1, 1),
             $this->createToughness(123),
             $this->createTablesWithWoundsTable($woundBoundary->getValue())
@@ -224,7 +224,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(6, $health->getTreatmentBoundary()->getValue());
         self::assertSame(9, $health->getUnhealedWoundsSum());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->healNewOrdinaryWoundsUpTo(
+        $health->healFreshOrdinaryWounds(
             $this->createHealingPower(999, 3),
             $this->createToughness(123),
             $this->createTablesWithWoundsTable($woundBoundary->getValue())
@@ -267,7 +267,7 @@ class HealthTest extends TestWithMockery
      * @param $rollValue
      * @param $expectedMalus
      */
-    public function I_should_roll_against_malus_from_wounds_because_of_new_wound($willValue, $rollValue, $expectedMalus)
+    public function I_should_roll_against_malus_from_wounds_because_of_fresh_wound($willValue, $rollValue, $expectedMalus)
     {
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(10));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -366,7 +366,7 @@ class HealthTest extends TestWithMockery
         ); // -3 malus as a result
         self::assertFalse($health->needsToRollAgainstMalus());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->healNewOrdinaryWoundsUpTo(
+        $health->healFreshOrdinaryWounds(
             $this->createHealingPower(1, 1),
             $this->createToughness(123),
             $this->createTablesWithWoundsTable($woundBoundary->getValue())
@@ -520,7 +520,7 @@ class HealthTest extends TestWithMockery
      * @test
      * @expectedException \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function I_can_not_heal_new_ordinary_wounds_if_roll_on_malus_expected()
+    public function I_can_not_heal_fresh_ordinary_wounds_if_roll_on_malus_expected()
     {
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(10));
         try {
@@ -540,7 +540,7 @@ class HealthTest extends TestWithMockery
             self::fail('No exception expected so far: ' . $exception->getTraceAsString());
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->healNewOrdinaryWoundsUpTo(
+        $health->healFreshOrdinaryWounds(
             $this->createHealingPower(5),
             $this->createToughness(123),
             $this->createTablesWithWoundsTable($woundBoundary->getValue())
@@ -622,7 +622,7 @@ class HealthTest extends TestWithMockery
      * @param $rollValue
      * @param $expectedMalus
      */
-    public function Malus_can_increase_on_new_wound($willValue, $rollValue, $expectedMalus)
+    public function Malus_can_increase_on_fresh_wound($willValue, $rollValue, $expectedMalus)
     {
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(5));
 
@@ -698,7 +698,7 @@ class HealthTest extends TestWithMockery
      * @param $rollValue
      * @param $expectedMalus
      */
-    public function Malus_can_not_decrease_on_new_wound($willValue, $rollValue, $expectedMalus)
+    public function Malus_can_not_decrease_on_fresh_wound($willValue, $rollValue, $expectedMalus)
     {
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(5));
 
@@ -786,7 +786,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             1,
-            $health->healNewOrdinaryWoundsUpTo(
+            $health->healFreshOrdinaryWounds(
                 $this->createHealingPower(1, 1),
                 $this->createToughness(123),
                 $this->createTablesWithWoundsTable($woundBoundary->getValue())
@@ -806,7 +806,7 @@ class HealthTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_add_affliction()
+    public function I_can_add_affliction(): void
     {
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(5));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -816,7 +816,8 @@ class HealthTest extends TestWithMockery
         );
         $affliction = $this->createAffliction($wound);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $health->addAffliction($affliction);
+        $returnedHealth = $health->addAffliction($affliction);
+        self::assertSame($health, $returnedHealth);
         self::assertCount(1, $health->getAfflictions());
         self::assertSame($affliction, $health->getAfflictions()->current());
     }
@@ -999,7 +1000,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             2 /* power of 4 - 3 (toughness) heals up to 2 wounds, see WoundsTable and related bonus-to-value conversion */,
-            $health->healNewOrdinaryWoundsUpTo(
+            $health->healFreshOrdinaryWounds(
                 HealingPower::createForTreatment(4, Tables::getIt()),
                 $this->createToughness(-3),
                 $this->createTablesWithWoundsTable($woundBoundary->getValue())
@@ -1017,7 +1018,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             0,
-            $health->healNewOrdinaryWoundsUpTo(
+            $health->healFreshOrdinaryWounds(
                 $this->createHealingPower(10, 0),
                 $this->createToughness(123),
                 $this->createTablesWithWoundsTable($woundBoundary->getValue())
@@ -1173,7 +1174,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             0,
-            $health->healNewOrdinaryWoundsUpTo(
+            $health->healFreshOrdinaryWounds(
                 $this->createHealingPower(1, 0),
                 $this->createToughness(123),
                 $this->createTablesWithWoundsTable($woundBoundary->getValue())
@@ -1360,7 +1361,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             0,
-            $health->healNewOrdinaryWoundsUpTo($this->createHealingPower(-21, 0),
+            $health->healFreshOrdinaryWounds($this->createHealingPower(-21, 0),
                 $this->createToughness(123),
                 $this->createTablesWithWoundsTable($woundBoundary->getValue())
             )

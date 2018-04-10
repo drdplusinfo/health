@@ -76,7 +76,7 @@ class HealingPower extends StrictObject implements IntegerInterface
      * @param Tables $tables
      * @return HealingPower
      */
-    public static function createForTreatment($healingPowerValue, Tables $tables): HealingPower
+    public static function createForTreatment(int $healingPowerValue, Tables $tables): HealingPower
     {
         return new static($healingPowerValue, $tables);
     }

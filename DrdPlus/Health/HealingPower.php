@@ -7,8 +7,6 @@ use DrdPlus\Codes\Body\ConditionsAffectingHealingCode;
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Properties\Derived\Toughness;
-use DrdPlus\Tables\Body\Healing\HealingByActivityTable;
-use DrdPlus\Tables\Body\Healing\HealingByConditionsTable;
 use DrdPlus\Tables\Body\Healing\HealingConditionsPercents;
 use DrdPlus\Tables\Measurements\Wounds\Wounds as TableWounds;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
@@ -32,10 +30,8 @@ class HealingPower extends StrictObject implements IntegerInterface
      * @param SubRaceCode $subRaceCode
      * @param RacesTable $racesTable
      * @param ActivityAffectingHealingCode $activityCode
-     * @param HealingByActivityTable $healingByActivityTable
      * @param ConditionsAffectingHealingCode $conditionsCode
      * @param HealingConditionsPercents $healingConditionsPercents
-     * @param HealingByConditionsTable $healingByConditionsTable
      * @param Roll2d6DrdPlus $roll2d6DrdPlus
      * @param Tables $tables
      * @return HealingPower
@@ -48,10 +44,8 @@ class HealingPower extends StrictObject implements IntegerInterface
         SubRaceCode $subRaceCode,
         RacesTable $racesTable,
         ActivityAffectingHealingCode $activityCode,
-        HealingByActivityTable $healingByActivityTable,
         ConditionsAffectingHealingCode $conditionsCode,
         HealingConditionsPercents $healingConditionsPercents,
-        HealingByConditionsTable $healingByConditionsTable,
         Roll2d6DrdPlus $roll2d6DrdPlus,
         Tables $tables
     ): HealingPower
@@ -63,8 +57,8 @@ class HealingPower extends StrictObject implements IntegerInterface
                 ? 4
                 : 0
             )
-            + $healingByActivityTable->getHealingBonusByActivity($activityCode->getValue())
-            + $healingByConditionsTable->getHealingBonusByConditions($conditionsCode->getValue(), $healingConditionsPercents)
+            + $tables->getHealingByActivityTable()->getHealingBonusByActivity($activityCode->getValue())
+            + $tables->getHealingByConditionsTable()->getHealingBonusByConditions($conditionsCode->getValue(), $healingConditionsPercents)
             - 7
             + $roll2d6DrdPlus->getValue();
 

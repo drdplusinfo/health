@@ -43,6 +43,7 @@ class HealingPowerTest extends TestWithMockery
         $tables->shouldReceive('getWoundsTable')
             ->andReturn($woundsTable = $this->mockery(WoundsTable::class));
         $woundsTable->shouldReceive('toWounds')
+            ->atLeast()->once()
             ->andReturnUsing(function (WoundsBonus $woundBonus) use ($expectedWoundsBonus, $returnWoundsValue) {
                 self::assertSame($expectedWoundsBonus, $woundBonus->getValue());
                 $wounds = $this->mockery(Wounds::class);
@@ -55,6 +56,7 @@ class HealingPowerTest extends TestWithMockery
             });
         if ($toBonus) {
             $woundsTable->shouldReceive('toBonus')
+                ->atLeast()->once()
                 ->andReturnUsing($toBonus);
         }
 
@@ -80,17 +82,21 @@ class HealingPowerTest extends TestWithMockery
     public function I_can_use_it_for_regeneration()
     {
         foreach ([true, false] as $hasNativeRegeneration) {
+            $tables = $this->createTablesWithWoundsTable($expectedValue = -7 + 123 + 456 + 789 + ($hasNativeRegeneration ? +4 : 0), 112233);
+            $tables->shouldReceive('getHealingByActivityTable')
+                ->andReturn($this->createHealingByActivityTable('baz', 123));
+            $healingConditionsPercents = $this->createHealingConditionsPercents();
+            $tables->shouldReceive('getHealingByConditionsTable')
+                ->andReturn($this->createHealingByConditionsTable('qux', $healingConditionsPercents, 456));
             $healingPower = HealingPower::createForRegeneration(
                 $raceCode = $this->createRaceCode('foo'),
                 $subRaceCode = $this->createSubRaceCode('bar'),
                 $this->createRacesTable($raceCode, $subRaceCode, $hasNativeRegeneration),
                 $this->createActivityCode('baz'),
-                $this->createHealingByActivityTable('baz', 123),
                 $this->createConditionCode('qux'),
-                $healingConditionsPercents = $this->createHealingConditionsPercents(),
-                $this->createHealingByConditionsTable('qux', $healingConditionsPercents, 456),
+                $healingConditionsPercents,
                 $this->createRoll2d6(789),
-                $this->createTablesWithWoundsTable($expectedValue = -7 + 123 + 456 + 789 + ($hasNativeRegeneration ? +4 : 0), 112233)
+                $tables
             );
             self::assertSame($expectedValue, $healingPower->getValue());
             self::assertSame((string)$expectedValue, (string)$healingPower);

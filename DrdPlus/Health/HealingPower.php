@@ -11,7 +11,6 @@ use DrdPlus\Tables\Body\Healing\HealingConditionsPercents;
 use DrdPlus\Tables\Measurements\Wounds\Wounds as TableWounds;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
-use DrdPlus\Tables\Races\RacesTable;
 use DrdPlus\Tables\Tables;
 use Granam\Integer\IntegerInterface;
 use Granam\Integer\Tools\ToInteger;
@@ -28,7 +27,6 @@ class HealingPower extends StrictObject implements IntegerInterface
     /**
      * @param RaceCode $raceCode
      * @param SubRaceCode $subRaceCode
-     * @param RacesTable $racesTable
      * @param ActivityAffectingHealingCode $activityCode
      * @param ConditionsAffectingHealingCode $conditionsCode
      * @param HealingConditionsPercents $healingConditionsPercents
@@ -42,7 +40,6 @@ class HealingPower extends StrictObject implements IntegerInterface
     public static function createForRegeneration(
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
-        RacesTable $racesTable,
         ActivityAffectingHealingCode $activityCode,
         ConditionsAffectingHealingCode $conditionsCode,
         HealingConditionsPercents $healingConditionsPercents,
@@ -53,7 +50,7 @@ class HealingPower extends StrictObject implements IntegerInterface
         /** see PPH page 80 right column */
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $healingPower =
-            ($racesTable->hasNativeRegeneration($raceCode, $subRaceCode)
+            ($tables->getRacesTable()->hasNativeRegeneration($raceCode, $subRaceCode)
                 ? 4
                 : 0
             )

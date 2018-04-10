@@ -88,10 +88,13 @@ class HealingPowerTest extends TestWithMockery
             $healingConditionsPercents = $this->createHealingConditionsPercents();
             $tables->shouldReceive('getHealingByConditionsTable')
                 ->andReturn($this->createHealingByConditionsTable('qux', $healingConditionsPercents, 456));
+            $raceCode = $this->createRaceCode('foo');
+                $subRaceCode = $this->createSubRaceCode('bar');
+            $tables->shouldReceive('getRacesTable')
+                ->andReturn($this->createRacesTable($raceCode, $subRaceCode, $hasNativeRegeneration));
             $healingPower = HealingPower::createForRegeneration(
-                $raceCode = $this->createRaceCode('foo'),
-                $subRaceCode = $this->createSubRaceCode('bar'),
-                $this->createRacesTable($raceCode, $subRaceCode, $hasNativeRegeneration),
+                $raceCode,
+                $subRaceCode,
                 $this->createActivityCode('baz'),
                 $this->createConditionCode('qux'),
                 $healingConditionsPercents,

@@ -177,11 +177,10 @@ class Health extends StrictObject implements Entity
      * Every serious injury SHOULD has at least one accompanying affliction (but it is PJ privilege to say it has not).
      *
      * @param Affliction $affliction
-     * @return Health
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
      */
-    public function addAffliction(Affliction $affliction): Health
+    public function addAffliction(Affliction $affliction): void
     {
         if ($affliction instanceof AfflictionByWound && !$this->doesHaveThatWound($affliction->getSeriousWound())) {
             throw new Exceptions\UnknownAfflictionOriginatingWound(
@@ -196,8 +195,6 @@ class Health extends StrictObject implements Entity
             );
         }
         $this->afflictions->add($affliction);
-
-        return $this;
     }
 
     /**
@@ -247,15 +244,15 @@ class Health extends StrictObject implements Entity
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
         $healedAmount = 0;
-        foreach ($this->getUnhealedOrdinaryWounds() as $unhealedOrdinaryWound) {
+        foreach ($this->getUnhealedOrdinaryWounds() as $newOrdinaryWound) {
             if ($healingPower->getHealUpTo($toughness) > 0) { // we do not spent all the healing power
-                $currentlyHealed = $unhealedOrdinaryWound->heal($healingPower, $toughness);
+                $currentlyHealed = $newOrdinaryWound->heal($healingPower, $toughness);
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                 $healingPower = $healingPower->decreaseByHealedAmount($currentlyHealed, $toughness, $tables); // new instance
                 $healedAmount += $currentlyHealed;
             }
             // all new ordinary wounds become "old", healed or not (and those unhealed can be healed only by a professional or nature itself)
-            $unhealedOrdinaryWound->setOld();
+            $newOrdinaryWound->setOld();
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
@@ -441,7 +438,7 @@ class Health extends StrictObject implements Entity
         return max(0, $this->getHealthMaximum($woundBoundary) - $this->getUnhealedWoundsSum());
     }
 
-    public function getId(): ?int
+    public function getId():? int
     {
         return $this->id;
     }
@@ -579,7 +576,7 @@ class Health extends StrictObject implements Entity
         return $this->getUnhealedSeriousWounds()->count();
     }
 
-    private const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
+    const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
 
     /**
      * @param WoundBoundary $woundBoundary
@@ -641,7 +638,7 @@ class Health extends StrictObject implements Entity
     /**
      * @return ReasonToRollAgainstWoundMalus|null
      */
-    public function getReasonToRollAgainstWoundMalus(): ?ReasonToRollAgainstWoundMalus
+    public function getReasonToRollAgainstWoundMalus():? ReasonToRollAgainstWoundMalus
     {
         return $this->reasonToRollAgainstWoundMalus;
     }

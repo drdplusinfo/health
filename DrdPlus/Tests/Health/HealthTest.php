@@ -267,7 +267,7 @@ class HealthTest extends TestWithMockery
      * @param $rollValue
      * @param $expectedMalus
      */
-    public function I_should_roll_against_malus_from_wounds_because_of_fresh_wound($willValue, $rollValue, $expectedMalus)
+    public function I_should_roll_against_malus_from_wounds_because_of_new_wound($willValue, $rollValue, $expectedMalus)
     {
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(10));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -816,8 +816,7 @@ class HealthTest extends TestWithMockery
         );
         $affliction = $this->createAffliction($wound);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $returnedHealth = $health->addAffliction($affliction);
-        self::assertSame($health, $returnedHealth);
+        $health->addAffliction($affliction);
         self::assertCount(1, $health->getAfflictions());
         self::assertSame($affliction, $health->getAfflictions()->current());
     }

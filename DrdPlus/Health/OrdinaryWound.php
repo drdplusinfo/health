@@ -2,6 +2,7 @@
 namespace DrdPlus\Health;
 
 use Doctrine\ORM\Mapping AS ORM;
+use DrdPlus\Codes\Body\OrdinaryWoundOriginCode;
 
 /**
  * @ORM\Entity
@@ -15,7 +16,7 @@ class OrdinaryWound extends Wound
      */
     public function __construct(Health $health, WoundSize $woundSize)
     {
-        parent::__construct($health, $woundSize, OrdinaryWoundOrigin::getIt());
+        parent::__construct($health, $woundSize, OrdinaryWoundOriginCode::getIt());
     }
 
     /**

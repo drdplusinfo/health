@@ -5,6 +5,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrineum\Entity\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use DrdPlus\Codes\Body\OrdinaryWoundOriginCode;
+use DrdPlus\Codes\Body\SeriousWoundOriginCode;
+use DrdPlus\Codes\Body\WoundOriginCode;
 use DrdPlus\Properties\Derived\Toughness;
 use Granam\Integer\IntegerInterface;
 use Granam\Strict\Object\StrictObject;
@@ -36,10 +39,10 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     private $pointsOfWound;
 
     /**
-     * @var WoundOrigin
-     * @ORM\Column(type="wound_origin")
+     * @var WoundOriginCode
+     * @ORM\Column(type="wound_origin_code")
      */
-    private $woundOrigin;
+    private $woundOriginCode;
 
     /**
      * @var bool
@@ -50,15 +53,15 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     /**
      * @param Health $health
      * @param WoundSize $woundSize (it can be also zero; usable for afflictions without a damage at all)
-     * @param WoundOrigin $woundOrigin Ordinary origin is for lesser wound, others for serious wound
+     * @param WoundOriginCode $woundOriginCode Ordinary origin is for lesser wound, others for serious wound
      * @throws \DrdPlus\Health\Exceptions\WoundHasToBeCreatedByHealthItself
      */
-    protected function __construct(Health $health, WoundSize $woundSize, WoundOrigin $woundOrigin)
+    protected function __construct(Health $health, WoundSize $woundSize, WoundOriginCode $woundOriginCode)
     {
         $this->checkIfCreatedByGivenHealth($health);
         $this->health = $health;
         $this->pointsOfWound = new ArrayCollection($this->createPointsOfWound($woundSize));
-        $this->woundOrigin = $woundOrigin;
+        $this->woundOriginCode = $woundOriginCode;
         $this->old = false;
     }
 
@@ -89,7 +92,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
         return $pointsOfWound;
     }
 
-    public function getId():? int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -108,17 +111,17 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     }
 
     /**
-     * @return SeriousWoundOrigin|OrdinaryWoundOrigin|WoundOrigin
+     * @return SeriousWoundOriginCode|OrdinaryWoundOriginCode|WoundOriginCode
      */
-    public function getWoundOrigin(): WoundOrigin
+    public function getWoundOriginCode(): WoundOriginCode
     {
-        return $this->woundOrigin;
+        return $this->woundOriginCode;
     }
 
     public function getValue(): int
     {
         // each point has value of 1, therefore count is enough
-        return count($this->getPointsOfWound());
+        return \count($this->getPointsOfWound());
     }
 
     public function getWoundSize(): WoundSize

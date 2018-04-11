@@ -1,10 +1,10 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions\Effects;
 
+use DrdPlus\Codes\Body\SeriousWoundOriginCode;
 use DrdPlus\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Bleeding;
 use DrdPlus\Health\Health;
-use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Properties\Derived\WoundBoundary;
@@ -33,7 +33,7 @@ class BleedingEffectTest extends AfflictionEffectTest
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $woundCausedBleeding = $health->createWound(
             new WoundSize(25),
-            $seriousWoundOrigin = $this->createSpecificWoundOrigin(),
+            $seriousWoundOrigin = $this->createSpecificWoundOriginCode(),
             $woundBoundary
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -44,8 +44,8 @@ class BleedingEffectTest extends AfflictionEffectTest
         );
         self::assertInstanceOf(Wound::class, $wound);
         self::assertSame(3, $wound->getValue()); // 4 bleeding size ... some calculation ... see wounds table for details
-        self::assertTrue($wound->getWoundOrigin()->isOrdinaryWoundOrigin()); // because not a serious injury
-        self::assertNotEquals($seriousWoundOrigin, $wound->getWoundOrigin());
+        self::assertTrue($wound->getWoundOriginCode()->isOrdinaryWoundOrigin()); // because not a serious injury
+        self::assertNotEquals($seriousWoundOrigin, $wound->getWoundOriginCode());
     }
 
     /**
@@ -62,11 +62,11 @@ class BleedingEffectTest extends AfflictionEffectTest
     }
 
     /**
-     * @return \Mockery\MockInterface|SeriousWoundOrigin
+     * @return \Mockery\MockInterface|SeriousWoundOriginCode
      */
-    private function createSpecificWoundOrigin()
+    private function createSpecificWoundOriginCode()
     {
-        $seriousWoundOrigin = $this->mockery(SeriousWoundOrigin::class);
+        $seriousWoundOrigin = $this->mockery(SeriousWoundOriginCode::class);
         $seriousWoundOrigin->shouldReceive('isOrdinaryWoundOrigin')
             ->andReturn(false);
 

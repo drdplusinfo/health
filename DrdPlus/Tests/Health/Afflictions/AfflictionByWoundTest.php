@@ -1,6 +1,8 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions;
 
+use DrdPlus\Codes\Body\SeriousWoundOriginCode;
+use DrdPlus\Codes\Body\WoundOriginCode;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
@@ -15,8 +17,6 @@ use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\OrdinaryWound;
 use DrdPlus\Health\SeriousWound;
-use DrdPlus\Health\SeriousWoundOrigin;
-use DrdPlus\Health\WoundOrigin;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Properties\Derived\WoundBoundary;
 
@@ -25,6 +25,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
 
     /**
      * @test
+     * @throws \ReflectionException
      */
     public function I_can_get_will_malus()
     {
@@ -38,6 +39,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
 
     /**
      * @test
+     * @throws \ReflectionException
      */
     public function I_can_get_intelligence_malus()
     {
@@ -51,6 +53,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
 
     /**
      * @test
+     * @throws \ReflectionException
      */
     public function I_can_get_charisma_malus()
     {
@@ -65,6 +68,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
     /**
      * @test
      * @expectedException \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
+     * @throws \ReflectionException
      */
     public function I_can_not_create_it_with_old_wound()
     {
@@ -91,6 +95,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
 
     /**
      * @test
+     * @throws \ReflectionException
      */
     public function It_is_linked_with_health_immediately()
     {
@@ -106,7 +111,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWound = $health->createWound(
             $woundSize,
-            SeriousWoundOrigin::getMechanicalCutWoundOrigin(),
+            SeriousWoundOriginCode::getMechanicalCutWoundOrigin(),
             $woundBoundary
         );
         $afflictionReflection = new \ReflectionClass(self::getSutClass());
@@ -136,15 +141,16 @@ abstract class AfflictionByWoundTest extends AfflictionTest
      * @param bool $isSerious
      * @param bool $isOld
      * @param $value
-     * @param WoundOrigin $woundOrigin
+     * @param WoundOriginCode $woundOriginCode
      * @return \Mockery\MockInterface|SeriousWound|OrdinaryWound
      */
-    protected function createWound($isSerious = true, $isOld = false, $value = 0, WoundOrigin $woundOrigin = null)
+    protected function createWound($isSerious = true, $isOld = false, $value = 0, WoundOriginCode $woundOriginCode = null)
     {
         $wound = $this->mockery($isSerious ? SeriousWound::class : OrdinaryWound::class);
         $wound->shouldReceive('getHealth')
             ->andReturn($health = $this->mockery(Health::class));
         $health->shouldReceive('addAffliction')
+            ->zeroOrMoreTimes()
             ->with(\Mockery::type(self::getSutClass()));
         $wound->shouldReceive('isSerious')
             ->andReturn($isSerious);
@@ -156,8 +162,8 @@ abstract class AfflictionByWoundTest extends AfflictionTest
             ->andReturn($value);
         $wound->shouldReceive('__toString')
             ->andReturn((string)$value);
-        $wound->shouldReceive('getWoundOrigin')
-            ->andReturn($woundOrigin ?: SeriousWoundOrigin::getElementalWoundOrigin());
+        $wound->shouldReceive('getWoundOriginCode')
+            ->andReturn($woundOriginCode ?: SeriousWoundOriginCode::getElementalWoundOrigin());
 
         return $wound;
     }
@@ -175,6 +181,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
         $health->shouldReceive('getGridOfWounds')
             ->andReturn($gridOfWounds = $this->mockery(GridOfWounds::class));
         $gridOfWounds->shouldReceive('calculateFilledHalfRowsFor')
+            ->zeroOrMoreTimes()
             ->with($wound->getWoundSize(), $woundBoundary)
             ->andReturn($filledHalfOfRows);
     }

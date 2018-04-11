@@ -2,6 +2,7 @@
 namespace DrdPlus\Health\EnumTypes;
 
 use Doctrineum\DateInterval\DBAL\Types\DateIntervalType;
+use DrdPlus\Codes\Body\EnumTypes\WoundOriginCodeType;
 use DrdPlus\Health\Afflictions\Effects\EnumTypes\AfflictionEffectType;
 use DrdPlus\Health\Afflictions\ElementalPertinence\EnumTypes\ElementalPertinenceType;
 use DrdPlus\Health\Afflictions\EnumTypes\AfflictionDangerousnessType;
@@ -14,13 +15,16 @@ use DrdPlus\Health\Afflictions\EnumTypes\AfflictionVirulenceType;
 
 class HealthEnumsRegistrar
 {
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public static function registerAll(): void
     {
+        WoundOriginCodeType::registerSelf();
         DateIntervalType::registerSelf();
 
         // Health
         TreatmentBoundaryType::registerSelf();
-        WoundOriginType::registerSelf();
         MalusFromWoundsType::registerSelf();
         ReasonToRollAgainstWoundMalusType::registerSelf();
 

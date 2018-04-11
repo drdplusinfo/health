@@ -2,6 +2,7 @@
 namespace DrdPlus\Tests\Health;
 
 use Doctrineum\Tests\Entity\AbstractDoctrineEntitiesTest;
+use DrdPlus\Codes\Body\SeriousWoundOriginCode;
 use DrdPlus\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Codes\Properties\RemarkableSenseCode;
 use DrdPlus\Codes\RaceCode;
@@ -18,7 +19,6 @@ use DrdPlus\Health\Afflictions\SpecificAfflictions\SeveredArm;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Thirst;
 use DrdPlus\Health\EnumTypes\HealthEnumsRegistrar;
 use DrdPlus\Health\Health;
-use DrdPlus\Health\SeriousWoundOrigin;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Lighting\Contrast;
 use DrdPlus\Lighting\Glare;
@@ -34,6 +34,9 @@ use DrdPlus\Tables\Tables;
 
 class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
 {
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     protected function setUp()
     {
         parent::setUp();
@@ -59,12 +62,12 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
         );
         $ordinaryWound = $health->createWound(
             new WoundSize(1),
-            SeriousWoundOrigin::getMechanicalCutWoundOrigin(),
+            SeriousWoundOriginCode::getMechanicalCutWoundOrigin(),
             $woundBoundary
         );
         $seriousWound = $health->createWound(
             new WoundSize(7),
-            SeriousWoundOrigin::getMechanicalCrushWoundOrigin(),
+            SeriousWoundOriginCode::getMechanicalCrushWoundOrigin(),
             $woundBoundary
         );
         $bleeding = Bleeding::createIt($seriousWound, $woundBoundary);
@@ -86,13 +89,13 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
                     Senses::getIt(
                         Knack::getIt(1),
                         $raceCode = RaceCode::getIt(RaceCode::ELF),
-                        $subraceCode = SubRaceCode::getIt(SubRaceCode::DARK),
+                        $subRaceCode = SubRaceCode::getIt(SubRaceCode::DARK),
                         Tables::getIt()
                     ),
                     Roller2d6DrdPlus::getIt()->roll(),
                     new BonusFromUsedRemarkableSense(
                         $raceCode,
-                        $subraceCode,
+                        $subRaceCode,
                         RemarkableSenseCode::getIt(RemarkableSenseCode::SIGHT),
                         Tables::getIt()
                     )

@@ -3,10 +3,10 @@ namespace DrdPlus\Tests\Health\EnumTypes;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrineum\DateInterval\DBAL\Types\DateIntervalType;
+use DrdPlus\Codes\Body\EnumTypes\WoundOriginCodeType;
+use DrdPlus\Codes\Body\OrdinaryWoundOriginCode;
+use DrdPlus\Codes\Body\SeriousWoundOriginCode;
 use DrdPlus\Health\EnumTypes\HealthEnumsRegistrar;
-use DrdPlus\Health\EnumTypes\WoundOriginType;
-use DrdPlus\Health\OrdinaryWoundOrigin;
-use DrdPlus\Health\SeriousWoundOrigin;
 use Granam\String\StringTools;
 use PHPUnit\Framework\TestCase;
 
@@ -14,8 +14,9 @@ class HealthEnumsRegistrarTest extends TestCase
 {
     /**
      * @test
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function I_can_register_all_enums_at_once()
+    public function I_can_register_all_enums_at_once(): void
     {
         HealthEnumsRegistrar::registerAll();
 
@@ -31,8 +32,14 @@ class HealthEnumsRegistrarTest extends TestCase
                 "Type {$expectedEnumTypeName} not registered by class {$enumTypeClass}"
             );
         }
-        self::assertTrue(WoundOriginType::hasSubTypeEnum(OrdinaryWoundOrigin::class));
-        self::assertTrue(WoundOriginType::hasSubTypeEnum(SeriousWoundOrigin::class));
+        self::assertTrue(
+            WoundOriginCodeType::hasSubTypeEnum(OrdinaryWoundOriginCode::class),
+            OrdinaryWoundOriginCode::class . ' is ont registered sub-type'
+        );
+        self::assertTrue(
+            WoundOriginCodeType::hasSubTypeEnum(SeriousWoundOriginCode::class),
+            SeriousWoundOriginCode::class . ' is ont registered sub-type'
+        );
     }
 
     /**

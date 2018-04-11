@@ -6,6 +6,7 @@ namespace DrdPlus\Health;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrineum\Entity\Entity;
+use DrdPlus\Codes\Body\SeriousWoundOriginCode;
 use DrdPlus\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Health\Afflictions\Affliction;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
@@ -86,7 +87,7 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param WoundSize $woundSize
-     * @param SeriousWoundOrigin $seriousWoundOrigin Beware that if the wound size is considered as NOT serious then
+     * @param SeriousWoundOriginCode $seriousWoundOriginCode Beware that if the wound size is considered as NOT serious then
      *     OrdinaryWoundOrigin will be used instead (as the only possible for @see OrdinaryWound)
      * @param WoundBoundary $woundBoundary
      * @return OrdinaryWound|SeriousWound|Wound
@@ -94,7 +95,7 @@ class Health extends StrictObject implements Entity
      */
     public function createWound(
         WoundSize $woundSize,
-        SeriousWoundOrigin $seriousWoundOrigin,
+        SeriousWoundOriginCode $seriousWoundOriginCode,
         WoundBoundary $woundBoundary
     ): Wound
     {
@@ -102,7 +103,7 @@ class Health extends StrictObject implements Entity
         $this->openForNewWound = true;
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $this->isSeriousInjury($woundSize, $woundBoundary)
-            ? new SeriousWound($this, $woundSize, $seriousWoundOrigin)
+            ? new SeriousWound($this, $woundSize, $seriousWoundOriginCode)
             : new OrdinaryWound($this, $woundSize);
         $this->openForNewWound = false;
         $this->wounds->add($wound);
@@ -185,7 +186,7 @@ class Health extends StrictObject implements Entity
         if ($affliction instanceof AfflictionByWound && !$this->doesHaveThatWound($affliction->getSeriousWound())) {
             throw new Exceptions\UnknownAfflictionOriginatingWound(
                 "Given affliction '{$affliction->getName()}' to add comes from unknown wound"
-                . " of value {$affliction->getSeriousWound()} and origin '{$affliction->getSeriousWound()->getWoundOrigin()}'."
+                . " of value {$affliction->getSeriousWound()} and origin '{$affliction->getSeriousWound()->getWoundOriginCode()}'."
                 . ' Have you created that wound by current health?'
             );
         }
@@ -311,13 +312,13 @@ class Health extends StrictObject implements Entity
         if (!$this->doesHaveThatWound($seriousWound)) {
             throw new Exceptions\UnknownSeriousWoundToHeal(
                 "Given serious wound of value {$seriousWound->getValue()} and origin"
-                . " {$seriousWound->getWoundOrigin()} to heal does not belongs to this health"
+                . " {$seriousWound->getWoundOriginCode()} to heal does not belongs to this health"
             );
         }
         if ($seriousWound->isOld()) {
             throw new Exceptions\ExpectedFreshWoundToHeal(
                 "Given serious wound of value {$seriousWound->getValue()} and origin"
-                . " {$seriousWound->getWoundOrigin()} should not be old to be healed."
+                . " {$seriousWound->getWoundOriginCode()} should not be old to be healed."
             );
         }
         $healedAmount = $seriousWound->heal($healingPower, $toughness);

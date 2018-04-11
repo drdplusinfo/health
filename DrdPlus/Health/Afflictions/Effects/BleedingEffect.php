@@ -15,7 +15,7 @@ use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
  */
 class BleedingEffect extends AfflictionEffect
 {
-    const BLEEDING_EFFECT = 'bleeding_effect';
+    public const BLEEDING_EFFECT = 'bleeding_effect';
 
     /**
      * @return BleedingEffect
@@ -52,7 +52,7 @@ class BleedingEffect extends AfflictionEffect
 
         return $woundCausedBleeding->getHealth()->createWound(
             $woundSize,
-            $woundCausedBleeding->getWoundOrigin(),
+            $woundCausedBleeding->getWoundOriginCode(),
             $woundBoundary
         );
     }

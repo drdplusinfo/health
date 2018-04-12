@@ -80,7 +80,9 @@ class Health extends StrictObject implements Entity
     {
         $this->wounds = new ArrayCollection();
         $this->afflictions = new ArrayCollection();
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt(0);
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->malusFromWounds = MalusFromWounds::getIt(0);
         $this->glared = Glared::createWithoutGlare($this);
     }
@@ -301,7 +303,7 @@ class Health extends StrictObject implements Entity
      * @throws \DrdPlus\Health\Exceptions\ExpectedFreshWoundToHeal
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function healSeriousWound(
+    public function healFreshSeriousWound(
         SeriousWound $seriousWound,
         HealingPower $healingPower,
         Toughness $toughness,

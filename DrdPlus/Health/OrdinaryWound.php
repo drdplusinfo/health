@@ -27,4 +27,9 @@ class OrdinaryWound extends Wound
         return false;
     }
 
+    public function isOrdinary(): bool
+    {
+        return true;
+    }
+
 }

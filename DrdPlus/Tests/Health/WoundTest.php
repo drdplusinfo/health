@@ -48,6 +48,7 @@ abstract class WoundTest extends TestWithMockery
         $wound->setOld();
         self::assertTrue($wound->isOld());
         self::assertSame('3', (string)$wound);
+        self::assertNotSame($wound->isSerious(), $wound->isOrdinary(), 'Both can not be both serious as well as ordinary');
 
         return $wound;
     }
@@ -79,6 +80,11 @@ abstract class WoundTest extends TestWithMockery
     abstract protected function assertIsSeriousAsExpected(Wound $wound);
 
     /**
+     * @param Wound $wound
+     */
+    abstract protected function assertIsOrdinaryAsExpected(Wound $wound);
+
+    /**
      * @test
      */
     public function I_can_heal_it_both_partially_and_fully(): void
@@ -93,6 +99,7 @@ abstract class WoundTest extends TestWithMockery
         self::assertCount($woundSizeValue, $wound->getPointsOfWound());
         self::assertFalse($wound->isHealed());
         $this->assertIsSeriousAsExpected($wound);
+        $this->assertIsOrdinaryAsExpected($wound);
         self::assertFalse($wound->isOld());
 
         self::assertSame(

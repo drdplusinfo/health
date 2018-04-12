@@ -26,6 +26,15 @@ class OrdinaryWoundTest extends WoundTest
     protected function assertIsSeriousAsExpected(Wound $wound): void
     {
         self::assertInstanceOf(OrdinaryWound::class, $wound);
-        self::assertFalse($wound->isSerious(), 'Ordinary wound should not be serious wound');
+        self::assertFalse($wound->isSerious(), \get_class($wound) . ' should not be serious');
+    }
+
+    /**
+     * @param Wound $wound
+     */
+    protected function assertIsOrdinaryAsExpected(Wound $wound): void
+    {
+        self::assertInstanceOf(OrdinaryWound::class, $wound);
+        self::assertTrue($wound->isOrdinary(), \get_class($wound) . ' should be ordinary');
     }
 }

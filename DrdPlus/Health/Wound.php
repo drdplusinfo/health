@@ -132,6 +132,8 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
 
     abstract public function isSerious(): bool;
 
+    abstract public function isOrdinary(): bool;
+
     /**
      * @param HealingPower $healingPower
      * @param Toughness $toughness

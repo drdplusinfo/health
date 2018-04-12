@@ -28,4 +28,9 @@ class SeriousWound extends Wound
         return true;
     }
 
+    public function isOrdinary(): bool
+    {
+        return false;
+    }
+
 }

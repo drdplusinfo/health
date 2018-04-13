@@ -72,7 +72,7 @@ class HealthTest extends TestWithMockery
         self::assertSame($health->getGridOfWounds()->getWoundsPerRowMaximum($woundBoundary) * 3, $health->getHealthMaximum($woundBoundary));
         self::assertSame($health->getGridOfWounds()->getWoundsPerRowMaximum($woundBoundary) * 3, $health->getRemainingHealthAmount($woundBoundary));
         self::assertCount(0, $health->getUnhealedWounds());
-        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(0, $health->getUnhealedFreshOrdinaryWoundsSum());
         self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(0, $health->getNumberOfSeriousInjuries());
         self::assertCount(0, $health->getAfflictions());
@@ -945,7 +945,7 @@ class HealthTest extends TestWithMockery
         self::assertCount(1, $health->getUnhealedWounds());
         self::assertSame($ordinaryWound, $health->getUnhealedWounds()->last());
         self::assertSame(13, $health->getRemainingHealthAmount($woundBoundary));
-        self::assertSame(2, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(2, $health->getUnhealedFreshOrdinaryWoundsSum());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary));
         self::assertFalse($health->needsToRollAgainstMalus());
@@ -969,7 +969,7 @@ class HealthTest extends TestWithMockery
         self::assertCount(2, $health->getUnhealedWounds());
         self::assertSame($anotherOrdinaryWound, $health->getUnhealedWounds()->last());
         self::assertSame([$ordinaryWound, $anotherOrdinaryWound], $health->getUnhealedWounds()->toArray());
-        self::assertSame(3, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(3, $health->getUnhealedFreshOrdinaryWoundsSum());
         self::assertSame(12, $health->getRemainingHealthAmount($woundBoundary));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary));
@@ -1012,7 +1012,7 @@ class HealthTest extends TestWithMockery
         );
         self::assertSame(17, $health->getRemainingHealthAmount($woundBoundary));
         self::assertSame(4, $health->getUnhealedWoundsSum());
-        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum(), 'All ordinary wounds should become "old" after heal');
+        self::assertSame(0, $health->getUnhealedFreshOrdinaryWoundsSum(), 'All ordinary wounds should become "old" after heal');
         self::assertSame(0, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(0, $health->getNumberOfSeriousInjuries());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1084,7 +1084,7 @@ class HealthTest extends TestWithMockery
         self::assertCount(1, $health->getUnhealedWounds());
         self::assertSame($seriousWoundByStab, $health->getUnhealedWounds()->last());
         self::assertSame(15, $health->getRemainingHealthAmount($woundBoundary));
-        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(0, $health->getUnhealedFreshOrdinaryWoundsSum());
         self::assertSame(3, $health->getUnhealedSeriousWoundsSum());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(0, $health->getSignificantMalusFromPains($woundBoundary), 'There are not enough wounds to suffer from them yet.');
@@ -1104,7 +1104,7 @@ class HealthTest extends TestWithMockery
         self::assertTrue($seriousWoundByPsyche->isSerious());
         self::assertSame($seriousWoundOrigin, $seriousWoundByPsyche->getWoundOriginCode());
         self::assertCount(2, $health->getUnhealedWounds());
-        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(0, $health->getUnhealedFreshOrdinaryWoundsSum());
         self::assertSame(8, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(8, $health->getUnhealedWoundsSum());
         self::assertSame(10, $health->getRemainingHealthAmount($woundBoundary));
@@ -1198,7 +1198,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(13, $health->getRemainingHealthAmount($woundBoundary));
         self::assertCount(2, $health->getUnhealedWounds());
         self::assertSame(5, $health->getUnhealedWoundsSum());
-        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(0, $health->getUnhealedFreshOrdinaryWoundsSum());
         self::assertSame(5, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(2, $health->getNumberOfSeriousInjuries(), 'Both serious wounds are still unhealed');
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1213,7 +1213,7 @@ class HealthTest extends TestWithMockery
         self::assertSame(16, $health->getRemainingHealthAmount($woundBoundary));
         self::assertCount(1, $health->getUnhealedWounds());
         self::assertSame(2, $health->getUnhealedWoundsSum());
-        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(0, $health->getUnhealedFreshOrdinaryWoundsSum());
         self::assertSame(2, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(1, $health->getNumberOfSeriousInjuries(), 'Single serious wound is unhealed');
     }
@@ -1353,10 +1353,10 @@ class HealthTest extends TestWithMockery
             SeriousWoundOriginCode::getMechanicalCrushWoundOrigin(),
             $woundBoundary
         );
-        self::assertSame(2, $health->getUnhealedNewOrdinaryWoundsSum());
+        self::assertSame(2, $health->getUnhealedFreshOrdinaryWoundsSum());
         self::assertSame(5, $health->getUnhealedSeriousWoundsSum());
         self::assertSame(
-            $health->getUnhealedNewOrdinaryWoundsSum(),
+            $health->getUnhealedFreshOrdinaryWoundsSum(),
             $health->getUnhealedWoundsSum() - $health->getTreatmentBoundary()->getValue()
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1372,9 +1372,9 @@ class HealthTest extends TestWithMockery
                 $this->createTablesWithWoundsTable($woundBoundary->getValue())
             )
         );
-        self::assertSame(0, $health->getUnhealedNewOrdinaryWoundsSum(), 'All ordinary wounds should be marked as old');
+        self::assertSame(0, $health->getUnhealedFreshOrdinaryWoundsSum(), 'All ordinary wounds should be marked as old');
         self::assertSame(
-            $health->getUnhealedNewOrdinaryWoundsSum(),
+            $health->getUnhealedFreshOrdinaryWoundsSum(),
             $health->getUnhealedWoundsSum() - $health->getTreatmentBoundary()->getValue()
         );
     }

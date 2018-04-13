@@ -247,7 +247,7 @@ class Health extends StrictObject implements Entity
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
         $healedAmount = 0;
-        foreach ($this->getUnhealedOrdinaryWounds() as $newOrdinaryWound) {
+        foreach ($this->getUnhealedFreshOrdinaryWounds() as $newOrdinaryWound) {
             if ($healingPower->getHealUpTo($toughness) > 0) { // we do not spent all the healing power
                 $currentlyHealed = $newOrdinaryWound->heal($healingPower, $toughness);
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -267,7 +267,7 @@ class Health extends StrictObject implements Entity
     /**
      * @return OrdinaryWound[]|Collection
      */
-    private function getUnhealedOrdinaryWounds()
+    private function getUnhealedFreshOrdinaryWounds()
     {
         return $this->wounds->filter(
             function (Wound $wound) {
@@ -369,14 +369,14 @@ class Health extends StrictObject implements Entity
      *
      * @return int
      */
-    public function getUnhealedNewOrdinaryWoundsSum(): int
+    public function getUnhealedFreshOrdinaryWoundsSum(): int
     {
         return array_sum(
             array_map(
                 function (OrdinaryWound $ordinaryWound) {
                     return $ordinaryWound->getValue();
                 },
-                $this->getUnhealedOrdinaryWounds()->toArray()
+                $this->getUnhealedFreshOrdinaryWounds()->toArray()
             )
         );
     }
@@ -403,7 +403,7 @@ class Health extends StrictObject implements Entity
     {
         return $this->getUnhealedWounds()->filter( // creates new Collection instance
             function (Wound $wound) {
-                return $wound->isSerious();
+                return $wound->isSerious() && !$wound->isHealed();
             }
         );
     }
@@ -579,7 +579,7 @@ class Health extends StrictObject implements Entity
         return $this->getUnhealedSeriousWounds()->count();
     }
 
-    const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
+    private const DEADLY_NUMBER_OF_SERIOUS_INJURIES = 6;
 
     /**
      * @param WoundBoundary $woundBoundary

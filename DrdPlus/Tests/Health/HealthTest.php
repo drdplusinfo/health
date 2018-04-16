@@ -3,18 +3,15 @@ namespace DrdPlus\Tests\Health;
 
 use DrdPlus\Codes\Body\OrdinaryWoundOriginCode;
 use DrdPlus\Codes\Body\SeriousWoundOriginCode;
-use DrdPlus\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\AfflictionName;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
-use DrdPlus\Health\GridOfWounds;
 use DrdPlus\Health\HealingPower;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\Inflictions\Glared;
 use DrdPlus\Health\ReasonToRollAgainstWoundMalus;
 use DrdPlus\Health\SeriousWound;
-use DrdPlus\Health\TreatmentBoundary;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Lighting\Glare;
@@ -82,11 +79,7 @@ class HealthTest extends TestWithMockery
         self::assertTrue($health->isConscious($woundBoundary));
         self::assertFalse($health->needsToRollAgainstMalus());
         self::assertNull($health->getReasonToRollAgainstWoundMalus());
-
-        self::assertInstanceOf(TreatmentBoundary::class, $health->getTreatmentBoundary());
         self::assertSame(0, $health->getTreatmentBoundary()->getValue());
-
-        self::assertInstanceOf(GridOfWounds::class, $health->getGridOfWounds());
     }
 
     /**
@@ -279,7 +272,7 @@ class HealthTest extends TestWithMockery
             $expectedMalus,
             $health->rollAgainstMalusFromWounds(
                 $this->createWill($willValue),
-                $this->createRoller2d6Plus($rollValue),
+                $this->createRoll2d6Plus($rollValue),
                 $woundBoundary
             )
         );
@@ -317,21 +310,19 @@ class HealthTest extends TestWithMockery
 
     /**
      * @param $value
-     * @return \Mockery\MockInterface|Roller2d6DrdPlus
+     * @return \Mockery\MockInterface|Roll2d6DrdPlus
      */
-    private function createRoller2d6Plus($value = null)
+    private function createRoll2d6Plus($value = null): Roll2d6DrdPlus
     {
-        $roller = $this->mockery(Roller2d6DrdPlus::class);
+        $roll = $this->mockery(Roll2d6DrdPlus::class);
         if ($value !== null) {
-            $roller->shouldReceive('roll')
-                ->andReturn($roll = $this->mockery(Roll2d6DrdPlus::class));
             $roll->shouldReceive('getValue')
                 ->andReturn($value);
             $roll->shouldReceive('getRolledNumbers')
                 ->andReturn([$value]);
         }
 
-        return $roller;
+        return $roll;
     }
 
     /**
@@ -361,7 +352,7 @@ class HealthTest extends TestWithMockery
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(-1),
-            $this->createRoller2d6Plus(3),
+            $this->createRoll2d6Plus(3),
             $woundBoundary
         ); // -3 malus as a result
         self::assertFalse($health->needsToRollAgainstMalus());
@@ -377,7 +368,7 @@ class HealthTest extends TestWithMockery
             $expectedMalus,
             $health->rollAgainstMalusFromWounds(
                 $this->createWill($willValue),
-                $this->createRoller2d6Plus($rollValue),
+                $this->createRoll2d6Plus($rollValue),
                 $woundBoundary
             )
         );
@@ -415,7 +406,7 @@ class HealthTest extends TestWithMockery
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(-1),
-            $this->createRoller2d6Plus(3),
+            $this->createRoll2d6Plus(3),
             $woundBoundary
         ); // -3 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -430,7 +421,7 @@ class HealthTest extends TestWithMockery
             $expectedMalus,
             $health->rollAgainstMalusFromWounds(
                 $this->createWill($willValue),
-                $this->createRoller2d6Plus($rollValue),
+                $this->createRoll2d6Plus($rollValue),
                 $woundBoundary
             )
         );
@@ -455,7 +446,7 @@ class HealthTest extends TestWithMockery
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(-1),
-            $this->createRoller2d6Plus(3),
+            $this->createRoll2d6Plus(3),
             $woundBoundary
         ); // -3 malus as a result
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -470,7 +461,7 @@ class HealthTest extends TestWithMockery
             $expectedMalus,
             $health->rollAgainstMalusFromWounds(
                 $this->createWill($willValue),
-                $this->createRoller2d6Plus($rollValue),
+                $this->createRoll2d6Plus($rollValue),
                 $woundBoundary
             )
         );
@@ -487,7 +478,7 @@ class HealthTest extends TestWithMockery
         $health = $this->createHealthToTest($woundBoundary = $this->createWoundBoundary(10));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(),
-            $this->createRoller2d6Plus(),
+            $this->createRoll2d6Plus(),
             $woundBoundary
         );
     }
@@ -638,7 +629,7 @@ class HealthTest extends TestWithMockery
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame($expectedMalus, $health->rollAgainstMalusFromWounds($this->createWill($willValue),
-            $this->createRoller2d6Plus($rollValue),
+            $this->createRoll2d6Plus($rollValue),
             $woundBoundary
         ));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -659,7 +650,7 @@ class HealthTest extends TestWithMockery
                 $currentlyExpectedMalus, // malus can increase (be more negative)
                 $health->rollAgainstMalusFromWounds(
                     $this->createWill($currentWillValue),
-                    $this->createRoller2d6Plus($currentRollValue),
+                    $this->createRoll2d6Plus($currentRollValue),
                     $woundBoundary
                 ),
                 "For will $currentWillValue and roll $currentRollValue has been expected malus $currentlyExpectedMalus"
@@ -675,7 +666,7 @@ class HealthTest extends TestWithMockery
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             // low values to ensure untouched malus (should not be increased, therefore changed here at all, on heal)
             $health->rollAgainstMalusFromWounds($this->createWill(-1),
-                $this->createRoller2d6Plus(-1),
+                $this->createRoll2d6Plus(-1),
                 $woundBoundary
             );
         }
@@ -714,7 +705,7 @@ class HealthTest extends TestWithMockery
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame($expectedMalus, $health->rollAgainstMalusFromWounds($this->createWill($willValue),
-            $this->createRoller2d6Plus($rollValue),
+            $this->createRoll2d6Plus($rollValue),
             $woundBoundary
         ));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -734,7 +725,7 @@ class HealthTest extends TestWithMockery
                 $expectedMalus, // malus should not be decreased (be closer to zero)
                 $health->rollAgainstMalusFromWounds(
                     $this->createWill($currentWillValue),
-                    $this->createRoller2d6Plus($currentRollValue),
+                    $this->createRoll2d6Plus($currentRollValue),
                     $woundBoundary
                 ),
                 "Even for will $currentWillValue and roll $currentRollValue has been expected previous malus $expectedMalus"
@@ -750,7 +741,7 @@ class HealthTest extends TestWithMockery
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             // low values to ensure untouched malus (should not be increased, therefore changed here at all, on heal)
             $health->rollAgainstMalusFromWounds($this->createWill(-1),
-                $this->createRoller2d6Plus(-1),
+                $this->createRoll2d6Plus(-1),
                 $woundBoundary
             );
         }
@@ -783,7 +774,7 @@ class HealthTest extends TestWithMockery
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(0),
-            $this->createRoller2d6Plus(11),
+            $this->createRoll2d6Plus(11),
             $woundBoundary
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -799,7 +790,7 @@ class HealthTest extends TestWithMockery
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(0),
-            $this->createRoller2d6Plus(-2),
+            $this->createRoll2d6Plus(-2),
             $woundBoundary
         ); // much worse roll
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1171,7 +1162,7 @@ class HealthTest extends TestWithMockery
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
             -3,
-            $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoller2d6Plus(1), $woundBoundary)
+            $health->rollAgainstMalusFromWounds($this->createWill(-1), $this->createRoll2d6Plus(1), $woundBoundary)
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         self::assertSame(
@@ -1280,7 +1271,7 @@ class HealthTest extends TestWithMockery
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(0),
-            $this->createRoller2d6Plus(10),
+            $this->createRoll2d6Plus(10),
             $woundBoundary
         );
         self::assertTrue($seriousWound->isSerious());
@@ -1312,7 +1303,7 @@ class HealthTest extends TestWithMockery
         self::assertTrue($seriousWound->isSerious());
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $health->rollAgainstMalusFromWounds($this->createWill(123),
-            $this->createRoller2d6Plus(321),
+            $this->createRoll2d6Plus(321),
             $woundBoundary
         );
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -1400,7 +1391,7 @@ class HealthTest extends TestWithMockery
         // ordinary vs serious
         self::assertSame($ordinaryWoundsSize, $health->getUnhealedOrdinaryWoundsSum());
         self::assertSame($seriousWoundsSize, $health->getUnhealedSeriousWoundsSum());
-        $health->rollAgainstMalusFromWounds($this->createWill(1), $this->createRoller2d6Plus(5), $woundBoundary);
+        $health->rollAgainstMalusFromWounds($this->createWill(1), $this->createRoll2d6Plus(5), $woundBoundary);
         self::assertSame(
             0, // nothing healed because of too low healing power
             $health->healFreshOrdinaryWounds($this->createHealingPower(-21, 0),
@@ -1452,7 +1443,7 @@ class HealthTest extends TestWithMockery
             $woundBoundary
         );
         $health->rollAgainstMalusFromWounds($this->createWill(1),
-            $this->createRoller2d6Plus(7),
+            $this->createRoll2d6Plus(7),
             $woundBoundary
         );
         self::assertSame(-2, $health->getSignificantMalusFromPains($woundBoundary));

@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrineum\Entity\Entity;
 use DrdPlus\Codes\Body\SeriousWoundOriginCode;
-use DrdPlus\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
+use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Health\Afflictions\Affliction;
 use DrdPlus\Health\Afflictions\AfflictionByWound;
 use DrdPlus\Health\Afflictions\SpecificAfflictions\Pain;
@@ -425,7 +425,6 @@ class Health extends StrictObject implements Entity
         );
     }
 
-
     /**
      * @return int
      */
@@ -801,14 +800,14 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param Roll2d6DrdPlus $roll2D6DrdPlus
      * @param WoundBoundary $woundBoundary
      * @return int resulted malus
      * @throws \DrdPlus\Health\Exceptions\UselessRollAgainstMalus
      */
     public function rollAgainstMalusFromWounds(
         Will $will,
-        Roller2d6DrdPlus $roller2d6DrdPlus,
+        Roll2d6DrdPlus $roll2D6DrdPlus,
         WoundBoundary $woundBoundary
     ): int
     {
@@ -820,8 +819,8 @@ class Health extends StrictObject implements Entity
         }
 
         $malusValue = $this->reasonToRollAgainstWoundMalus->becauseOfHeal()
-            ? $this->rollAgainstMalusOnHeal($will, $roller2d6DrdPlus)
-            : $this->rollAgainstMalusOnWound($will, $roller2d6DrdPlus);
+            ? $this->rollAgainstMalusOnHeal($will, $roll2D6DrdPlus)
+            : $this->rollAgainstMalusOnWound($will, $roll2D6DrdPlus);
 
         $this->reasonToRollAgainstWoundMalus = null;
 
@@ -830,15 +829,15 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param Roll2d6DrdPlus $roll2D6DrdPlus
      * @return int
      */
-    private function rollAgainstMalusOnHeal(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus): int
+    private function rollAgainstMalusOnHeal(Will $will, Roll2d6DrdPlus $roll2D6DrdPlus): int
     {
         if ($this->malusFromWounds->getValue() === 0) {
             return $this->malusFromWounds->getValue(); // on heal can be the malus only lowered - there is nothing to lower
         }
-        $newRoll = $this->createRollOnWillAgainstMalus($will, $roller2d6DrdPlus);
+        $newRoll = $this->createRollOnWillAgainstMalus($will, $roll2D6DrdPlus);
         // lesser (or same of course) malus remains; can not be increased on healing
         if ($this->malusFromWounds->getValue() >= $newRoll->getMalusValue()) { // greater in mathematical meaning (malus is negative)
             return $this->malusFromWounds->getValue(); // lesser malus remains
@@ -850,12 +849,12 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param Roll2d6DrdPlus $roll2D6DrdPlus
      * @return RollOnWillAgainstMalus
      */
-    private function createRollOnWillAgainstMalus(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus): RollOnWillAgainstMalus
+    private function createRollOnWillAgainstMalus(Will $will, Roll2d6DrdPlus $roll2D6DrdPlus): RollOnWillAgainstMalus
     {
-        return new RollOnWillAgainstMalus(new RollOnWill($will, $roller2d6DrdPlus->roll()));
+        return new RollOnWillAgainstMalus(new RollOnWill($will, $roll2D6DrdPlus));
     }
 
     /**
@@ -870,15 +869,15 @@ class Health extends StrictObject implements Entity
 
     /**
      * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param Roll2d6DrdPlus $roll2D6DrdPlus
      * @return int
      */
-    private function rollAgainstMalusOnWound(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus): int
+    private function rollAgainstMalusOnWound(Will $will, Roll2d6DrdPlus $roll2D6DrdPlus): int
     {
         if ($this->malusFromWounds->getValue() === MalusFromWounds::MOST) {
             return $this->malusFromWounds->getValue();
         }
-        $newRoll = $this->createRollOnWillAgainstMalus($will, $roller2d6DrdPlus);
+        $newRoll = $this->createRollOnWillAgainstMalus($will, $roll2D6DrdPlus);
         // bigger (or same of course) malus remains; can not be decreased on new wounds
         if ($this->malusFromWounds->getValue() <= $newRoll->getMalusValue() // lesser in mathematical meaning (malus is negative)
         ) {
@@ -922,7 +921,8 @@ class Health extends StrictObject implements Entity
 
     public function hasFreshWounds(): bool
     {
-        return $this->getUnhealedWounds()->exists(function (int $index, Wound $wound) {
+        return $this->getUnhealedWounds()->exists(function (/** @noinspection PhpUnusedParameterInspection */
+            int $index, Wound $wound) {
             return !$wound->isOld();
         });
     }

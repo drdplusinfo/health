@@ -277,6 +277,18 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * @return OrdinaryWound[]|Collection
+     */
+    private function getUnhealedFreshSeriousWounds()
+    {
+        return $this->wounds->filter(
+            function (Wound $wound) {
+                return !$wound->isHealed() && $wound->isSerious() && !$wound->isOld();
+            }
+        );
+    }
+
+    /**
      * @param WoundBoundary $woundBoundary
      * @param int $healedAmount
      */
@@ -371,7 +383,7 @@ class Health extends StrictObject implements Entity
      */
     public function getUnhealedFreshOrdinaryWoundsSum(): int
     {
-        return array_sum(
+        return \array_sum(
             array_map(
                 function (OrdinaryWound $ordinaryWound) {
                     return $ordinaryWound->getValue();
@@ -382,17 +394,62 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * Usable for info about amount of wounds which can be healed by treatment
+     *
+     * @return int
+     */
+    public function getUnhealedFreshSeriousWoundsSum(): int
+    {
+        return \array_sum(
+            array_map(
+                function (SeriousWound $seriousWound) {
+                    return $seriousWound->getValue();
+                },
+                $this->getUnhealedFreshSeriousWounds()->toArray()
+            )
+        );
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnhealedOrdinaryWoundsSum(): int
+    {
+        return \array_sum(
+            array_map(
+                function (OrdinaryWound $seriousWound) {
+                    return $seriousWound->getValue();
+                },
+                $this->getUnhealedOrdinaryWounds()->toArray()
+            )
+        );
+    }
+
+
+    /**
      * @return int
      */
     public function getUnhealedSeriousWoundsSum(): int
     {
-        return array_sum(
+        return \array_sum(
             array_map(
                 function (SeriousWound $seriousWound) {
                     return $seriousWound->getValue();
                 },
                 $this->getUnhealedSeriousWounds()->toArray()
             )
+        );
+    }
+
+    /**
+     * @return SeriousWound[]|Collection
+     */
+    private function getUnhealedOrdinaryWounds(): Collection
+    {
+        return $this->getUnhealedWounds()->filter( // creates new Collection instance
+            function (Wound $wound) {
+                return !$wound->isSerious() && !$wound->isHealed();
+            }
         );
     }
 
@@ -413,14 +470,110 @@ class Health extends StrictObject implements Entity
      */
     public function getUnhealedWoundsSum(): int
     {
-        return array_sum(
-            array_map(
+        return \array_sum(
+            \array_map(
                 function (Wound $unhealedWound) {
                     return $unhealedWound->getValue();
                 },
                 $this->getUnhealedWounds()->toArray()
             )
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnhealedFreshWoundsSum(): int
+    {
+        return \array_sum(
+            \array_map(
+                function (Wound $unhealedWound) {
+                    return $unhealedWound->getValue();
+                },
+                $this->getUnhealedFreshWounds()->toArray()
+            )
+        );
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnhealedOldWoundsSum(): int
+    {
+        return \array_sum(
+            \array_map(
+                function (Wound $unhealedWound) {
+                    return $unhealedWound->getValue();
+                },
+                $this->getUnhealedOldWounds()->toArray()
+            )
+        );
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnhealedOldSeriousWoundsSum(): int
+    {
+        return \array_sum(
+            \array_map(
+                function (Wound $unhealedWound) {
+                    return $unhealedWound->getValue();
+                },
+                $this->getUnhealedOldSeriousWounds()->toArray()
+            )
+        );
+    }
+
+    private function getUnhealedOldSeriousWounds()
+    {
+        return $this->getUnhealedOldWounds()->filter(function (Wound $wound) {
+            return $wound->isSerious() && $wound->isOld() && !$wound->isHealed();
+        });
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnhealedOldOrdinaryWoundsSum(): int
+    {
+        return \array_sum(
+            \array_map(
+                function (Wound $unhealedWound) {
+                    return $unhealedWound->getValue();
+                },
+                $this->getUnhealedOldOrdinaryWounds()->toArray()
+            )
+        );
+    }
+
+    private function getUnhealedOldOrdinaryWounds()
+    {
+        return $this->getUnhealedOldWounds()->filter(function (Wound $wound) {
+            return !$wound->isSerious() && $wound->isOld() && !$wound->isHealed();
+        });
+    }
+
+    /**
+     * Can be healed only by regeneration.
+     * @return Collection
+     */
+    public function getUnhealedOldWounds(): Collection
+    {
+        return $this->getUnhealedWounds()->filter(function (Wound $wound) {
+            return $wound->isOld();
+        });
+    }
+
+    /**
+     * Can be healed by treatment.
+     * @return Collection
+     */
+    public function getUnhealedFreshWounds(): Collection
+    {
+        return $this->getUnhealedWounds()->filter(function (Wound $wound) {
+            return !$wound->isOld();
+        });
     }
 
     /**
@@ -441,13 +594,13 @@ class Health extends StrictObject implements Entity
         return max(0, $this->getHealthMaximum($woundBoundary) - $this->getUnhealedWoundsSum());
     }
 
-    public function getId():? int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * Gives both new and old wounds
+     * Gives both fresh and old wounds
      *
      * @return Collection|Wound[]
      */
@@ -641,7 +794,7 @@ class Health extends StrictObject implements Entity
     /**
      * @return ReasonToRollAgainstWoundMalus|null
      */
-    public function getReasonToRollAgainstWoundMalus():? ReasonToRollAgainstWoundMalus
+    public function getReasonToRollAgainstWoundMalus(): ?ReasonToRollAgainstWoundMalus
     {
         return $this->reasonToRollAgainstWoundMalus;
     }
@@ -767,4 +920,10 @@ class Health extends StrictObject implements Entity
         return $this->glared;
     }
 
+    public function hasFreshWounds(): bool
+    {
+        return $this->getUnhealedWounds()->exists(function (int $index, Wound $wound) {
+            return !$wound->isOld();
+        });
+    }
 }

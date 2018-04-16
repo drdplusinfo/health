@@ -6,6 +6,7 @@ use DrdPlus\Health\Health;
 use DrdPlus\Lighting\Glare;
 use DrdPlus\Tables\Measurements\Time\Time;
 use DrdPlus\Tables\Measurements\Time\TimeTable;
+use DrdPlus\Tables\Tables;
 use Granam\Tests\Tools\TestWithMockery;
 
 class GlaredTest extends TestWithMockery
@@ -16,7 +17,7 @@ class GlaredTest extends TestWithMockery
      * @param int $malus
      * @param bool $isShined
      */
-    public function I_can_create_it_from_glare($malus, $isShined)
+    public function I_can_create_it_from_glare(int $malus, bool $isShined): void
     {
         $glared = Glared::createFromGlare($this->createGlare($malus, $isShined), $health = new Health());
         self::assertNull($glared->getId());
@@ -27,7 +28,7 @@ class GlaredTest extends TestWithMockery
         self::assertSame(0, $glared->getGettingUsedToForRounds());
     }
 
-    public function provideMalusAndShined()
+    public function provideMalusAndShined(): array
     {
         return [
             [123, true],
@@ -54,7 +55,7 @@ class GlaredTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_create_it_without_glare_at_all()
+    public function I_can_create_it_without_glare_at_all(): void
     {
         $glared = Glared::createWithoutGlare($health = new Health());
         self::assertNull($glared->getId());
@@ -66,7 +67,7 @@ class GlaredTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_lower_malus_by_getting_used_to_shine()
+    public function I_can_lower_malus_by_getting_used_to_shine(): void
     {
         $glared = Glared::createFromGlare($this->createGlare(-15, true), new Health());
 
@@ -91,7 +92,7 @@ class GlaredTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_used_to_shine_by_long_waiting()
+    public function I_can_get_used_to_shine_by_long_waiting(): void
     {
         $glared = Glared::createFromGlare($this->createGlare(-50, true), new Health());
 
@@ -108,7 +109,7 @@ class GlaredTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_lower_malus_by_getting_used_to_darkness()
+    public function I_can_lower_malus_by_getting_used_to_darkness(): void
     {
         $glared = Glared::createFromGlare($this->createGlare(-36, false), new Health());
 
@@ -141,9 +142,9 @@ class GlaredTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_used_to_darkness_by_long_waiting()
+    public function I_can_get_used_to_darkness_by_long_waiting(): void
     {
-        $glared = Glared::createFromGlare($this->createGlare(-21, false), new Health());
+        $glared = Glared::createFromGlare($this->createGlare(-21 /* malus */, false), new Health());
 
         self::assertSame(-21, $glared->getCurrentMalus());
         self::assertTrue($glared->isBlinded()); // blinded means ten rounds to remove one malus point
@@ -153,6 +154,43 @@ class GlaredTest extends TestWithMockery
         $glared->setGettingUsedToForTime(new Time(1, TimeUnitCode::HOUR, $timeTable));
         self::assertSame(0, $glared->getCurrentMalus());
         self::assertSame(210, $glared->getGettingUsedToForRounds());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_used_to_darkness_by_very_long_waiting_when_blinded(): void
+    {
+        $blinded = Glared::createFromGlare($this->createGlare($malus = -21, false /* not shined = blinded */), new Health());
+
+        self::assertSame($malus, $blinded->getCurrentMalus());
+        self::assertTrue($blinded->isBlinded()); // blinded means ten rounds to remove one malus point
+        self::assertSame(0, $blinded->getGettingUsedToForRounds());
+
+        $time = new Time(1, TimeUnitCode::YEAR, Tables::getIt()->getTimeTable());
+        self::assertNull($time->findRounds(), 'Used time should be so long so it can not be expressed in rounds');
+        $blinded->setGettingUsedToForTime($time);
+        self::assertSame(0, $blinded->getCurrentMalus());
+        self::assertSame(10 * \abs($malus), $blinded->getGettingUsedToForRounds());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_used_to_darkness_by_very_long_waiting_when_shined(): void
+    {
+        $shined = Glared::createFromGlare($this->createGlare($malus = -1, true /* shined = not blinded */), new Health());
+
+        self::assertSame($malus, $shined->getCurrentMalus());
+        self::assertFalse($shined->isBlinded());
+        self::assertTrue($shined->isShined()); // shined means one round to remove one malus point
+        self::assertSame(0, $shined->getGettingUsedToForRounds());
+
+        $time = new Time(1, TimeUnitCode::YEAR, Tables::getIt()->getTimeTable());
+        self::assertNull($time->findRounds(), 'Used time should be so long so it can not be expressed in rounds');
+        $shined->setGettingUsedToForTime($time);
+        self::assertSame(0, $shined->getCurrentMalus());
+        self::assertSame(\abs($malus), $shined->getGettingUsedToForRounds());
     }
 
 }

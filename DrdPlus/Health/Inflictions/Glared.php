@@ -66,7 +66,7 @@ class Glared extends StrictObject implements Entity
      * @param bool $isShined
      * @param Health $health
      */
-    private function __construct($malus, $isShined, Health $health)
+    private function __construct(int $malus, bool $isShined, Health $health)
     {
         $this->malus = $malus;
         $this->shined = $isShined;

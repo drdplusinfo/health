@@ -141,7 +141,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
      */
     public function heal(HealingPower $healingPower, Toughness $toughness): int
     {
-        $this->setOld(); // any wound is "old", treated and can be healed by regeneration or professional only
+        $this->setOld(); // any wound is "old", treated and can be healed by regeneration or a true professional only
         // technical note: orphaned points of wound are removed automatically on persistence
         if ($healingPower->getHealUpTo($toughness) >= $this->getValue()) { // there is power to heal it all
             $healed = $this->getValue();
@@ -172,6 +172,14 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     public function isOld(): bool
     {
         return $this->old;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFresh(): bool
+    {
+        return !$this->old;
     }
 
     public function setOld()

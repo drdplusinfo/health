@@ -769,7 +769,7 @@ class Health extends StrictObject implements Entity
     private function getMalusFromWoundsValue(WoundBoundary $woundBoundary): int
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
-        if ($this->getGridOfWounds()->getNumberOfFilledRows($woundBoundary) === 0) {
+        if (!$this->mayHaveMalusFromWounds($woundBoundary)) {
             return 0;
         }
 
@@ -926,5 +926,14 @@ class Health extends StrictObject implements Entity
             int $index, Wound $wound) {
             return !$wound->isOld();
         });
+    }
+
+    /**
+     * @param WoundBoundary $woundBoundary
+     * @return bool
+     */
+    public function mayHaveMalusFromWounds(WoundBoundary $woundBoundary): bool
+    {
+        return $this->getGridOfWounds()->getNumberOfFilledRows($woundBoundary) > 0;
     }
 }

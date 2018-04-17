@@ -1620,4 +1620,27 @@ class HealthTest extends TestWithMockery
 
         return $glare;
     }
+
+    /**
+     * @test
+     */
+    public function I_can_easily_find_out_if_may_have_malus_from_wounds(): void
+    {
+        $health = new Health();
+        self::assertFalse($health->mayHaveMalusFromWounds($woundBoundary = $this->createWoundBoundary(10)));
+        $health->createWound(
+            $this->createWoundSize($woundBoundary->getValue() - 1),
+            SeriousWoundOriginCode::getIt(SeriousWoundOriginCode::PSYCHICAL),
+            $woundBoundary
+        );
+        self::assertFalse($health->mayHaveMalusFromWounds($woundBoundary));
+        self::assertTrue($health->mayHaveMalusFromWounds($this->createWoundBoundary($woundBoundary->getValue() - 1)));
+        self::assertFalse($health->mayHaveMalusFromWounds($woundBoundary));
+        $health->createWound(
+            $this->createWoundSize(1),
+            SeriousWoundOriginCode::getIt(SeriousWoundOriginCode::PSYCHICAL),
+            $woundBoundary
+        );
+        self::assertTrue($health->mayHaveMalusFromWounds($woundBoundary));
+    }
 }

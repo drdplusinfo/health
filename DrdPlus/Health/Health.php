@@ -745,6 +745,7 @@ class Health extends StrictObject implements Entity
     }
 
     /**
+     * Dominant, applied malus from wounds (pains respectively)
      * @param WoundBoundary $woundBoundary
      * @return int
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
@@ -757,7 +758,7 @@ class Health extends StrictObject implements Entity
             $maluses[] = $pain->getMalusToActivities();
         }
 
-        return min($maluses); // the most significant malus, therefore the lowest value
+        return \min($maluses); // the most significant malus (always lesser than zero), therefore the lowest value
     }
 
     /**

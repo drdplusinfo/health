@@ -163,7 +163,7 @@ class Health extends StrictObject implements Entity
      * @param int $woundAmount
      * @param WoundBoundary $woundBoundary
      */
-    private function resolveMalusAfterWound($woundAmount, WoundBoundary $woundBoundary)
+    private function resolveMalusAfterWound(int $woundAmount, WoundBoundary $woundBoundary)
     {
         if ($woundAmount === 0) {
             return;

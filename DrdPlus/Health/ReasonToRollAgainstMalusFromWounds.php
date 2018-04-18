@@ -6,16 +6,16 @@ use Granam\Scalar\ScalarInterface;
 use Granam\Tools\ValueDescriber;
 
 /**
- * @method static ReasonToRollAgainstWoundMalus getEnum($value)
+ * @method static ReasonToRollAgainstMalusFromWounds getEnum($value)
  */
-class ReasonToRollAgainstWoundMalus extends StringEnum
+class ReasonToRollAgainstMalusFromWounds extends StringEnum
 {
     const WOUND = 'wound';
 
     /**
-     * @return ReasonToRollAgainstWoundMalus
+     * @return ReasonToRollAgainstMalusFromWounds
      */
-    public static function getWoundReason(): ReasonToRollAgainstWoundMalus
+    public static function getWoundReason(): ReasonToRollAgainstMalusFromWounds
     {
         return static::getEnum(self::WOUND);
     }
@@ -28,9 +28,9 @@ class ReasonToRollAgainstWoundMalus extends StringEnum
     const HEAL = 'heal';
 
     /**
-     * @return ReasonToRollAgainstWoundMalus
+     * @return ReasonToRollAgainstMalusFromWounds
      */
-    public static function getHealReason(): ReasonToRollAgainstWoundMalus
+    public static function getHealReason(): ReasonToRollAgainstMalusFromWounds
     {
         return static::getEnum(self::HEAL);
     }
@@ -42,10 +42,10 @@ class ReasonToRollAgainstWoundMalus extends StringEnum
 
     /**
      * @param string $reasonCode
-     * @return ReasonToRollAgainstWoundMalus
+     * @return ReasonToRollAgainstMalusFromWounds
      * @throws \DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus
      */
-    public static function getIt($reasonCode): ReasonToRollAgainstWoundMalus
+    public static function getIt($reasonCode): ReasonToRollAgainstMalusFromWounds
     {
         return static::getEnum($reasonCode);
     }

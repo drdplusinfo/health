@@ -39,7 +39,7 @@ class BleedingEffect extends AfflictionEffect
      * @param WoundsTable $woundsTable
      * @param WoundBoundary $woundBoundary
      * @return SeriousWound|OrdinaryWound|Wound
-     * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFirst
+     * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFromWoundsFirst
      */
     public function bleed(Bleeding $bleeding, WoundsTable $woundsTable, WoundBoundary $woundBoundary): Wound
     {

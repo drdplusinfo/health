@@ -25,25 +25,21 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
      * @ORM\Id @ORM\GeneratedValue(strategy="AUTO") @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @var Health
      * @ORM\ManyToOne(targetEntity="Health", inversedBy="wounds")
      */
     private $health;
-
     /**
      * @var ArrayCollection|PointOfWound[]
      * @ORM\OneToMany(cascade={"all"}, targetEntity="PointOfWound", mappedBy="wound", orphanRemoval=true)
      */
     private $pointsOfWound;
-
     /**
      * @var WoundOriginCode
      * @ORM\Column(type="wound_origin_code")
      */
     private $woundOriginCode;
-
     /**
      * @var bool
      * @ORM\Column(type="boolean")

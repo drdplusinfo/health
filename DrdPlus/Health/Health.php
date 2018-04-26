@@ -95,7 +95,7 @@ class Health extends StrictObject implements Entity
      * @return OrdinaryWound|SeriousWound|Wound
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFromWoundsFirst
      */
-    public function createWound(
+    public function addWound(
         WoundSize $woundSize,
         SeriousWoundOriginCode $seriousWoundOriginCode,
         WoundBoundary $woundBoundary
@@ -932,8 +932,18 @@ class Health extends StrictObject implements Entity
      * @param WoundBoundary $woundBoundary
      * @return bool
      */
+    public function maySufferFromWounds(WoundBoundary $woundBoundary): bool
+    {
+        // if you became unconscious than the roll against pain malus is not re-rolled
+        return $this->mayHaveMalusFromWounds($woundBoundary) && $this->isConscious($woundBoundary);
+    }
+
+    /**
+     * @param WoundBoundary $woundBoundary
+     * @return bool
+     */
     public function mayHaveMalusFromWounds(WoundBoundary $woundBoundary): bool
     {
-        return $this->getGridOfWounds()->getNumberOfFilledRows($woundBoundary) > 0;
+        return $this->getGridOfWounds()->getNumberOfFilledRows($woundBoundary) >= GridOfWounds::PAIN_NUMBER_OF_ROWS;
     }
 }

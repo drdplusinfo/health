@@ -109,7 +109,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
         /** @var WoundBoundary $woundBoundary */
         /** @var WoundSize $woundSize */
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $seriousWound = $health->createWound(
+        $seriousWound = $health->addWound(
             $woundSize,
             SeriousWoundOriginCode::getMechanicalCutWoundOrigin(),
             $woundBoundary

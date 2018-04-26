@@ -50,7 +50,7 @@ class BleedingEffect extends AfflictionEffect
         $woundSize = new WoundSize($woundsFromTable->getValue());
         $woundCausedBleeding = $bleeding->getSeriousWound();
 
-        return $woundCausedBleeding->getHealth()->createWound(
+        return $woundCausedBleeding->getHealth()->addWound(
             $woundSize,
             $woundCausedBleeding->getWoundOriginCode(),
             $woundBoundary

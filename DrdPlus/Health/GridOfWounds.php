@@ -8,9 +8,9 @@ use Granam\Strict\Object\StrictObject;
 class GridOfWounds extends StrictObject
 {
 
-    const PAIN_NUMBER_OF_ROWS = 1;
-    const UNCONSCIOUS_NUMBER_OF_ROWS = 2;
-    const TOTAL_NUMBER_OF_ROWS = 3;
+    public const PAIN_NUMBER_OF_ROWS = 1;
+    public const UNCONSCIOUS_NUMBER_OF_ROWS = 2;
+    public const TOTAL_NUMBER_OF_ROWS = 3;
 
     /**
      * @var Health

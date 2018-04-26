@@ -31,7 +31,7 @@ class BleedingEffectTest extends AfflictionEffectTest
         $health = new Health();
         $woundBoundary = $this->createWoundLimitBoundary(10);
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $woundCausedBleeding = $health->createWound(
+        $woundCausedBleeding = $health->addWound(
             new WoundSize(25),
             $seriousWoundOrigin = $this->createSpecificWoundOriginCode(),
             $woundBoundary

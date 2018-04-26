@@ -60,12 +60,12 @@ class HealthDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
             ),
             Tables::getIt()
         );
-        $ordinaryWound = $health->createWound(
+        $ordinaryWound = $health->addWound(
             new WoundSize(1),
             SeriousWoundOriginCode::getMechanicalCutWoundOrigin(),
             $woundBoundary
         );
-        $seriousWound = $health->createWound(
+        $seriousWound = $health->addWound(
             new WoundSize(7),
             SeriousWoundOriginCode::getMechanicalCrushWoundOrigin(),
             $woundBoundary

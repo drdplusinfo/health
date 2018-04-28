@@ -19,9 +19,7 @@ use Granam\Strict\Object\StrictObject;
 
 class HealingPower extends StrictObject implements IntegerInterface
 {
-    /**
-     * @var Wounds
-     */
+    /** @var Wounds */
     private $healUpToWounds;
 
     /**
@@ -76,7 +74,7 @@ class HealingPower extends StrictObject implements IntegerInterface
      * @param int $healingPowerValue
      * @param Tables $tables
      */
-    private function __construct($healingPowerValue, Tables $tables)
+    private function __construct(int $healingPowerValue, Tables $tables)
     {
         $this->healUpToWounds = (new WoundsBonus($healingPowerValue, $tables->getWoundsTable()))->getWounds();
     }

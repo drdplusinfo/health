@@ -8,23 +8,22 @@ use DrdPlus\Codes\RaceCode;
 use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Tables\Body\Healing\HealingConditionsPercents;
-use DrdPlus\Tables\Measurements\Wounds\Wounds as TableWounds;
-use DrdPlus\Tables\Measurements\Wounds\Wounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Tables;
 use Granam\Integer\IntegerInterface;
-use Granam\Integer\Tools\ToInteger;
-use Granam\Number\NumberInterface;
 use Granam\Strict\Object\StrictObject;
 
 class HealingPower extends StrictObject implements IntegerInterface
 {
-    /** @var Wounds */
+    /** @var int */
+    private $value;
+    /** @var int */
     private $healUpToWounds;
 
     /**
      * @param RaceCode $raceCode
      * @param SubRaceCode $subRaceCode
+     * @param Toughness $toughness
      * @param ActivityAffectingHealingCode $activityCode
      * @param ConditionsAffectingHealingCode $conditionsCode
      * @param HealingConditionsPercents $healingConditionsPercents
@@ -38,6 +37,7 @@ class HealingPower extends StrictObject implements IntegerInterface
     public static function createForRegeneration(
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
+        Toughness $toughness,
         ActivityAffectingHealingCode $activityCode,
         ConditionsAffectingHealingCode $conditionsCode,
         HealingConditionsPercents $healingConditionsPercents,
@@ -54,29 +54,32 @@ class HealingPower extends StrictObject implements IntegerInterface
             )
             + $tables->getHealingByActivityTable()->getHealingBonusByActivity($activityCode->getValue())
             + $tables->getHealingByConditionsTable()->getHealingBonusByConditions($conditionsCode->getValue(), $healingConditionsPercents)
-            - 7
+            - 7 // constant value coming from a official formula
             + $roll2d6DrdPlus->getValue();
 
-        return new static($healingPower, $tables);
+        return new static($healingPower, $toughness, $tables);
     }
 
     /**
      * @param int $healingPowerValue
+     * @param Toughness $toughness
      * @param Tables $tables
      * @return HealingPower
      */
-    public static function createForTreatment(int $healingPowerValue, Tables $tables): HealingPower
+    public static function createForTreatment(int $healingPowerValue, Toughness $toughness, Tables $tables): HealingPower
     {
-        return new static($healingPowerValue, $tables);
+        return new static($healingPowerValue, $toughness, $tables);
     }
 
     /**
      * @param int $healingPowerValue
+     * @param Toughness $toughness
      * @param Tables $tables
      */
-    private function __construct(int $healingPowerValue, Tables $tables)
+    private function __construct(int $healingPowerValue, Toughness $toughness, Tables $tables)
     {
-        $this->healUpToWounds = (new WoundsBonus($healingPowerValue, $tables->getWoundsTable()))->getWounds();
+        $this->value = $healingPowerValue + $toughness->getValue();
+        $this->healUpToWounds = (new WoundsBonus($this->value, $tables->getWoundsTable()))->getWounds()->getValue();
     }
 
     /**
@@ -84,46 +87,16 @@ class HealingPower extends StrictObject implements IntegerInterface
      */
     public function getValue(): int
     {
-        return $this->healUpToWounds->getBonus()->getValue();
+        return $this->value;
     }
 
     /**
-     * @param Toughness $toughness
+     *
      * @return int
      */
-    public function getHealUpTo(Toughness $toughness): int
+    public function getHealUpToWounds(): int
     {
-        return $this->healUpToWounds->getValue() + $toughness->getValue();
-    }
-
-    /**
-     * @param int|float|string|NumberInterface $healedAmount not a healing power, but real amount of healed wound points
-     * @param Toughness $toughness
-     * @param Tables $tables
-     * @return static|healingPower
-     * @throws \DrdPlus\Health\Exceptions\HealedAmountIsTooBig
-     * @throws \Granam\Integer\Tools\Exceptions\WrongParameterType
-     * @throws \Granam\Integer\Tools\Exceptions\ValueLostOnCast
-     */
-    public function decreaseByHealedAmount($healedAmount, Toughness $toughness, Tables $tables)
-    {
-        $healedAmount = ToInteger::toInteger($healedAmount);
-        $healUpTo = $this->getHealUpTo($toughness);
-        if ($healedAmount > $healUpTo) {
-            throw new Exceptions\HealedAmountIsTooBig(
-                "So much amount {$healedAmount} could not be healed by this healing power"
-                . " ({$this->getValue()}) able to heal only up to {$healUpTo}"
-            );
-        }
-        if ($healedAmount === 0) {
-            return $this;
-        }
-        $decreasedHealingPower = clone $this;
-        $remainingHealUpTo = $healUpTo - $healedAmount - $toughness->getValue();
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $decreasedHealingPower->healUpToWounds = new TableWounds($remainingHealUpTo, $tables->getWoundsTable());
-
-        return $decreasedHealingPower;
+        return $this->healUpToWounds;
     }
 
     /**
@@ -131,6 +104,6 @@ class HealingPower extends StrictObject implements IntegerInterface
      */
     public function __toString()
     {
-        return (string)$this->getValue();
+        return (string)$this->getValue() . " (with heal up to {$this->getHealUpToWounds()})";
     }
 }

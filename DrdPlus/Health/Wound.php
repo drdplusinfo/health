@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use DrdPlus\Codes\Body\OrdinaryWoundOriginCode;
 use DrdPlus\Codes\Body\SeriousWoundOriginCode;
 use DrdPlus\Codes\Body\WoundOriginCode;
-use DrdPlus\Properties\Derived\Toughness;
 use Granam\Integer\IntegerInterface;
 use Granam\Strict\Object\StrictObject;
 
@@ -131,22 +130,22 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     abstract public function isOrdinary(): bool;
 
     /**
-     * @param HealingPower $healingPower
-     * @param Toughness $toughness
+     * @param int $healUpToWounds
      * @return int amount of healed points of wound
      */
-    public function heal(HealingPower $healingPower, Toughness $toughness): int
+    public function heal(int $healUpToWounds): int
     {
         $this->setOld(); // any wound is "old", treated and can be healed by regeneration or a true professional only
         // technical note: orphaned points of wound are removed automatically on persistence
-        if ($healingPower->getHealUpTo($toughness) >= $this->getValue()) { // there is power to heal it all
+        if ($healUpToWounds >= $this->getValue()) { // there is power to heal it all
             $healed = $this->getValue();
             $this->pointsOfWound->clear(); // unbinds all the points of wound
 
             return $healed;
         }
         $healed = 0;
-        for ($healing = 1; $healing <= $healingPower->getHealUpTo($toughness); $healing++) {
+        for ($healing = 1; $healing <= $healUpToWounds; $healing++) {
+            // removing points one by one
             $this->pointsOfWound->removeElement($this->pointsOfWound->last());
             $healed++;
         }

@@ -3,16 +3,10 @@ namespace DrdPlus\Tests\Health;
 
 use DrdPlus\Codes\Body\OrdinaryWoundOriginCode;
 use DrdPlus\Codes\Body\SeriousWoundOriginCode;
-use DrdPlus\Health\HealingPower;
 use DrdPlus\Health\Health;
 use DrdPlus\Health\PointOfWound;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
-use DrdPlus\Properties\Derived\Toughness;
-use DrdPlus\Tables\Measurements\Wounds\Wounds;
-use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
-use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
-use DrdPlus\Tables\Tables;
 use Granam\Tests\Tools\TestWithMockery;
 
 abstract class WoundTest extends TestWithMockery
@@ -105,63 +99,18 @@ abstract class WoundTest extends TestWithMockery
         self::assertFalse($wound->isOld());
         self::assertTrue($wound->isFresh());
 
-        self::assertSame(
-            1,
-            $wound->heal(HealingPower::createForTreatment(123, $this->createTablesWithWoundsTable(3, 123)), $this->createToughness(-2)),
-            'Expected reported healed value to be 1'
-        );
+        self::assertSame(1, $wound->heal(1), 'Expected reported healed value to be 1');
         self::assertSame(2, $wound->getValue(), 'Expected one point of wound to be already healed');
         self::assertCount(2, $wound->getPointsOfWound());
         self::assertFalse($wound->isHealed());
         self::assertTrue($wound->isOld(), 'Wound should become "old" after any heal attempt');
         self::assertFalse($wound->isFresh(), 'Wound should not be "fresh" after any heal attempt');
 
-        self::assertSame(
-            2,
-            $wound->heal(HealingPower::createForTreatment(123, $this->createTablesWithWoundsTable(999, 123)), $this->createToughness(456)),
-            'Expected reported healed value to be the remaining value, 2'
-        );
+        self::assertSame(2, $wound->heal(999), 'Expected reported healed value to be the remaining value, 2');
         self::assertEmpty($wound->getPointsOfWound());
         self::assertTrue($wound->isHealed());
         self::assertTrue($wound->isOld(), 'Wound should become "old" after any heal attempt');
         self::assertFalse($wound->isFresh(), 'Wound should not be "fresh" after any heal attempt');
-    }
-
-    /**
-     * @param $value
-     * @return \Mockery\MockInterface|Toughness
-     */
-    private function createToughness($value)
-    {
-        $toughness = $this->mockery(Toughness::class);
-        $toughness->shouldReceive('getValue')
-            ->andReturn($value);
-
-        return $toughness;
-    }
-
-    /**
-     * @param $woundsValue
-     * @param $expectedWoundsBonus
-     * @return \Mockery\MockInterface|Tables
-     */
-    private function createTablesWithWoundsTable($woundsValue, $expectedWoundsBonus)
-    {
-        $tables = $this->mockery(Tables::class);
-        $tables->shouldReceive('getWoundsTable')
-            ->andReturn($woundsTable = $this->mockery(WoundsTable::class));
-        $woundsTable->shouldReceive('toWounds')
-            ->atLeast()->once()
-            ->andReturnUsing(function (WoundsBonus $woundBonus) use ($expectedWoundsBonus, $woundsValue) {
-                self::assertSame($expectedWoundsBonus, $woundBonus->getValue());
-                $wounds = $this->mockery(Wounds::class);
-                $wounds->shouldReceive('getValue')
-                    ->andReturn($woundsValue);
-
-                return $wounds;
-            });
-
-        return $tables;
     }
 
     /**

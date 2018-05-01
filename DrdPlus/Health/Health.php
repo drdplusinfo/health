@@ -237,29 +237,25 @@ class Health extends StrictObject implements Entity
      * Also sets treatment boundary to unhealed wounds after. Even if the heal itself heals nothing!
      *
      * @param HealingPower $healingPower
-     * @param Toughness $toughness
-     * @param Tables $tables
+     * @param WoundBoundary $woundBoundary
      * @return int amount of actually healed points of wounds
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFromWoundsFirst
      */
-    public function healFreshOrdinaryWounds(HealingPower $healingPower, Toughness $toughness, Tables $tables): int
+    public function healFreshOrdinaryWounds(HealingPower $healingPower, WoundBoundary $woundBoundary): int
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // can heal new and ordinary wounds only, up to limit by current treatment boundary
         $healedAmount = 0;
+        $remainingHealUpToWounds = $healingPower->getHealUpToWounds();
         foreach ($this->getUnhealedFreshOrdinaryWounds() as $newOrdinaryWound) {
-            if ($healingPower->getHealUpTo($toughness) > 0) { // we do not spent all the healing power
-                $currentlyHealed = $newOrdinaryWound->heal($healingPower, $toughness);
-                /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-                $healingPower = $healingPower->decreaseByHealedAmount($currentlyHealed, $toughness, $tables); // new instance
-                $healedAmount += $currentlyHealed;
-            }
-            // all new ordinary wounds become "old", healed or not (and those unhealed can be healed only by a professional or nature itself)
-            $newOrdinaryWound->setOld();
+            // wound is set as old internally, ALL OF THEM, even if no healing left
+            $currentlyRegenerated = $newOrdinaryWound->heal($remainingHealUpToWounds);
+            $remainingHealUpToWounds -= $currentlyRegenerated;
+            $healedAmount += $currentlyRegenerated;
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        $this->resolveMalusAfterHeal($healedAmount, WoundBoundary::getIt($toughness, $tables));
+        $this->resolveMalusAfterHeal($healedAmount, $woundBoundary);
 
         return $healedAmount;
     }
@@ -335,8 +331,7 @@ class Health extends StrictObject implements Entity
                 . " {$seriousWound->getWoundOriginCode()} should not be old to be healed."
             );
         }
-        $healedAmount = $seriousWound->heal($healingPower, $toughness);
-        $seriousWound->setOld();
+        $healedAmount = $seriousWound->heal($healingPower->getHealUpToWounds());
         // treatment boundary is taken with wounds down together
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->treatmentBoundary->getValue() - $healedAmount);
@@ -349,29 +344,25 @@ class Health extends StrictObject implements Entity
      * Regenerate any wound, both ordinary and serious, both new and old, by natural or unnatural way.
      *
      * @param HealingPower $healingPower
-     * @param Toughness $toughness
-     * @param Tables $tables
+     * @param WoundBoundary $woundBoundary
      * @return int actually regenerated amount
      * @throws \DrdPlus\Health\Exceptions\NeedsToRollAgainstMalusFromWoundsFirst
      */
-    public function regenerate(HealingPower $healingPower, Toughness $toughness, Tables $tables): int
+    public function regenerate(HealingPower $healingPower, WoundBoundary $woundBoundary): int
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         // every wound becomes old after this
         $regeneratedAmount = 0;
+        $remainingHealUpToWounds = $healingPower->getHealUpToWounds();
         foreach ($this->getUnhealedWounds() as $unhealedWound) {
-            if ($healingPower->getHealUpTo($toughness) > 0) { // we do not spent all the healing power yet
-                $currentlyRegenerated = $unhealedWound->heal($healingPower, $toughness);
-                /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-                $healingPower = $healingPower->decreaseByHealedAmount($currentlyRegenerated, $toughness, $tables); // new instance
-                $regeneratedAmount += $currentlyRegenerated;
-            }
-            // all unhealed wounds become "old", healed or not (and can be healed only by regenerating like this)
-            $unhealedWound->setOld();
+            // wound is set as old internally, ALL OF THEM, even if no healing left
+            $currentlyRegenerated = $unhealedWound->heal($remainingHealUpToWounds);
+            $remainingHealUpToWounds -= $currentlyRegenerated;
+            $regeneratedAmount += $currentlyRegenerated;
         }
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->treatmentBoundary = TreatmentBoundary::getIt($this->getUnhealedWoundsSum());
-        $this->resolveMalusAfterHeal($regeneratedAmount, WoundBoundary::getIt($toughness, $tables));
+        $this->resolveMalusAfterHeal($regeneratedAmount, $woundBoundary);
 
         return $regeneratedAmount;
     }

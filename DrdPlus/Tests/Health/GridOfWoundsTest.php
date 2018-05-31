@@ -17,7 +17,7 @@ class GridOfWoundsTest extends TestWithMockery
      */
     private static $pointOfWound;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         self::$pointOfWound = $this->mockery(PointOfWound::class);
     }
@@ -25,17 +25,17 @@ class GridOfWoundsTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_maximum_of_wounds_per_row()
+    public function I_can_get_maximum_of_wounds_per_row(): void
     {
         $gridOfWounds = new GridOfWounds($this->createHealth([] /* no wounds*/));
         self::assertSame(123, $gridOfWounds->getWoundsPerRowMaximum($this->createWoundBoundary(123)));
     }
 
     /**
-     * @param $value
+     * @param int $value
      * @return \Mockery\MockInterface|WoundBoundary
      */
-    private function createWoundBoundary($value)
+    private function createWoundBoundary(int $value)
     {
         $woundBoundary = $this->mockery(WoundBoundary::class);
         $woundBoundary->shouldReceive('getValue')
@@ -48,16 +48,16 @@ class GridOfWoundsTest extends TestWithMockery
      * @param array|Wound[] $unhealedWounds
      * @return \Mockery\MockInterface|Health
      */
-    private function createHealth(array $unhealedWounds = [])
+    private function createHealth(array $unhealedWounds = []): Health
     {
         $health = $this->mockery(Health::class);
         $health->shouldReceive('getUnhealedWounds')
             ->andReturn($unhealedWounds);
         $health->shouldReceive('getUnhealedWoundsSum')
             ->andReturn(
-                array_sum(array_map(
+                (int)\array_sum(\array_map(
                     function (Wound $wound) {
-                        return count($wound->getPointsOfWound());
+                        return \count($wound->getPointsOfWound());
                     },
                     $unhealedWounds
                 ))
@@ -101,7 +101,7 @@ class GridOfWoundsTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_calculated_filled_half_rows_for_given_wound_value()
+    public function I_can_get_calculated_filled_half_rows_for_given_wound_value(): void
     {
         // limit of wounds divisible by two (odd)
         $gridOfWounds = new GridOfWounds($this->createHealth([] /* no wounds*/));
@@ -190,7 +190,7 @@ class GridOfWoundsTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_number_of_filled_rows()
+    public function I_can_get_number_of_filled_rows(): void
     {
         $gridOfWounds = new GridOfWounds($this->createHealth($this->createWounds([3, 1])));
         self::assertSame(

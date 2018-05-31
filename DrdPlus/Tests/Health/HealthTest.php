@@ -1005,15 +1005,6 @@ class HealthTest extends TestWithMockery
             $decreasedHealingPower = $this->mockery(HealingPower::class);
             $decreasedHealingPower->shouldReceive('getHealUpToWounds')
                 ->andReturn(0);
-            /** @noinspection PhpUnusedParameterInspection */
-            $healingPower->shouldReceive('decreaseByHealedAmount')
-                ->zeroOrMoreTimes()
-                ->andReturnUsing(function ($givenHealedAmount)
-                use ($decreasedHealingPower, $expectedHealedAmount) {
-                    self::assertSame($givenHealedAmount, $expectedHealedAmount);
-
-                    return $decreasedHealingPower;
-                });
         }
 
         return $healingPower;

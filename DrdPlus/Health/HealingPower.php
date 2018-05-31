@@ -24,8 +24,8 @@ class HealingPower extends StrictObject implements IntegerInterface
      * @param RaceCode $raceCode
      * @param SubRaceCode $subRaceCode
      * @param Toughness $toughness
-     * @param ActivityAffectingHealingCode $activityCode
-     * @param ConditionsAffectingHealingCode $conditionsCode
+     * @param ActivityAffectingHealingCode $activityAffectingHealingCode
+     * @param ConditionsAffectingHealingCode $conditionsAffectingHealingCode
      * @param HealingConditionsPercents $healingConditionsPercents
      * @param Roll2d6DrdPlus $roll2d6DrdPlus
      * @param Tables $tables
@@ -38,8 +38,8 @@ class HealingPower extends StrictObject implements IntegerInterface
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
         Toughness $toughness,
-        ActivityAffectingHealingCode $activityCode,
-        ConditionsAffectingHealingCode $conditionsCode,
+        ActivityAffectingHealingCode $activityAffectingHealingCode,
+        ConditionsAffectingHealingCode $conditionsAffectingHealingCode,
         HealingConditionsPercents $healingConditionsPercents,
         Roll2d6DrdPlus $roll2d6DrdPlus,
         Tables $tables
@@ -52,8 +52,8 @@ class HealingPower extends StrictObject implements IntegerInterface
                 ? 4
                 : 0
             )
-            + $tables->getHealingByActivityTable()->getHealingBonusByActivity($activityCode->getValue())
-            + $tables->getHealingByConditionsTable()->getHealingBonusByConditions($conditionsCode->getValue(), $healingConditionsPercents)
+            + $tables->getHealingByActivityTable()->getHealingBonusByActivity($activityAffectingHealingCode->getValue())
+            + $tables->getHealingByConditionsTable()->getHealingBonusByConditions($conditionsAffectingHealingCode->getValue(), $healingConditionsPercents)
             - 7 // constant value coming from a official formula
             + $roll2d6DrdPlus->getValue();
 

@@ -9,10 +9,9 @@ class ReasonToRollAgainstMalusTest extends TestCase
     /**
      * @test
      */
-    public function I_can_use_wound_reason()
+    public function I_can_use_wound_reason(): void
     {
         $woundReason = ReasonToRollAgainstMalusFromWounds::getWoundReason();
-        self::assertInstanceOf(ReasonToRollAgainstMalusFromWounds::class, $woundReason);
         self::assertTrue($woundReason->becauseOfWound());
         self::assertFalse($woundReason->becauseOfHeal());
         self::assertSame('wound', $woundReason->getValue());
@@ -20,10 +19,9 @@ class ReasonToRollAgainstMalusTest extends TestCase
         self::assertSame(ReasonToRollAgainstMalusFromWounds::getIt('wound'), $woundReason);
     }
 
-    public function I_can_use_heal_reason()
+    public function I_can_use_heal_reason(): void
     {
         $healReason = ReasonToRollAgainstMalusFromWounds::getHealReason();
-        self::assertInstanceOf(ReasonToRollAgainstMalusFromWounds::class, $healReason);
         self::assertTrue($healReason->becauseOfHeal());
         self::assertFalse($healReason->becauseOfWound());
         self::assertSame('heal', $healReason->getValue());
@@ -36,7 +34,7 @@ class ReasonToRollAgainstMalusTest extends TestCase
      * @expectedException \DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus
      * @expectedExceptionMessageRegExp ~hypochondriac~
      */
-    public function I_can_not_create_unknown_reason()
+    public function I_can_not_create_unknown_reason(): void
     {
         ReasonToRollAgainstMalusFromWounds::getEnum('hypochondriac');
     }

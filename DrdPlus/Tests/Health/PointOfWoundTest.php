@@ -10,7 +10,7 @@ class PointOfWoundTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_use_it()
+    public function I_can_use_it(): void
     {
         $pointOfWound = new PointOfWound($wound = $this->createWound());
         self::assertNull($pointOfWound->getId());
@@ -22,7 +22,7 @@ class PointOfWoundTest extends TestWithMockery
     /**
      * @return \Mockery\MockInterface|Wound
      */
-    private function createWound()
+    private function createWound(): Wound
     {
         return $this->mockery(Wound::class);
     }

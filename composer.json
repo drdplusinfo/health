@@ -11,20 +11,20 @@
   "require": {
     "php": ">=7.1",
     "doctrine/orm": "2.*",
-    "doctrineum/entity": "dev-master",
-    "doctrineum/integer": "dev-master",
-    "doctrineum/string": "dev-master",
-    "doctrineum/date-interval": "dev-master",
-    "drd-plus/properties": "dev-master",
-    "drd-plus/tables": "dev-master",
-    "drd-plus/rolls-on": "dev-master",
-    "drd-plus/calculations": "dev-master",
-    "drd-plus/skills": "dev-master",
-    "drd-plus/lighting": "dev-master"
+    "doctrineum/entity": "^2.1",
+    "doctrineum/integer": "^3.1",
+    "doctrineum/string": "^2.1",
+    "doctrineum/date-interval": "^3.1",
+    "drd-plus/properties": "^1.0",
+    "drd-plus/tables": "^1.0",
+    "drd-plus/rolls-on": "^1.0",
+    "drd-plus/calculations": "^1.0",
+    "drd-plus/skills": "^1.0",
+    "drd-plus/lighting": "^1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
-    "phpunit/phpunit": "~6.0",
+    "phpunit/phpunit": "~7.0",
     "mockery/mockery": "~1.0",
     "granam/exceptions-hierarchy": "~4.0"
   },

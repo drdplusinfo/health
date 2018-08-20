@@ -1,5 +1,5 @@
 {
-  "name": "drd-plus/health",
+  "name": "drdplus/health",
   "license": "MIT",
   "type": "project",
   "description": "Body and soul harms, afflictions and their treatment of a being for Drd+",
@@ -15,12 +15,12 @@
     "doctrineum/integer": "^3.1",
     "doctrineum/string": "^2.1",
     "doctrineum/date-interval": "^3.1",
-    "drd-plus/properties": "^1.0",
-    "drd-plus/tables": "^1.0",
-    "drd-plus/rolls-on": "^1.0",
-    "drd-plus/calculations": "^1.0",
-    "drd-plus/skills": "^1.0",
-    "drd-plus/lighting": "^1.0"
+    "drdplus/properties": "^1.0",
+    "drdplus/tables": "^1.0",
+    "drdplus/rolls-on": "^1.0",
+    "drdplus/calculations": "^1.0",
+    "drdplus/skills": "^1.0",
+    "drdplus/lighting": "^1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",

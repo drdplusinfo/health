@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Afflictions;
 
-use Doctrineum\String\StringEnum;
+use Granam\StringEnum\StringEnum;
 use DrdPlus\Codes\Units\TimeUnitCode;
 use Granam\Tools\ValueDescriber;
 
@@ -10,43 +10,31 @@ use Granam\Tools\ValueDescriber;
  */
 class AfflictionVirulence extends StringEnum
 {
-    const AFFLICTION_VIRULENCE = 'affliction_virulence';
+    public const AFFLICTION_VIRULENCE = 'affliction_virulence';
 
-    const ROUND = TimeUnitCode::ROUND;
+    public const ROUND = TimeUnitCode::ROUND;
 
-    /**
-     * @return AfflictionVirulence
-     */
     public static function getRoundVirulence(): AfflictionVirulence
     {
         return static::getEnum(self::ROUND);
     }
 
-    const MINUTE = TimeUnitCode::MINUTE;
+    public const MINUTE = TimeUnitCode::MINUTE;
 
-    /**
-     * @return AfflictionVirulence
-     */
     public static function getMinuteVirulence(): AfflictionVirulence
     {
         return static::getEnum(TimeUnitCode::MINUTE);
     }
 
-    const HOUR = TimeUnitCode::HOUR;
+    public const HOUR = TimeUnitCode::HOUR;
 
-    /**
-     * @return AfflictionVirulence
-     */
     public static function getHourVirulence(): AfflictionVirulence
     {
         return static::getEnum(self::HOUR);
     }
 
-    const DAY = TimeUnitCode::DAY;
+    public const DAY = TimeUnitCode::DAY;
 
-    /**
-     * @return AfflictionVirulence
-     */
     public static function getDayVirulence(): AfflictionVirulence
     {
         return static::getEnum(self::DAY);
@@ -56,7 +44,6 @@ class AfflictionVirulence extends StringEnum
      * @param bool|float|int|string|object $enumValue
      * @return string
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownVirulencePeriod
-     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {
@@ -66,7 +53,6 @@ class AfflictionVirulence extends StringEnum
                 'Unknown period of a virulence: ' . ValueDescriber::describe($enumValue)
             );
         }
-
         return $finalValue;
     }
 

@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health;
 
-use Doctrineum\Integer\IntegerEnum;
+use Granam\IntegerEnum\IntegerEnum;
 use Granam\Tools\ValueDescriber;
 
 /**
@@ -9,13 +9,12 @@ use Granam\Tools\ValueDescriber;
  */
 class MalusFromWounds extends IntegerEnum
 {
-    const MOST = -3;
+    public const MOST = -3;
 
     /**
      * @param int $malusValue
      * @return MalusFromWounds
      * @throws \DrdPlus\Health\Exceptions\UnexpectedMalusValue
-     * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
     public static function getIt($malusValue): MalusFromWounds
     {
@@ -26,7 +25,6 @@ class MalusFromWounds extends IntegerEnum
      * @param mixed $enumValue
      * @return int
      * @throws \DrdPlus\Health\Exceptions\UnexpectedMalusValue
-     * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
     protected static function convertToEnumFinalValue($enumValue): int
     {
@@ -38,7 +36,6 @@ class MalusFromWounds extends IntegerEnum
                 'Malus can be between 0 and ' . self::MOST . ', got ' . ValueDescriber::describe($enumValue)
             );
         }
-
         return $finalValue;
     }
 

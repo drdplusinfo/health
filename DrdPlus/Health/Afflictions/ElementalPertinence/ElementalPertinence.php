@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Afflictions\ElementalPertinence;
 
-use Doctrineum\String\StringEnum;
+use Granam\StringEnum\StringEnum;
 use Granam\String\StringTools;
 
 /**
@@ -9,7 +9,7 @@ use Granam\String\StringTools;
  */
 abstract class ElementalPertinence extends StringEnum
 {
-    const MINUS = '-';
+    public const MINUS = '-';
 
     /**
      * @return ElementalPertinence
@@ -19,12 +19,9 @@ abstract class ElementalPertinence extends StringEnum
         return static::getEnum(self::MINUS . static::getPertinenceCode());
     }
 
-    /**
-     * @return string
-     */
     public static function getPertinenceCode(): string
     {
-        return preg_replace('~_pertinence$~', '', StringTools::camelCaseToSnakeCasedBasename(static::class));
+        return \preg_replace('~_pertinence$~', '', StringTools::camelCaseToSnakeCasedBasename(static::class));
     }
 
     /**
@@ -35,7 +32,7 @@ abstract class ElementalPertinence extends StringEnum
         return strpos($this->getValue(), self::MINUS) === 0;
     }
 
-    const PLUS = '+';
+    public const PLUS = '+';
 
     /**
      * @return ElementalPertinence
@@ -45,9 +42,6 @@ abstract class ElementalPertinence extends StringEnum
         return static::getEnum(self::PLUS . static::getPertinenceCode());
     }
 
-    /**
-     * @return bool
-     */
     public function isPlus(): bool
     {
         return strpos($this->getValue(), self::PLUS) === 0;

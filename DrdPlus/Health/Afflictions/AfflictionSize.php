@@ -1,7 +1,8 @@
 <?php
 namespace DrdPlus\Health\Afflictions;
 
-use Doctrineum\Integer\IntegerEnum;
+use Granam\Integer\IntegerInterface;
+use Granam\IntegerEnum\IntegerEnum;
 use Granam\Tools\ValueDescriber;
 
 /**
@@ -10,10 +11,9 @@ use Granam\Tools\ValueDescriber;
 class AfflictionSize extends IntegerEnum
 {
     /**
-     * @param int $size
+     * @param int|IntegerInterface $size
      * @return AfflictionSize
      * @throws \DrdPlus\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative
-     * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
     public static function getIt($size): AfflictionSize
     {
@@ -24,7 +24,6 @@ class AfflictionSize extends IntegerEnum
      * @param mixed $enumValue
      * @return int
      * @throws \DrdPlus\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative
-     * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
     protected static function convertToEnumFinalValue($enumValue): int
     {
@@ -34,7 +33,6 @@ class AfflictionSize extends IntegerEnum
                 'Affliction size has to be at least 0, got ' . ValueDescriber::describe($enumValue)
             );
         }
-
         return $finalValue;
     }
 

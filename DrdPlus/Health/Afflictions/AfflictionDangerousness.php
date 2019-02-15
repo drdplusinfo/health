@@ -1,7 +1,8 @@
 <?php
 namespace DrdPlus\Health\Afflictions;
 
-use Doctrineum\Integer\IntegerEnum;
+use Granam\Integer\IntegerInterface;
+use Granam\IntegerEnum\IntegerEnum;
 
 /**
  * @method static getEnum($value)
@@ -9,7 +10,7 @@ use Doctrineum\Integer\IntegerEnum;
 class AfflictionDangerousness extends IntegerEnum
 {
     /**
-     * @param $value
+     * @param int|IntegerInterface $value
      * @return AfflictionDangerousness
      */
     public static function getIt($value): AfflictionDangerousness

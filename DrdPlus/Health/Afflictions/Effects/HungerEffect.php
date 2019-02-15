@@ -6,19 +6,13 @@ namespace DrdPlus\Health\Afflictions\Effects;
  */
 class HungerEffect extends AfflictionEffect
 {
-    const HUNGER_EFFECT = 'hunger_effect';
+    public const HUNGER_EFFECT = 'hunger_effect';
 
-    /**
-     * @return HungerEffect
-     */
     public static function getIt(): HungerEffect
     {
         return static::getEnum(self::HUNGER_EFFECT);
     }
 
-    /**
-     * @return bool
-     */
     public function isEffectiveEvenOnSuccessAgainstTrap(): bool
     {
         return true;

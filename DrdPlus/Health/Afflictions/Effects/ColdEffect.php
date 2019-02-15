@@ -9,7 +9,7 @@ use DrdPlus\Calculations\SumAndRound;
  */
 class ColdEffect extends AfflictionEffect
 {
-    const COLD_EFFECT = 'cold_effect';
+    public const COLD_EFFECT = 'cold_effect';
 
     public static function getIt(): ColdEffect
     {

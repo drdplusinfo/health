@@ -19,7 +19,7 @@ class AfflictionSizeTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
+     * @expectedException \Granam\IntegerEnum\Exceptions\WrongValueForIntegerEnum
      * @expectedExceptionMessageRegExp ~Broken heart by fixed dart~
      */
     public function I_am_stopped_by_specific_exception_on_invalid_value()

@@ -31,7 +31,7 @@ class HungerTest extends AfflictionTest
 
         $health = new Health();
         $hunger = Hunger::createIt($health, $this->createAfflictionSize());
-        self::assertSame([$hunger], $health->getAfflictions()->toArray());
+        self::assertSame([$hunger], $health->getAfflictions());
     }
 
     /**

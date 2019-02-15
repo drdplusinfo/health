@@ -5,12 +5,12 @@ use DrdPlus\Codes\ElementCode;
 
 class AirPertinence extends ElementalPertinence
 {
-    const AIR = ElementCode::AIR;
+    public const AIR = ElementCode::AIR;
 
     /**
      * @return AirPertinence|ElementalPertinence
      */
-    public static function getMinus()
+    public static function getMinus(): AirPertinence
     {
         return parent::getMinus();
     }
@@ -18,7 +18,7 @@ class AirPertinence extends ElementalPertinence
     /**
      * @return AirPertinence|ElementalPertinence
      */
-    public static function getPlus()
+    public static function getPlus(): AirPertinence
     {
         return parent::getPlus();
     }

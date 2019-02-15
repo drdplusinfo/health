@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Health\Afflictions;
 
-use Doctrineum\Integer\IntegerEnum;
+use Granam\IntegerEnum\IntegerEnum;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use PHPUnit\Framework\TestCase;
 

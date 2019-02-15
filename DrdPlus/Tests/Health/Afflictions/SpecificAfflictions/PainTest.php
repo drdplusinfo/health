@@ -39,7 +39,6 @@ class PainTest extends AfflictionByWoundTest
             $elementalPertinence = $this->createElementalPertinence()
         );
 
-        self::assertNull($someTerriblePain->getId());
         self::assertSame($seriousWound, $someTerriblePain->getSeriousWound());
 
         self::assertInstanceOf(AfflictionDomain::class, $someTerriblePain->getDomain());

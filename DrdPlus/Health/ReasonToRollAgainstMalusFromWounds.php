@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health;
 
-use Doctrineum\String\StringEnum;
+use Granam\StringEnum\StringEnum;
 use Granam\Scalar\ScalarInterface;
 use Granam\Tools\ValueDescriber;
 
@@ -10,11 +10,8 @@ use Granam\Tools\ValueDescriber;
  */
 class ReasonToRollAgainstMalusFromWounds extends StringEnum
 {
-    const WOUND = 'wound';
+    public const WOUND = 'wound';
 
-    /**
-     * @return ReasonToRollAgainstMalusFromWounds
-     */
     public static function getWoundReason(): ReasonToRollAgainstMalusFromWounds
     {
         return static::getEnum(self::WOUND);
@@ -25,11 +22,8 @@ class ReasonToRollAgainstMalusFromWounds extends StringEnum
         return $this->getValue() === self::WOUND;
     }
 
-    const HEAL = 'heal';
+    public const HEAL = 'heal';
 
-    /**
-     * @return ReasonToRollAgainstMalusFromWounds
-     */
     public static function getHealReason(): ReasonToRollAgainstMalusFromWounds
     {
         return static::getEnum(self::HEAL);
@@ -54,7 +48,6 @@ class ReasonToRollAgainstMalusFromWounds extends StringEnum
      * @param bool|float|int|ScalarInterface|string $enumValue
      * @return string
      * @throws \DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus
-     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {
@@ -64,7 +57,6 @@ class ReasonToRollAgainstMalusFromWounds extends StringEnum
                 'Expected one of ' . self::WOUND . ' or ' . self::HEAL . ', got ' . ValueDescriber::describe($enumValue)
             );
         }
-
         return $finalValue;
     }
 

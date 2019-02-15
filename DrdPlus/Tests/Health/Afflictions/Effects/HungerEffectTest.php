@@ -3,7 +3,6 @@ namespace DrdPlus\Tests\Health\Afflictions\Effects;
 
 use DrdPlus\Health\Afflictions\Effects\HungerEffect;
 
-/** @noinspection LongInheritanceChainInspection */
 class HungerEffectTest extends AfflictionEffectTest
 {
     /**

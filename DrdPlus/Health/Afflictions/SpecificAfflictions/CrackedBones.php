@@ -13,16 +13,14 @@ use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\CrackedBonesEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Health\SeriousWound;
-use Doctrine\ORM\Mapping as ORM;
 use DrdPlus\Properties\Derived\WoundBoundary;
 
 /**
- * @ORM\Entity
- * @method CrackedBonesEffect getAfflictionEffect(): int
+  * @method CrackedBonesEffect getAfflictionEffect(): int
  */
 class CrackedBones extends AfflictionByWound
 {
-    const CRACKED_BONES = 'cracked_bones';
+    public const CRACKED_BONES = 'cracked_bones';
 
     /**
      * @param SeriousWound $seriousWound
@@ -38,7 +36,6 @@ class CrackedBones extends AfflictionByWound
                 ->getGridOfWounds()
                 ->calculateFilledHalfRowsFor($seriousWound->getWoundSize(), $woundBoundary);
 
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $seriousWound,
             AfflictionProperty::getIt(PropertyCode::TOUGHNESS),
@@ -54,41 +51,26 @@ class CrackedBones extends AfflictionByWound
         );
     }
 
-    /**
-     * @return int
-     */
     public function getHealMalus(): int
     {
         return $this->getAfflictionEffect()->getHealingMalus($this);
     }
 
-    /**
-     * @return int
-     */
     public function getMalusToActivities(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getStrengthMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getAgilityMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getKnackMalus(): int
     {
         return 0;

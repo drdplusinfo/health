@@ -1,82 +1,49 @@
 <?php
 namespace DrdPlus\Health\Inflictions;
 
-use Doctrineum\Entity\Entity;
 use DrdPlus\Health\Health;
 use DrdPlus\Lighting\Glare;
 use DrdPlus\Tables\Measurements\Time\Time;
 use DrdPlus\Calculations\SumAndRound;
 use Granam\Strict\Object\StrictObject;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
  */
-class Glared extends StrictObject implements Entity
+class Glared extends StrictObject
 {
     /**
      * @var int
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
      */
     private $malus;
     /**
      * @var bool
-     * @ORM\Column(type="boolean")
      */
     private $shined;
     /**
      * @var int
-     * @ORM\Column(type="integer")
      */
     private $gettingUsedToForRounds;
     /**
      * @var Health
-     * @ORM\OneToOne(targetEntity="\DrdPlus\Health\Health", mappedBy="glared")
      */
     private $health;
 
-    /**
-     * @param Health $health
-     * @return Glared
-     */
     public static function createWithoutGlare(Health $health): Glared
     {
         return new static(0, 0, $health);
     }
 
-    /**
-     * @param Glare $glare
-     * @param Health $health
-     * @return Glared
-     */
     public static function createFromGlare(Glare $glare, Health $health): Glared
     {
         return new static($glare->getMalus(), $glare->isShined(), $health);
     }
 
-    /**
-     * @param int $malus
-     * @param bool $isShined
-     * @param Health $health
-     */
     private function __construct(int $malus, bool $isShined, Health $health)
     {
         $this->malus = $malus;
         $this->shined = $isShined;
         $this->gettingUsedToForRounds = 0;
         $this->health = $health;
-    }
-
-    public function getId():? int
-    {
-        return $this->id;
     }
 
     /**
@@ -93,30 +60,20 @@ class Glared extends StrictObject implements Entity
             // each rounds of getting used to lowers malus by one point
             return $this->malus + $this->getGettingUsedToForRounds();
         }
-
         // ten rounds of getting used to are needed to lower glare malus by a single point
         return $this->malus + SumAndRound::floor($this->getGettingUsedToForRounds() / 10);
     }
 
-    /**
-     * @return bool
-     */
     public function isShined(): bool
     {
         return $this->shined;
     }
 
-    /**
-     * @return bool
-     */
     public function isBlinded(): bool
     {
         return !$this->isShined();
     }
 
-    /**
-     * @return Health
-     */
     public function getHealth(): Health
     {
         return $this->health;

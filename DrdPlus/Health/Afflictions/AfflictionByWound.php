@@ -1,38 +1,17 @@
 <?php
 namespace DrdPlus\Health\Afflictions;
 
-use Doctrine\ORM\Mapping as ORM;
 use DrdPlus\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Health\SeriousWound;
 
-/**
- * @ORM\MappedSuperclass()
- */
 abstract class AfflictionByWound extends Affliction
 {
     /**
      * @var SeriousWound
-     * @ORM\ManyToOne(targetEntity="\DrdPlus\Health\SeriousWound", cascade={"persist"})
      */
     private $seriousWound;
 
-    /**
-     * @param SeriousWound $seriousWound
-     * @param AfflictionProperty $property
-     * @param AfflictionDangerousness $dangerousness
-     * @param AfflictionDomain $domain
-     * @param AfflictionVirulence $virulence
-     * @param AfflictionSource $source
-     * @param AfflictionSize $size
-     * @param ElementalPertinence $elementalPertinence
-     * @param AfflictionEffect $effect
-     * @param \DateInterval $outbreakPeriod
-     * @param AfflictionName $afflictionName
-     * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
-     * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
-     * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
-     */
     protected function __construct(
         SeriousWound $seriousWound, // wound can be healed, but never disappears - just stays healed
         AfflictionProperty $property,
@@ -68,33 +47,21 @@ abstract class AfflictionByWound extends Affliction
         );
     }
 
-    /**
-     * @return SeriousWound
-     */
     public function getSeriousWound(): SeriousWound
     {
         return $this->seriousWound;
     }
 
-    /**
-     * @return int
-     */
     public function getWillMalus(): int
     {
         return 0; // currently no wound affliction can affect will
     }
 
-    /**
-     * @return int
-     */
     public function getIntelligenceMalus(): int
     {
         return 0; // currently no wound affliction can affect will
     }
 
-    /**
-     * @return int
-     */
     public function getCharismaMalus(): int
     {
         return 0; // currently no wound affliction can affect will

@@ -1,7 +1,6 @@
 <?php
 namespace DrdPlus\Health\Afflictions\SpecificAfflictions;
 
-use Doctrine\ORM\Mapping as ORM;
 use DrdPlus\Health\Afflictions\Affliction;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
@@ -14,9 +13,6 @@ use DrdPlus\Health\Afflictions\Effects\ThirstEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Health\Health;
 
-/**
- * @ORM\Entity
- */
 class Thirst extends Affliction
 {
 
@@ -45,65 +41,41 @@ class Thirst extends Affliction
         );
     }
 
-    /**
-     * @return int
-     */
     public function getHealMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getMalusToActivities(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getStrengthMalus(): int
     {
         return -$this->getAfflictionSize()->getValue();
     }
 
-    /**
-     * @return int
-     */
     public function getAgilityMalus(): int
     {
         return -$this->getAfflictionSize()->getValue();
     }
 
-    /**
-     * @return int
-     */
     public function getKnackMalus(): int
     {
         return -$this->getAfflictionSize()->getValue();
     }
 
-    /**
-     * @return int
-     */
     public function getWillMalus(): int
     {
         return -$this->getAfflictionSize()->getValue();
     }
 
-    /**
-     * @return int
-     */
     public function getIntelligenceMalus(): int
     {
         return -$this->getAfflictionSize()->getValue();
     }
 
-    /**
-     * @return int
-     */
     public function getCharismaMalus(): int
     {
         return -$this->getAfflictionSize()->getValue();

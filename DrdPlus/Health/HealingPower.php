@@ -1,7 +1,6 @@
 <?php
 namespace DrdPlus\Health;
 
-use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Codes\Body\ActivityAffectingHealingCode;
 use DrdPlus\Codes\Body\ConditionsAffectingHealingCode;
 use DrdPlus\Codes\RaceCode;
@@ -10,6 +9,7 @@ use DrdPlus\Properties\Derived\Toughness;
 use DrdPlus\Tables\Body\Healing\HealingConditionsPercents;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Tables;
+use Granam\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use Granam\Integer\IntegerInterface;
 use Granam\Strict\Object\StrictObject;
 
@@ -46,7 +46,6 @@ class HealingPower extends StrictObject implements IntegerInterface
     ): HealingPower
     {
         /** see PPH page 80 right column */
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $healingPower =
             ($tables->getRacesTable()->hasNativeRegeneration($raceCode, $subRaceCode)
                 ? 4
@@ -82,18 +81,11 @@ class HealingPower extends StrictObject implements IntegerInterface
         $this->healUpToWounds = (new WoundsBonus($this->value, $tables->getWoundsTable()))->getWounds()->getValue();
     }
 
-    /**
-     * @return int
-     */
     public function getValue(): int
     {
         return $this->value;
     }
 
-    /**
-     *
-     * @return int
-     */
     public function getHealUpToWounds(): int
     {
         return $this->healUpToWounds;
@@ -104,6 +96,6 @@ class HealingPower extends StrictObject implements IntegerInterface
      */
     public function __toString()
     {
-        return (string)$this->getValue() . " (with heal up to {$this->getHealUpToWounds()})";
+        return $this->getValue() . " (with heal up to {$this->getHealUpToWounds()})";
     }
 }

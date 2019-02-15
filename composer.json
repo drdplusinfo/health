@@ -10,17 +10,14 @@
   },
   "require": {
     "php": ">=7.1",
-    "doctrine/orm": "2.*",
-    "doctrineum/entity": "^2.1",
-    "doctrineum/integer": "^3.1",
-    "doctrineum/string": "^2.1",
-    "doctrineum/date-interval": "^3.1",
-    "drdplus/properties": "^1.0",
-    "drdplus/tables": "^1.0",
-    "drdplus/rolls-on": "^1.0",
-    "drdplus/calculations": "^1.0",
-    "drdplus/skills": "^1.0",
-    "drdplus/lighting": "^1.0"
+    "granam/integer-enum": "~1.0",
+    "granam/string-enum": "~1.0",
+    "drdplus/properties": "~2.0",
+    "drdplus/tables": "~2.0",
+    "drdplus/rolls-on": "~2.0",
+    "drdplus/calculations": "~1.0",
+    "drdplus/skills": "~2.0",
+    "drdplus/lighting": "~2.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",

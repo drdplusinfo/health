@@ -1,9 +1,9 @@
 <?php
 namespace DrdPlus\Health\Afflictions;
 
-use Doctrineum\String\StringEnum;
 use DrdPlus\Codes\Properties\PropertyCode;
 use Granam\String\StringInterface;
+use Granam\StringEnum\StringEnum;
 use Granam\Tools\ValueDescriber;
 
 /**
@@ -25,7 +25,6 @@ class AfflictionProperty extends StringEnum
      * @param string|StringInterface $enumValue
      * @return string
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionPropertyCode
-     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {
@@ -40,15 +39,15 @@ class AfflictionProperty extends StringEnum
         return $enumFinalValue;
     }
 
-    const STRENGTH = PropertyCode::STRENGTH;
-    const AGILITY = PropertyCode::AGILITY;
-    const KNACK = PropertyCode::KNACK;
-    const WILL = PropertyCode::WILL;
-    const INTELLIGENCE = PropertyCode::INTELLIGENCE;
-    const CHARISMA = PropertyCode::CHARISMA;
-    const ENDURANCE = PropertyCode::ENDURANCE;
-    const TOUGHNESS = PropertyCode::TOUGHNESS;
-    const LEVEL = 'level';
+    public const STRENGTH = PropertyCode::STRENGTH;
+    public const AGILITY = PropertyCode::AGILITY;
+    public const KNACK = PropertyCode::KNACK;
+    public const WILL = PropertyCode::WILL;
+    public const INTELLIGENCE = PropertyCode::INTELLIGENCE;
+    public const CHARISMA = PropertyCode::CHARISMA;
+    public const ENDURANCE = PropertyCode::ENDURANCE;
+    public const TOUGHNESS = PropertyCode::TOUGHNESS;
+    public const LEVEL = 'level';
 
     /**
      * @return array|string[]

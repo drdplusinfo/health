@@ -14,18 +14,16 @@ use DrdPlus\Health\Afflictions\Effects\BleedingEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative;
 use DrdPlus\Health\SeriousWound;
-use Doctrine\ORM\Mapping as ORM;
 use DrdPlus\Properties\Derived\WoundBoundary;
 
 /**
  * See PPH page 78, right column
  *
- * @ORM\Entity
  * @method BleedingEffect getAfflictionEffect(): int
  */
 class Bleeding extends AfflictionByWound
 {
-    const BLEEDING = 'bleeding';
+    public const BLEEDING = 'bleeding';
 
     /**
      * @param SeriousWound $seriousWound
@@ -42,7 +40,6 @@ class Bleeding extends AfflictionByWound
         $bleedingSizeValue = $seriousWound->getHealth()->getGridOfWounds()
                 ->calculateFilledHalfRowsFor($seriousWound->getWoundSize(), $woundBoundary) - 1;
         try {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $size = AfflictionSize::getIt($bleedingSizeValue);
         } catch (AfflictionSizeCanNotBeNegative $afflictionSizeCanNotBeNegative) {
             throw new Exceptions\BleedingCanNotExistsDueToTooLowWound(
@@ -50,7 +47,6 @@ class Bleeding extends AfflictionByWound
             );
         }
 
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $seriousWound,
             AfflictionProperty::getIt(PropertyCode::TOUGHNESS),
@@ -66,41 +62,26 @@ class Bleeding extends AfflictionByWound
         );
     }
 
-    /**
-     * @return int
-     */
     public function getHealMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getMalusToActivities(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getStrengthMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getAgilityMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getKnackMalus(): int
     {
         return 0;

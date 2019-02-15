@@ -12,19 +12,17 @@ use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\SeveredArmEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Health\SeriousWound;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * See PPH page 78, right column
  *
- * @ORM\Entity
- * @method SeveredArmEffect getAfflictionEffect(): int
+  * @method SeveredArmEffect getAfflictionEffect(): int
  */
 class SeveredArm extends AfflictionByWound
 {
-    const SEVERED_ARM = 'severed_arm';
-    const COMPLETELY_SEVERED_ARM = 'completely_severed_arm';
-    const COMPLETELY_SEVERED_ARM_SIZE = 6;
+    public const SEVERED_ARM = 'severed_arm';
+    public const COMPLETELY_SEVERED_ARM = 'completely_severed_arm';
+    public const COMPLETELY_SEVERED_ARM_SIZE = 6;
 
     /**
      * @param SeriousWound $seriousWound
@@ -32,7 +30,6 @@ class SeveredArm extends AfflictionByWound
      * @return SeveredArm
      * @throws \DrdPlus\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative
      * @throws \DrdPlus\Health\Afflictions\SpecificAfflictions\Exceptions\SeveredArmAfflictionSizeExceeded
-     * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      * @throws \DrdPlus\Health\Afflictions\Exceptions\WoundHasToBeFreshForAffliction
      * @throws \DrdPlus\Health\Exceptions\UnknownAfflictionOriginatingWound
      * @throws \DrdPlus\Health\Exceptions\AfflictionIsAlreadyRegistered
@@ -66,41 +63,26 @@ class SeveredArm extends AfflictionByWound
         );
     }
 
-    /**
-     * @return int
-     */
     public function getHealMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getMalusToActivities(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getStrengthMalus(): int
     {
         return $this->getAfflictionEffect()->getStrengthMalus($this);
     }
 
-    /**
-     * @return int
-     */
     public function getAgilityMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getKnackMalus(): int
     {
         return $this->getAfflictionEffect()->getKnackMalus($this);

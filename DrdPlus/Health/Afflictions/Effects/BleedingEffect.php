@@ -17,16 +17,14 @@ class BleedingEffect extends AfflictionEffect
 {
     public const BLEEDING_EFFECT = 'bleeding_effect';
 
-    /**
-     * @return BleedingEffect
-     */
     public static function getIt(): BleedingEffect
     {
         return static::getEnum(self::BLEEDING_EFFECT);
     }
 
     /**
-     * {@inheritdoc}
+     * Even if affected creature success on roll against trap, comes this effect into play.
+     * @return bool
      */
     public function isEffectiveEvenOnSuccessAgainstTrap(): bool
     {
@@ -46,7 +44,6 @@ class BleedingEffect extends AfflictionEffect
         // see PPH page 78 right column, Bleeding
         $effectSize = $bleeding->getAfflictionSize()->getValue() - 6;
         $woundsFromTable = $woundsTable->toWounds(new WoundsBonus($effectSize, $woundsTable));
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $woundSize = new WoundSize($woundsFromTable->getValue());
         $woundCausedBleeding = $bleeding->getSeriousWound();
 

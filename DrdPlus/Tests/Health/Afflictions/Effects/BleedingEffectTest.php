@@ -10,7 +10,6 @@ use DrdPlus\Health\WoundSize;
 use DrdPlus\Properties\Derived\WoundBoundary;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 
-/** @noinspection LongInheritanceChainInspection */
 class BleedingEffectTest extends AfflictionEffectTest
 {
     /**
@@ -30,13 +29,11 @@ class BleedingEffectTest extends AfflictionEffectTest
         $bleedingEffect = BleedingEffect::getIt();
         $health = new Health();
         $woundBoundary = $this->createWoundLimitBoundary(10);
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $woundCausedBleeding = $health->addWound(
             new WoundSize(25),
             $seriousWoundOrigin = $this->createSpecificWoundOriginCode(),
             $woundBoundary
         );
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $bleedingEffect->bleed(
             Bleeding::createIt($woundCausedBleeding, $woundBoundary),
             new WoundsTable(),
@@ -49,10 +46,10 @@ class BleedingEffectTest extends AfflictionEffectTest
     }
 
     /**
-     * @param $value
+     * @param int $value
      * @return \Mockery\MockInterface|WoundBoundary
      */
-    private function createWoundLimitBoundary($value)
+    private function createWoundLimitBoundary(int $value)
     {
         $woundsLimit = $this->mockery(WoundBoundary::class);
         $woundsLimit->shouldReceive('getValue')

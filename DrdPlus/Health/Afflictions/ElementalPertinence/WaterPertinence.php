@@ -5,7 +5,7 @@ use DrdPlus\Codes\ElementCode;
 
 class WaterPertinence extends ElementalPertinence
 {
-    const WATER = ElementCode::WATER;
+    public const WATER = ElementCode::WATER;
 
     /**
      * @return WaterPertinence|ElementalPertinence

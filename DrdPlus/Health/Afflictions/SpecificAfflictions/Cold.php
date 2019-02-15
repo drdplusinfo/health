@@ -13,17 +13,15 @@ use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\ColdEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\WaterPertinence;
 use DrdPlus\Health\SeriousWound;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * See PPH page 78, left column
  *
- * @ORM\Entity
- * @method ColdEffect getAfflictionEffect(): int
+  * @method ColdEffect getAfflictionEffect(): int
  */
 class Cold extends AfflictionByWound
 {
-    const COLD = 'cold';
+    public const COLD = 'cold';
 
     /**
      * @param SeriousWound $seriousWound
@@ -32,7 +30,6 @@ class Cold extends AfflictionByWound
      */
     public static function createIt(SeriousWound $seriousWound): Cold
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $seriousWound,
             AfflictionProperty::getIt(PropertyCode::TOUGHNESS),
@@ -48,41 +45,26 @@ class Cold extends AfflictionByWound
         );
     }
 
-    /**
-     * @return int
-     */
     public function getHealMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getMalusToActivities(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getStrengthMalus(): int
     {
         return $this->getAfflictionEffect()->getStrengthMalus($this);
     }
 
-    /**
-     * @return int
-     */
     public function getAgilityMalus(): int
     {
         return $this->getAfflictionEffect()->getAgilityMalus($this);
     }
 
-    /**
-     * @return int
-     */
     public function getKnackMalus(): int
     {
         return $this->getAfflictionEffect()->getKnackMalus($this);

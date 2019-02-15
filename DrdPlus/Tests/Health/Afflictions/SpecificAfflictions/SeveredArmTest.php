@@ -30,7 +30,6 @@ class SeveredArmTest extends AfflictionByWoundTest
     {
         $severedArm = SeveredArm::createIt($wound = $this->createWound());
 
-        self::assertNull($severedArm->getId());
         self::assertSame($wound, $severedArm->getSeriousWound());
 
         self::assertInstanceOf(AfflictionDomain::class, $severedArm->getDomain());

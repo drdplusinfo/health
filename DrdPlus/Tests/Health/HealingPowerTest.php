@@ -1,7 +1,6 @@
 <?php
 namespace DrdPlus\Tests\Health;
 
-use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Codes\Body\ActivityAffectingHealingCode;
 use DrdPlus\Codes\Body\ConditionsAffectingHealingCode;
 use DrdPlus\Codes\RaceCode;
@@ -16,6 +15,7 @@ use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Races\RacesTable;
 use DrdPlus\Tables\Tables;
+use Granam\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use Granam\Tests\Tools\TestWithMockery;
 
 class HealingPowerTest extends TestWithMockery

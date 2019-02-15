@@ -17,13 +17,11 @@ abstract class WoundTest extends TestWithMockery
      */
     public function I_can_use_it(): Wound
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $this->createWound(
             $health = $this->createHealth(),
             new WoundSize($woundSizeValue = 3),
             $woundOrigin = SeriousWoundOriginCode::getMechanicalCutWoundOrigin()
         );
-        self::assertNull($wound->getId());
         self::assertSame($health, $wound->getHealth());
         self::assertSame($woundSizeValue, $wound->getValue());
         $this->assertIsSeriousAsExpected($wound);
@@ -85,7 +83,6 @@ abstract class WoundTest extends TestWithMockery
      */
     public function I_can_heal_it_both_partially_and_fully(): void
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $this->createWound(
             $health = $this->createHealth(),
             new WoundSize($woundSizeValue = 3),
@@ -118,7 +115,6 @@ abstract class WoundTest extends TestWithMockery
      */
     public function I_can_create_wound_with_zero_value(): void
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $wound = $this->createWound(
             $this->createHealth(),
             new WoundSize(0),

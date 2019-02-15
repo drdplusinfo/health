@@ -1,27 +1,14 @@
 <?php
 namespace DrdPlus\Health;
 
-use Doctrineum\Entity\Entity;
 use Granam\Integer\IntegerInterface;
 use Granam\Strict\Object\StrictObject;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
-class PointOfWound extends StrictObject implements Entity, IntegerInterface
+class PointOfWound extends StrictObject implements IntegerInterface
 {
-    /**
-     * @var int
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
      * @var Wound
-     * @ORM\ManyToOne(targetEntity="Wound", inversedBy="pointsOfWound")
      */
     private $wound;
 
@@ -30,22 +17,11 @@ class PointOfWound extends StrictObject implements Entity, IntegerInterface
         $this->wound = $wound;
     }
 
-    public function getId():? int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Wound
-     */
     public function getWound(): Wound
     {
         return $this->wound;
     }
 
-    /**
-     * @return int
-     */
     public function getValue(): int
     {
         return 1;

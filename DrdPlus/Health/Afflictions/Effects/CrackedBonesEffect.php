@@ -8,7 +8,7 @@ use DrdPlus\Health\Afflictions\SpecificAfflictions\CrackedBones;
  */
 class CrackedBonesEffect extends AfflictionEffect
 {
-    const CRACKED_BONES_EFFECT = 'cracked_bones_effect';
+    public const CRACKED_BONES_EFFECT = 'cracked_bones_effect';
 
     public static function getIt(): CrackedBonesEffect
     {

@@ -1,12 +1,8 @@
 <?php
 namespace DrdPlus\Health;
 
-use Doctrine\ORM\Mapping AS ORM;
 use DrdPlus\Codes\Body\SeriousWoundOriginCode;
 
-/**
- * @ORM\Entity
- */
 class SeriousWound extends Wound
 {
     /**
@@ -20,9 +16,6 @@ class SeriousWound extends Wound
         parent::__construct($health, $woundSize, $seriousWoundOriginCode);
     }
 
-    /**
-     * @return bool
-     */
     public function isSerious(): bool
     {
         return true;
@@ -32,5 +25,4 @@ class SeriousWound extends Wound
     {
         return false;
     }
-
 }

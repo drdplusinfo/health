@@ -38,7 +38,6 @@ class CrackedBonesTest extends AfflictionByWoundTest
         $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 3);
         $crackedBones = CrackedBones::createIt($wound, $woundBoundary);
 
-        self::assertNull($crackedBones->getId());
         self::assertSame($wound, $crackedBones->getSeriousWound());
 
         self::assertInstanceOf(AfflictionDomain::class, $crackedBones->getDomain());

@@ -38,7 +38,6 @@ class BleedingTest extends AfflictionByWoundTest
         $this->addSizeCalculation($wound, $woundBoundary, $filledHalfOfRows = 123);
         $bleeding = Bleeding::createIt($wound, $woundBoundary);
 
-        self::assertNull($bleeding->getId());
         self::assertSame($wound, $bleeding->getSeriousWound());
 
         self::assertInstanceOf(AfflictionDomain::class, $bleeding->getDomain());

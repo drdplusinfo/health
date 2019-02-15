@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health;
 
-use Doctrineum\Integer\IntegerEnum;
+use Granam\IntegerEnum\IntegerEnum;
 use Granam\Scalar\ScalarInterface;
 use Granam\Tools\ValueDescriber;
 
@@ -29,20 +29,18 @@ class TreatmentBoundary extends IntegerEnum
     {
         try {
             $finalValue = parent::convertToEnumFinalValue($enumValue);
-        } catch (\Doctrineum\Integer\Exceptions\Exception $conversionException) {
+        } catch (\Granam\IntegerEnum\Exceptions\Exception $conversionException) {
             throw new Exceptions\TreatmentBoundaryCanNotBeNegative(
                 'Expected integer as a wound value, got ' . ValueDescriber::describe($enumValue),
                 $conversionException->getCode(),
                 $conversionException
             );
         }
-
         if ($finalValue < 0) {
             throw new Exceptions\TreatmentBoundaryCanNotBeNegative(
                 'Expected at least zero, got ' . ValueDescriber::describe($enumValue)
             );
         }
-
         return $finalValue;
     }
 }

@@ -1,7 +1,6 @@
 <?php
 namespace DrdPlus\Health\Afflictions\SpecificAfflictions;
 
-use Doctrine\ORM\Mapping as ORM;
 use DrdPlus\Health\Afflictions\Affliction;
 use DrdPlus\Health\Afflictions\AfflictionDangerousness;
 use DrdPlus\Health\Afflictions\AfflictionDomain;
@@ -15,9 +14,6 @@ use DrdPlus\Health\Afflictions\ElementalPertinence\EarthPertinence;
 use DrdPlus\Health\Health;
 use DrdPlus\Calculations\SumAndRound;
 
-/**
- * @ORM\Entity
- */
 class Hunger extends Affliction
 {
 
@@ -30,7 +26,6 @@ class Hunger extends Affliction
      */
     public static function createIt(Health $health, AfflictionSize $daysOfHunger): Hunger
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new static(
             $health,
             AfflictionProperty::getIt(AfflictionProperty::ENDURANCE), // irrelevant, hunger can not be avoided
@@ -46,65 +41,41 @@ class Hunger extends Affliction
         );
     }
 
-    /**
-     * @return int
-     */
     public function getHealMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getMalusToActivities(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getStrengthMalus(): int
     {
         return -SumAndRound::half($this->getAfflictionSize()->getValue());
     }
 
-    /**
-     * @return int
-     */
     public function getAgilityMalus(): int
     {
         return -SumAndRound::half($this->getAfflictionSize()->getValue());
     }
 
-    /**
-     * @return int
-     */
     public function getKnackMalus(): int
     {
         return -SumAndRound::half($this->getAfflictionSize()->getValue());
     }
 
-    /**
-     * @return int
-     */
     public function getWillMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getIntelligenceMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getCharismaMalus(): int
     {
         return 0;

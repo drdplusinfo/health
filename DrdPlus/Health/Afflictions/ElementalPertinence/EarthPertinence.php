@@ -5,12 +5,12 @@ use DrdPlus\Codes\ElementCode;
 
 class EarthPertinence extends ElementalPertinence
 {
-    const EARTH = ElementCode::EARTH;
+    public const EARTH = ElementCode::EARTH;
 
     /**
      * @return EarthPertinence|ElementalPertinence
      */
-    public static function getMinus()
+    public static function getMinus(): EarthPertinence
     {
         return parent::getMinus();
     }
@@ -18,7 +18,7 @@ class EarthPertinence extends ElementalPertinence
     /**
      * @return EarthPertinence|ElementalPertinence
      */
-    public static function getPlus()
+    public static function getPlus(): EarthPertinence
     {
         return parent::getPlus();
     }

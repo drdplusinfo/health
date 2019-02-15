@@ -1,47 +1,28 @@
 <?php
 namespace DrdPlus\Health;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrineum\Entity\Entity;
-use Doctrine\ORM\Mapping as ORM;
 use DrdPlus\Codes\Body\OrdinaryWoundOriginCode;
 use DrdPlus\Codes\Body\SeriousWoundOriginCode;
 use DrdPlus\Codes\Body\WoundOriginCode;
 use Granam\Integer\IntegerInterface;
 use Granam\Strict\Object\StrictObject;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="severity", type="string")
- * @ORM\DiscriminatorMap({"ordinary" = "OrdinaryWound", "serious" = "SeriousWound"})
- */
-abstract class Wound extends StrictObject implements Entity, IntegerInterface
+abstract class Wound extends StrictObject implements IntegerInterface
 {
     /**
-     * @var int
-     * @ORM\Id @ORM\GeneratedValue(strategy="AUTO") @ORM\Column(type="integer")
-     */
-    private $id;
-    /**
      * @var Health
-     * @ORM\ManyToOne(targetEntity="Health", inversedBy="wounds")
      */
     private $health;
     /**
-     * @var ArrayCollection|PointOfWound[]
-     * @ORM\OneToMany(cascade={"all"}, targetEntity="PointOfWound", mappedBy="wound", orphanRemoval=true)
+     * @var array|PointOfWound[]
      */
     private $pointsOfWound;
     /**
      * @var WoundOriginCode
-     * @ORM\Column(type="wound_origin_code")
      */
     private $woundOriginCode;
     /**
      * @var bool
-     * @ORM\Column(type="boolean")
      */
     private $old;
 
@@ -55,7 +36,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     {
         $this->checkIfCreatedByGivenHealth($health);
         $this->health = $health;
-        $this->pointsOfWound = new ArrayCollection($this->createPointsOfWound($woundSize));
+        $this->pointsOfWound = $this->createPointsOfWound($woundSize);
         $this->woundOriginCode = $woundOriginCode;
         $this->old = false;
     }
@@ -83,13 +64,7 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
         for ($wounded = $woundSize->getValue(); $wounded > 0; $wounded--) {
             $pointsOfWound[] = new PointOfWound($this); // implicit value of point of wound is 1
         }
-
         return $pointsOfWound;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getHealth(): Health
@@ -98,11 +73,11 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
     }
 
     /**
-     * @return Collection|PointOfWound[]
+     * @return array|PointOfWound[]
      */
-    public function getPointsOfWound(): Collection
+    public function getPointsOfWound(): array
     {
-        return clone $this->pointsOfWound; // to avoid external changes of the collection
+        return $this->pointsOfWound;
     }
 
     /**
@@ -121,7 +96,6 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
 
     public function getWoundSize(): WoundSize
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return WoundSize::createIt($this->getValue());
     }
 
@@ -139,39 +113,29 @@ abstract class Wound extends StrictObject implements Entity, IntegerInterface
         // technical note: orphaned points of wound are removed automatically on persistence
         if ($healUpToWounds >= $this->getValue()) { // there is power to heal it all
             $healed = $this->getValue();
-            $this->pointsOfWound->clear(); // unbinds all the points of wound
+            $this->pointsOfWound = []; // unbinds all the points of wound
 
             return $healed;
         }
         $healed = 0;
         for ($healing = 1; $healing <= $healUpToWounds; $healing++) {
             // removing points one by one
-            $this->pointsOfWound->removeElement($this->pointsOfWound->last());
+            \array_pop($this->pointsOfWound);
             $healed++;
         }
-
         return $healed; // just a partial heal
     }
 
-    /**
-     * @return bool
-     */
     public function isHealed(): bool
     {
         return $this->getValue() === 0;
     }
 
-    /**
-     * @return bool
-     */
     public function isOld(): bool
     {
         return $this->old;
     }
 
-    /**
-     * @return bool
-     */
     public function isFresh(): bool
     {
         return !$this->old;

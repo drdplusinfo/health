@@ -5,12 +5,12 @@ use DrdPlus\Codes\ElementCode;
 
 class FirePertinence extends ElementalPertinence
 {
-    const FIRE = ElementCode::FIRE;
+    public const FIRE = ElementCode::FIRE;
 
     /**
      * @return FirePertinence|ElementalPertinence
      */
-    public static function getMinus()
+    public static function getMinus(): FirePertinence
     {
         return parent::getMinus();
     }
@@ -18,7 +18,7 @@ class FirePertinence extends ElementalPertinence
     /**
      * @return FirePertinence|ElementalPertinence
      */
-    public static function getPlus()
+    public static function getPlus(): FirePertinence
     {
         return parent::getPlus();
     }

@@ -6,11 +6,8 @@ namespace DrdPlus\Health\Afflictions\Effects;
  */
 class ThirstEffect extends AfflictionEffect
 {
-    const THIRST_EFFECT = 'thirst_effect';
+    public const THIRST_EFFECT = 'thirst_effect';
 
-    /**
-     * @return ThirstEffect
-     */
     public static function getIt(): ThirstEffect
     {
         return static::getEnum(self::THIRST_EFFECT);

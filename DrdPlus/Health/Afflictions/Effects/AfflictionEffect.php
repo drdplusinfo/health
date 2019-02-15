@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Health\Afflictions\Effects;
 
-use Doctrineum\Scalar\ScalarEnum;
+use Granam\ScalarEnum\ScalarEnum;
 
 abstract class AfflictionEffect extends ScalarEnum
 {

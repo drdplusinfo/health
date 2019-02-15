@@ -1,7 +1,8 @@
 <?php
 namespace DrdPlus\Health\Afflictions;
 
-use Doctrineum\String\StringEnum;
+use Granam\String\StringInterface;
+use Granam\StringEnum\StringEnum;
 use Granam\Tools\ValueDescriber;
 
 /**
@@ -9,10 +10,10 @@ use Granam\Tools\ValueDescriber;
  */
 class AfflictionSource extends StringEnum
 {
-    const AFFLICTION_SOURCE = 'affliction_source';
+    public const AFFLICTION_SOURCE = 'affliction_source';
 
     /**
-     * @param string $sourceCode
+     * @param string|StringInterface $sourceCode
      * @return AfflictionSource
      */
     public static function getIt($sourceCode): AfflictionSource
@@ -20,99 +21,66 @@ class AfflictionSource extends StringEnum
         return static::getEnum($sourceCode);
     }
 
-    const EXTERNAL = 'external';
+    public const EXTERNAL = 'external';
 
-    /**
-     * @return AfflictionSource
-     */
     public static function getExternalSource(): AfflictionSource
     {
         return self::getEnum(self::EXTERNAL);
     }
 
-    /**
-     * @return bool
-     */
     public function isExternal(): bool
     {
         return $this->getValue() === self::EXTERNAL;
     }
 
-    const ACTIVE = 'active';
+    public const ACTIVE = 'active';
 
-    /**
-     * @return AfflictionSource
-     */
     public static function getActiveSource(): AfflictionSource
     {
         return self::getEnum(self::ACTIVE);
     }
 
-    /**
-     * @return bool
-     */
     public function isActive(): bool
     {
         return $this->getValue() === self::ACTIVE;
     }
 
-    const PASSIVE = 'passive';
+    public const PASSIVE = 'passive';
 
-    /**
-     * @return AfflictionSource
-     */
     public static function getPassiveSource(): AfflictionSource
     {
         return self::getEnum(self::PASSIVE);
     }
 
-    /**
-     * @return bool
-     */
     public function isPassive(): bool
     {
         return $this->getValue() === self::PASSIVE;
     }
 
-    const PARTIAL_DEFORMATION = 'partial_deformation';
+    public const PARTIAL_DEFORMATION = 'partial_deformation';
 
-    /**
-     * @return AfflictionSource
-     */
     public static function getPartialDeformationSource(): AfflictionSource
     {
         return self::getEnum(self::PARTIAL_DEFORMATION);
     }
 
-    /**
-     * @return bool
-     */
     public function isPartialDeformation(): bool
     {
         return $this->getValue() === self::PARTIAL_DEFORMATION;
     }
 
-    const FULL_DEFORMATION = 'full_deformation';
+    public const FULL_DEFORMATION = 'full_deformation';
 
-    /**
-     * @return AfflictionSource
-     */
     public static function getFullDeformationSource(): AfflictionSource
     {
         return self::getEnum(self::FULL_DEFORMATION);
     }
 
-    /**
-     * @return bool
-     */
     public function isFullDeformation(): bool
     {
         return $this->getValue() === self::FULL_DEFORMATION;
     }
 
-    /**
-     * @return bool
-     */
     public function isDeformation(): bool
     {
         return $this->isPartialDeformation() || $this->isFullDeformation();
@@ -122,7 +90,6 @@ class AfflictionSource extends StringEnum
      * @param bool|float|int|string $enumValue
      * @return string
      * @throws \DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionSource
-     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {
@@ -132,7 +99,6 @@ class AfflictionSource extends StringEnum
                 'Unexpected source of an affliction: ' . ValueDescriber::describe($enumValue)
             );
         }
-
         return $enumFinalValue;
     }
 

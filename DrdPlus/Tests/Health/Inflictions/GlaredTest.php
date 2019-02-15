@@ -20,7 +20,6 @@ class GlaredTest extends TestWithMockery
     public function I_can_create_it_from_glare(int $malus, bool $isShined): void
     {
         $glared = Glared::createFromGlare($this->createGlare($malus, $isShined), $health = new Health());
-        self::assertNull($glared->getId());
         self::assertSame($malus, $glared->getCurrentMalus());
         self::assertSame($isShined, $glared->isShined());
         self::assertSame(!$isShined, $glared->isBlinded());
@@ -58,7 +57,6 @@ class GlaredTest extends TestWithMockery
     public function I_can_create_it_without_glare_at_all(): void
     {
         $glared = Glared::createWithoutGlare($health = new Health());
-        self::assertNull($glared->getId());
         self::assertSame(0, $glared->getCurrentMalus());
         self::assertSame($health, $glared->getHealth());
         self::assertSame(0, $glared->getGettingUsedToForRounds());

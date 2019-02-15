@@ -31,7 +31,6 @@ class ColdTest extends AfflictionByWoundTest
     {
         $cold = Cold::createIt($wound = $this->createWound());
 
-        self::assertNull($cold->getId());
         self::assertSame($wound, $cold->getSeriousWound());
 
         self::assertInstanceOf(AfflictionDomain::class, $cold->getDomain());

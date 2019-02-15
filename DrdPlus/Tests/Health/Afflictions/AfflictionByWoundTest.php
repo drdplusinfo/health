@@ -108,7 +108,6 @@ abstract class AfflictionByWoundTest extends AfflictionTest
             ->andReturn(5);
         /** @var WoundBoundary $woundBoundary */
         /** @var WoundSize $woundSize */
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $seriousWound = $health->addWound(
             $woundSize,
             SeriousWoundOriginCode::getMechanicalCutWoundOrigin(),
@@ -133,8 +132,7 @@ abstract class AfflictionByWoundTest extends AfflictionTest
             $this->mockery(\DateInterval::class),
             $this->mockery(AfflictionName::class)
         );
-
-        self::assertSame([$afflictionInstance], $health->getAfflictions()->toArray());
+        self::assertSame([$afflictionInstance], $health->getAfflictions());
     }
 
     /**

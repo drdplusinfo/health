@@ -3,7 +3,6 @@ namespace DrdPlus\Tests\Health\Afflictions\Effects;
 
 use DrdPlus\Health\Afflictions\Effects\ThirstEffect;
 
-/** @noinspection LongInheritanceChainInspection */
 class ThirstEffectTest extends AfflictionEffectTest
 {
     /**

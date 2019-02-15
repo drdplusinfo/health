@@ -13,17 +13,15 @@ use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\PainEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
 use DrdPlus\Health\SeriousWound;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * see PPH page 79 left column
  *
- * @ORM\Entity
- * @method PainEffect getAfflictionEffect(): int
+  * @method PainEffect getAfflictionEffect(): int
  */
 class Pain extends AfflictionByWound
 {
-    const PAIN = 'pain';
+    public const PAIN = 'pain';
 
     /**
      * @param SeriousWound $seriousWound
@@ -58,42 +56,27 @@ class Pain extends AfflictionByWound
         );
     }
 
-    /**
-     * @return int
-     */
     public function getHealMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getMalusToActivities(): int
     {
         // this malus affects activities, not passive actions like be healed
         return $this->getAfflictionEffect()->getMalusFromPain($this);
     }
 
-    /**
-     * @return int
-     */
     public function getStrengthMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getAgilityMalus(): int
     {
         return 0;
     }
 
-    /**
-     * @return int
-     */
     public function getKnackMalus(): int
     {
         return 0;

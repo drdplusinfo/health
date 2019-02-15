@@ -13,7 +13,6 @@ class PointOfWoundTest extends TestWithMockery
     public function I_can_use_it(): void
     {
         $pointOfWound = new PointOfWound($wound = $this->createWound());
-        self::assertNull($pointOfWound->getId());
         self::assertSame(1, $pointOfWound->getValue());
         self::assertSame($wound, $pointOfWound->getWound());
         self::assertSame('1', (string)$pointOfWound);

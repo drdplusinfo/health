@@ -35,7 +35,7 @@ class AfflictionVirulenceTest extends TestCase
     public function I_can_not_create_custom_virulence()
     {
         $this->expectException(\DrdPlus\Health\Afflictions\Exceptions\UnknownVirulencePeriod::class);
-        $this->expectExceptionMessageRegExp('~life~');
+        $this->expectExceptionMessageMatches('~life~');
         AfflictionVirulence::getEnum('life');
     }
 }

@@ -36,7 +36,7 @@ class ReasonToRollAgainstMalusTest extends TestCase
     public function I_can_not_create_unknown_reason(): void
     {
         $this->expectException(\DrdPlus\Health\Exceptions\UnknownReasonToRollAgainstMalus::class);
-        $this->expectExceptionMessageRegExp('~hypochondriac~');
+        $this->expectExceptionMessageMatches('~hypochondriac~');
         ReasonToRollAgainstMalusFromWounds::getEnum('hypochondriac');
     }
 }

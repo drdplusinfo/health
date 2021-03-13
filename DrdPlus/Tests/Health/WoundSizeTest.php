@@ -27,7 +27,7 @@ class WoundSizeTest extends TestCase
     public function I_am_stopped_by_specific_exception_on_invalid_value(): void
     {
         $this->expectException(\Granam\Integer\Tools\Exceptions\WrongParameterType::class);
-        $this->expectExceptionMessageRegExp('~Terribly wounded by horrible pebble~');
+        $this->expectExceptionMessageMatches('~Terribly wounded by horrible pebble~');
         new WoundSize('Terribly wounded by horrible pebble');
     }
 
@@ -37,7 +37,7 @@ class WoundSizeTest extends TestCase
     public function I_can_not_use_negative_value(): void
     {
         $this->expectException(\DrdPlus\Health\Exceptions\WoundSizeCanNotBeNegative::class);
-        $this->expectExceptionMessageRegExp('~-1~');
+        $this->expectExceptionMessageMatches('~-1~');
         new WoundSize(-1);
     }
 }

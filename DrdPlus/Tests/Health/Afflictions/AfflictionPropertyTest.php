@@ -50,7 +50,7 @@ class AfflictionPropertyTest extends TestCase
     public function I_can_not_use_custom_property()
     {
         $this->expectException(\DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionPropertyCode::class);
-        $this->expectExceptionMessageRegExp('~greedy~');
+        $this->expectExceptionMessageMatches('~greedy~');
         AfflictionProperty::getIt('greedy');
     }
 }

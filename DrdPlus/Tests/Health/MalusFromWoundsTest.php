@@ -26,7 +26,7 @@ class MalusFromWoundsTest extends TestCase
     public function I_can_not_create_positive_malus()
     {
         $this->expectException(\DrdPlus\Health\Exceptions\UnexpectedMalusValue::class);
-        $this->expectExceptionMessageRegExp('~1~');
+        $this->expectExceptionMessageMatches('~1~');
         MalusFromWounds::getIt(1);
     }
 
@@ -36,7 +36,7 @@ class MalusFromWoundsTest extends TestCase
     public function I_can_not_create_worse_malus_than_minus_three()
     {
         $this->expectException(\DrdPlus\Health\Exceptions\UnexpectedMalusValue::class);
-        $this->expectExceptionMessageRegExp('~-4~');
+        $this->expectExceptionMessageMatches('~-4~');
         MalusFromWounds::getIt(-4);
     }
 }

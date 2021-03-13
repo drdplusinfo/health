@@ -66,7 +66,7 @@ class AfflictionSourceTest extends TestCase
     public function I_can_not_create_custom_source()
     {
         $this->expectException(\DrdPlus\Health\Afflictions\Exceptions\UnknownAfflictionSource::class);
-        $this->expectExceptionMessageRegExp('~heavy metal~');
+        $this->expectExceptionMessageMatches('~heavy metal~');
         AfflictionSource::getEnum('heavy metal');
     }
 }

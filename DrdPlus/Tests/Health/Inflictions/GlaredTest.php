@@ -8,7 +8,7 @@ use DrdPlus\Lighting\Glare;
 use DrdPlus\Tables\Measurements\Time\Time;
 use DrdPlus\Tables\Measurements\Time\TimeTable;
 use DrdPlus\Tables\Tables;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class GlaredTest extends TestWithMockery
 {

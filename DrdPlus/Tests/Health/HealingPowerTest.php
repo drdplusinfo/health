@@ -17,7 +17,7 @@ use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Races\RacesTable;
 use DrdPlus\Tables\Tables;
 use Granam\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class HealingPowerTest extends TestWithMockery
 {

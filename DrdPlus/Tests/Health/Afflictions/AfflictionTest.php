@@ -9,7 +9,7 @@ use DrdPlus\Health\Afflictions\AfflictionSize;
 use DrdPlus\Health\Afflictions\AfflictionVirulence;
 use DrdPlus\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Health\Afflictions\ElementalPertinence\ElementalPertinence;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 abstract class AfflictionTest extends TestWithMockery
 {

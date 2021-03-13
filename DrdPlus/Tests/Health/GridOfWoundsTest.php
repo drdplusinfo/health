@@ -8,7 +8,7 @@ use DrdPlus\Health\PointOfWound;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
 use DrdPlus\Properties\Derived\WoundBoundary;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class GridOfWoundsTest extends TestWithMockery
 {

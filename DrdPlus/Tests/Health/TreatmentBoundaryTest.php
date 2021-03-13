@@ -22,7 +22,7 @@ class TreatmentBoundaryTest extends TestCase
     public function I_am_stopped_by_specific_exception_on_invalid_value(): void
     {
         $this->expectException(\DrdPlus\Health\Exceptions\TreatmentBoundaryCanNotBeNegative::class);
-        $this->expectExceptionMessageRegExp('~Why you ask me?~');
+        $this->expectExceptionMessageMatches('~Why you ask me?~');
         TreatmentBoundary::getIt('Why you ask me?');
     }
 
@@ -32,7 +32,7 @@ class TreatmentBoundaryTest extends TestCase
     public function I_can_not_use_negative_value(): void
     {
         $this->expectException(\DrdPlus\Health\Exceptions\TreatmentBoundaryCanNotBeNegative::class);
-        $this->expectExceptionMessageRegExp('~-1~');
+        $this->expectExceptionMessageMatches('~-1~');
         TreatmentBoundary::getIt(-1);
     }
 }

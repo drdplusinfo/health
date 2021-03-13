@@ -24,7 +24,7 @@ class AfflictionSizeTest extends TestCase
     public function I_am_stopped_by_specific_exception_on_invalid_value()
     {
         $this->expectException(\Granam\IntegerEnum\Exceptions\WrongValueForIntegerEnum::class);
-        $this->expectExceptionMessageRegExp('~Broken heart by fixed dart~');
+        $this->expectExceptionMessageMatches('~Broken heart by fixed dart~');
         AfflictionSize::getIt('Broken heart by fixed dart');
     }
 
@@ -34,7 +34,7 @@ class AfflictionSizeTest extends TestCase
     public function I_can_not_use_negative_value()
     {
         $this->expectException(\DrdPlus\Health\Afflictions\Exceptions\AfflictionSizeCanNotBeNegative::class);
-        $this->expectExceptionMessageRegExp('~-1~');
+        $this->expectExceptionMessageMatches('~-1~');
         AfflictionSize::getEnum(-1);
     }
 }

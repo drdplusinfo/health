@@ -4,7 +4,7 @@ namespace DrdPlus\Tests\Health;
 
 use DrdPlus\Health\PointOfWound;
 use DrdPlus\Health\Wound;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class PointOfWoundTest extends TestWithMockery
 {

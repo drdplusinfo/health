@@ -5,7 +5,7 @@ namespace DrdPlus\Tests\Health\Afflictions\Effects;
 use DrdPlus\Health\Afflictions\Effects\AfflictionEffect;
 use DrdPlus\Health\Afflictions\Effects\SeveredArmEffect;
 use Granam\String\StringTools;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 abstract class AfflictionEffectTest extends TestWithMockery
 {

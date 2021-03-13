@@ -8,7 +8,7 @@ use DrdPlus\Health\Health;
 use DrdPlus\Health\PointOfWound;
 use DrdPlus\Health\Wound;
 use DrdPlus\Health\WoundSize;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 abstract class WoundTest extends TestWithMockery
 {

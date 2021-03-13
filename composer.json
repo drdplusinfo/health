@@ -5,7 +5,12 @@
   "description": "Body and soul harms, afflictions and their treatment of a being for Drd+",
   "autoload": {
     "psr-4": {
-      "DrdPlus\\": "DrdPlus/"
+      "DrdPlus\\Health\\": "Health"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DrdPlus\\Tests\\": "tests"
     }
   },
   "require": {

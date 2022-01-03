@@ -10,19 +10,21 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "DrdPlus\\Tests\\": "tests"
+      "DrdPlus\\Tests\\": "tests",
+      "Granam\\ExceptionsHierarchy\\": "vendor/granam/exceptions-hierarchy",
+      "Granam\\Tests\\ExceptionsHierarchy\\": "vendor/granam/exceptions-hierarchy/tests/ExceptionsHierarchy"
     }
   },
   "require": {
     "php": ">=7.3",
-    "drdplus/skills": "~2.0",
-    "granam/string-enum": "^1.0"
+    "drdplus/skills": "~3.0",
+    "granam/string-enum": "^1.1"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
     "phpunit/phpunit": "^9.0",
     "mockery/mockery": "^1.2",
-    "granam/exceptions-hierarchy": "^5.0",
+    "granam/exceptions-hierarchy": "^5.1",
     "granam/test-with-mockery": "^2.0"
   }
 }
